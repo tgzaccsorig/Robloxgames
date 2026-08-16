@@ -1,1 +1,897 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Roblox Hidden Gems</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #080a0f;
+      --panel: #10141d;
+      --panel-hover: #151b26;
+      --border: #222a38;
+      --text: #f4f7fb;
+      --muted: #8d98aa;
+      --green: #39e58c;
+      --blue: #5b8cff;
+      --purple: #9b6cff;
+      --red: #ff5c70;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(91,140,255,.15), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(155,108,255,.12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* HEADER */
+
+    header {
+      padding: 34px 0 22px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 8px 30px rgba(91,140,255,.25);
+    }
+
+    .logo span {
+      color: #8daeff;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 55px 0 35px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #6d9aff, #b084ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    /* SEARCH */
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 170px 170px;
+      gap: 12px;
+      margin: 20px 0 30px;
+    }
+
+    .search-box,
+    select {
+      height: 52px;
+      border: 1px solid var(--border);
+      background: rgba(16,20,29,.9);
+      color: var(--text);
+      border-radius: 12px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 100%;
+      padding: 0 18px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: white;
+      font-size: 15px;
+    }
+
+    .search-box input::placeholder {
+      color: #667184;
+    }
+
+    select {
+      padding: 0 14px;
+      cursor: pointer;
+    }
+
+    select option {
+      background: #10141d;
+      color: white;
+    }
+
+    /* SECTION */
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 17px;
+    }
+
+    .section-title h2 {
+      font-size: 22px;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* GAMES */
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-bottom: 60px;
+    }
+
+    .game-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(
+        145deg,
+        rgba(20,25,36,.96),
+        rgba(11,14,21,.96)
+      );
+      border-radius: 16px;
+      transition: .2s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: #34415a;
+      background: var(--panel-hover);
+      box-shadow: 0 18px 50px rgba(0,0,0,.3);
+    }
+
+    .game-image {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+      background: #171c27;
+    }
+
+    .game-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .online-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 9px;
+      background: rgba(4,8,13,.85);
+      backdrop-filter: blur(8px);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .online-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .game-body {
+      padding: 16px;
+    }
+
+    .game-name {
+      font-size: 18px;
+      font-weight: 750;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .game-description {
+      height: 42px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 13px;
+      overflow: hidden;
+    }
+
+    .tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: #aeb8c9;
+      font-size: 11px;
+    }
+
+    .game-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stats {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stats strong {
+      color: #e8edf5;
+      font-size: 13px;
+    }
+
+    .play-button {
+      border: 0;
+      padding: 10px 15px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .play-button:hover {
+      transform: scale(1.04);
+      filter: brightness(1.1);
+    }
+
+    /* EMPTY */
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 70px 20px;
+      color: var(--muted);
+    }
+
+    .empty-icon {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
+      color: #667184;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+      .games {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-box {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .container {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .hero {
+        padding: 40px 0 25px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        grid-column: auto;
+      }
+
+      .games {
+        grid-template-columns: 1fr;
+      }
+
+      .game-image {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container header-inner">
+
+      <div class="logo">
+        <div class="logo-icon">💎</div>
+        <div>Roblox <span>Hidden Gems</span></div>
+      </div>
+
+      <div class="status">
+        <div class="status-dot"></div>
+        Каталог работает
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container">
+
+        <h1>Найди игру, о которой <span>никто не знает</span></h1>
+
+        <p>
+          Каталог интересных Roblox-игр, которые не забиты миллионами игроков.
+          Ищи маленькие проекты, экспериментальные игры и настоящие hidden gems.
+        </p>
+
+      </div>
+    </section>
+
+    <section class="container">
+
+      <div class="controls">
+
+        <div class="search-box">
+          <input
+            id="search"
+            type="text"
+            placeholder="🔎  Поиск игры..."
+            autocomplete="off"
+          >
+        </div>
+
+        <select id="onlineFilter">
+          <option value="all">Любой онлайн</option>
+          <option value="0-50">До 50 игроков</option>
+          <option value="50-200">50–200 игроков</option>
+          <option value="200-500">200–500 игроков</option>
+          <option value="500-1000">500–1000 игроков</option>
+        </select>
+
+        <select id="sort">
+          <option value="hidden">Сначала hidden gems</option>
+          <option value="online-desc">Онлайн ↓</option>
+          <option value="online-asc">Онлайн ↑</option>
+          <option value="rating">Рейтинг ↓</option>
+        </select>
+
+      </div>
+
+      <div class="section-title">
+        <h2>💎 Скрытые жемчужины</h2>
+        <div class="result-count" id="resultCount"></div>
+      </div>
+
+      <div class="games" id="games"></div>
+
+      <div class="empty" id="empty">
+        <div class="empty-icon">🔍</div>
+        <h3>Ничего не найдено</h3>
+        <p>Попробуй изменить поиск или фильтр.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    Roblox Hidden Gems · Фанатский проект · Не связан с Roblox Corporation
+  </footer>
+
+
+  <script>
+
+    /*
+      ============================================
+      ДАННЫЕ ИГР
+      ============================================
+
+      Пока здесь находятся примерные игры.
+
+      Для настоящего сайта сюда можно подключить
+      backend/API и автоматически получать:
+      - название;
+      - thumbnail;
+      - онлайн;
+      - рейтинг;
+      - жанр;
+      - ссылку на Roblox.
+    */
+
+    const games = [
+
+      {
+        id: 1,
+        name: "Forgotten Islands",
+        description: "Исследуй загадочные острова и находи тайны, о которых никто не знает.",
+        online: 37,
+        maxPlayers: 100,
+        rating: 94,
+        genre: "Adventure",
+        tags: ["Adventure", "Exploration"],
+        image: "https://placehold.co/800x450/121827/ffffff?text=Forgotten+Islands",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 2,
+        name: "Night Shift",
+        description: "Странная ночная смена. Что-то явно не так с этим местом...",
+        online: 126,
+        maxPlayers: 250,
+        rating: 96,
+        genre: "Horror",
+        tags: ["Horror", "Story"],
+        image: "https://placehold.co/800x450/17121f/ffffff?text=Night+Shift",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 3,
+        name: "Tiny Kingdoms",
+        description: "Создай маленькое королевство и сражайся за контроль над миром.",
+        online: 284,
+        maxPlayers: 500,
+        rating: 91,
+        genre: "Strategy",
+        tags: ["Strategy", "PvP"],
+        image: "https://placehold.co/800x450/111b18/ffffff?text=Tiny+Kingdoms",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 4,
+        name: "Deep Space",
+        description: "Один корабль. Бесконечный космос. И никто не знает, что находится впереди.",
+        online: 63,
+        maxPlayers: 150,
+        rating: 95,
+        genre: "Sci-Fi",
+        tags: ["Space", "Adventure"],
+        image: "https://placehold.co/800x450/111729/ffffff?text=Deep+Space",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 5,
+        name: "Street Legends",
+        description: "Уличные гонки, тюнинг машин и соревнования с другими игроками.",
+        online: 418,
+        maxPlayers: 700,
+        rating: 89,
+        genre: "Racing",
+        tags: ["Cars", "Racing"],
+        image: "https://placehold.co/800x450/1c1414/ffffff?text=Street+Legends",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 6,
+        name: "The Last Camp",
+        description: "Выживание в лесу. Собирай ресурсы, строй лагерь и переживи ночь.",
+        online: 18,
+        maxPlayers: 80,
+        rating: 97,
+        genre: "Survival",
+        tags: ["Survival", "Co-op"],
+        image: "https://placehold.co/800x450/121b15/ffffff?text=The+Last+Camp",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 7,
+        name: "Void Runner",
+        description: "Быстрый roguelike с опасными врагами и случайно создаваемыми уровнями.",
+        online: 76,
+        maxPlayers: 120,
+        rating: 93,
+        genre: "Roguelike",
+        tags: ["Action", "Roguelike"],
+        image: "https://placehold.co/800x450/191322/ffffff?text=Void+Runner",
+        url: "https://www.roblox.com/"
+      },
+
+      {
+        id: 8,
+        name: "Lost Metro",
+        description: "Спустись в заброшенное метро и выясни, почему оно всё ещё работает.",
+        online: 44,
+        maxPlayers: 100,
+        rating: 98,
+        genre: "Mystery",
+        tags: ["Mystery", "Horror"],
+        image: "https://placehold.co/800x450/171717/ffffff?text=Lost+Metro",
+        url: "https://www.roblox.com/"
+      }
+
+    ];
+
+
+    /*
+      ============================================
+      ЭЛЕМЕНТЫ
+      ============================================
+    */
+
+    const gamesContainer = document.getElementById("games");
+    const searchInput = document.getElementById("search");
+    const onlineFilter = document.getElementById("onlineFilter");
+    const sortSelect = document.getElementById("sort");
+    const resultCount = document.getElementById("resultCount");
+    const empty = document.getElementById("empty");
+
+
+    /*
+      ============================================
+      ФОРМАТИРОВАНИЕ ОНЛАЙНА
+      ============================================
+    */
+
+    function formatNumber(number) {
+      return new Intl.NumberFormat("ru-RU").format(number);
+    }
+
+
+    /*
+      ============================================
+      ПРОВЕРКА ФИЛЬТРА ОНЛАЙНА
+      ============================================
+    */
+
+    function checkOnline(game) {
+
+      const filter = onlineFilter.value;
+
+      if (filter === "all") {
+        return true;
+      }
+
+      const [min, max] = filter.split("-").map(Number);
+
+      return game.online >= min && game.online <= max;
+    }
+
+
+    /*
+      ============================================
+      РЕНДЕР ИГР
+      ============================================
+    */
+
+    function renderGames() {
+
+      const search = searchInput.value
+        .toLowerCase()
+        .trim();
+
+      let filtered = games.filter(game => {
+
+        const matchesSearch =
+          game.name.toLowerCase().includes(search) ||
+          game.genre.toLowerCase().includes(search) ||
+          game.tags.some(tag =>
+            tag.toLowerCase().includes(search)
+          );
+
+        return matchesSearch && checkOnline(game);
+
+      });
+
+
+      /*
+        СОРТИРОВКА
+      */
+
+      switch (sortSelect.value) {
+
+        case "online-desc":
+          filtered.sort((a, b) => b.online - a.online);
+          break;
+
+        case "online-asc":
+          filtered.sort((a, b) => a.online - b.online);
+          break;
+
+        case "rating":
+          filtered.sort((a, b) => b.rating - a.rating);
+          break;
+
+        case "hidden":
+          filtered.sort((a, b) => {
+
+            /*
+              Чем меньше онлайн и выше рейтинг,
+              тем выше игра поднимается.
+
+              Это и создаёт эффект "hidden gem".
+            */
+
+            const scoreA =
+              a.rating * 2 - Math.log10(a.online + 1) * 15;
+
+            const scoreB =
+              b.rating * 2 - Math.log10(b.online + 1) * 15;
+
+            return scoreB - scoreA;
+
+          });
+
+          break;
+      }
+
+
+      gamesContainer.innerHTML = "";
+
+      resultCount.textContent =
+        `${filtered.length} игр`;
+
+
+      if (filtered.length === 0) {
+
+        empty.style.display = "block";
+
+        return;
+
+      }
+
+      empty.style.display = "none";
+
+
+      filtered.forEach(game => {
+
+        const card = document.createElement("article");
+
+        card.className = "game-card";
+
+        card.innerHTML = `
+
+          <div class="game-image">
+
+            <img
+              src="${game.image}"
+              alt="${escapeHtml(game.name)}"
+              loading="lazy"
+            >
+
+            <div class="online-badge">
+
+              <div class="online-dot"></div>
+
+              ${formatNumber(game.online)} онлайн
+
+            </div>
+
+          </div>
+
+
+          <div class="game-body">
+
+            <div class="game-name">
+              ${escapeHtml(game.name)}
+            </div>
+
+            <div class="game-description">
+              ${escapeHtml(game.description)}
+            </div>
+
+            <div class="tags">
+
+              ${game.tags.map(tag => `
+                <span class="tag">
+                  ${escapeHtml(tag)}
+                </span>
+              `).join("")}
+
+            </div>
+
+
+            <div class="game-footer">
+
+              <div class="stats">
+
+                <div>
+                  ⭐ <strong>${game.rating}%</strong>
+                </div>
+
+                <div>
+                  👥 ${formatNumber(game.online)}
+                  / ${formatNumber(game.maxPlayers)}
+                </div>
+
+              </div>
+
+
+              <a
+                class="play-button"
+                href="${game.url}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Играть →
+              </a>
+
+            </div>
+
+          </div>
+
+        `;
+
+        gamesContainer.appendChild(card);
+
+      });
+
+    }
+
+
+    /*
+      ============================================
+      ЗАЩИТА ОТ HTML В ТЕКСТЕ
+      ============================================
+    */
+
+    function escapeHtml(text) {
+
+      const div = document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+
+    }
+
+
+    /*
+      ============================================
+      СОБЫТИЯ
+      ============================================
+    */
+
+    searchInput.addEventListener(
+      "input",
+      renderGames
+    );
+
+    onlineFilter.addEventListener(
+      "change",
+      renderGames
+    );
+
+    sortSelect.addEventListener(
+      "change",
+      renderGames
+    );
+
+
+    /*
+      ============================================
+      ЗАПУСК
+      ============================================
+    */
+
+    renderGames();
+
+  </script>
+
+</body>
+  </html>
