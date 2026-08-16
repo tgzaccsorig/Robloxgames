@@ -1,483 +1,83 @@
-```html
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Roblox Hidden Gems</title>
-
-<meta name="description"
-content="Каталог Roblox игр с онлайн-игроками, рейтингом и поиском hidden gems.">
-
 <style>
-:root{
-  --bg:#07090e;
-  --card:#10141d;
-  --card2:#151b26;
-  --border:#242c3a;
-  --text:#f5f7fb;
-  --muted:#8d98aa;
-  --blue:#5b8cff;
-  --purple:#9a68ff;
-  --green:#35df87;
-  --red:#ff5d73;
+:root{--bg:#08090d;--panel:#11131a;--panel2:#171a23;--line:#272b38;--text:#f6f7fb;--muted:#969baa;--accent:#7c5cff;--green:#35d07f;--radius:18px}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 10% 0%,#7c5cff22,transparent 32%),radial-gradient(circle at 90% 10%,#35d07f12,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+a{text-decoration:none;color:inherit}
+button,input,select{font:inherit}
+button,select{cursor:pointer}
+.wrap{width:min(1400px,calc(100% - 28px));margin:auto}
+
+header{position:sticky;top:0;z-index:10;background:#08090dcc;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff0b}
+.nav{min-height:72px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;min-width:max-content}
+.logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#7c5cff,#4c38b9);font-size:21px}
+.brand b{font-size:17px}
+.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.topsearch{position:relative;flex:1;max-width:650px;margin-left:auto}
+.topsearch input{width:100%;padding:13px 15px 13px 42px;border:1px solid var(--line);border-radius:13px;background:#ffffff08;color:var(--text);outline:0}
+.topsearch input:focus{border-color:var(--accent);box-shadow:0 0 0 4px #7c5cff20}
+.glass{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted)}
+
+main{padding:30px 0 60px}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:25px}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1;letter-spacing:-.055em;margin:0}
+.hero h1 span{color:#9b86ff}
+.hero p{color:var(--muted);max-width:720px;line-height:1.6;margin:14px 0 0}
+.stats{display:flex;gap:9px;flex-wrap:wrap}
+.stat{min-width:110px;text-align:center;padding:12px 15px;border:1px solid var(--line);border-radius:13px;background:#ffffff07}
+.stat b{display:block;font-size:18px}
+.stat small{color:var(--muted);font-size:10px}
+
+.toolbar{display:grid;grid-template-columns:1fr 180px 170px 110px;gap:9px;margin-bottom:20px}
+.control{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:12px 13px;outline:0}
+.control:focus{border-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.card{overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,#ffffff09,#ffffff04);transition:.18s}
+.card:hover{transform:translateY(-4px);border-color:#7c5cff88}
+.thumb{position:relative;aspect-ratio:1;background:#0d0f14;overflow:hidden}
+.thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.online{position:absolute;left:9px;top:9px;padding:6px 8px;border-radius:9px;background:#05070acc;border:1px solid #ffffff10;font-size:11px;font-weight:800}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 9px #35d07fcc;margin-right:5px}
+.body{padding:13px}
+.title{font-weight:800;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+.creator{color:var(--muted);font-size:11px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0}
+.pill{font-size:10px;color:#c8cbd5;background:#ffffff08;padding:6px 7px;border-radius:8px}
+.play{display:block;text-align:center;background:linear-gradient(135deg,#7c5cff,#5d43d4);padding:10px;border-radius:10px;font-weight:800;font-size:13px}
+.empty,.loading{grid-column:1/-1;text-align:center;padding:60px 20px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted)}
+.spinner{width:30px;height:30px;border:3px solid #ffffff14;border-top-color:var(--accent);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.pages{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:27px}
+.page{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:9px 12px;border-radius:10px}
+.page.active{background:#7c5cff2c;border-color:var(--accent)}
+.page:disabled{opacity:.4;cursor:not-allowed}
+footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:24px 0 35px;font-size:11px}
+
+@media(max-width:1100px){
+.grid{grid-template-columns:repeat(3,1fr)}
 }
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+@media(max-width:800px){
+.nav{flex-wrap:wrap;padding:10px 0}
+.topsearch{order:3;flex-basis:100%;max-width:none}
+.hero{display:block}
+.stats{margin-top:18px}
+.toolbar{grid-template-columns:1fr 1fr}
+.toolbar .q{grid-column:1/-1}
+.grid{grid-template-columns:repeat(2,1fr)}
 }
-
-body{
-  min-height:100vh;
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:
-    radial-gradient(circle at 10% 0%,rgba(91,140,255,.18),transparent 30%),
-    radial-gradient(circle at 90% 5%,rgba(154,104,255,.14),transparent 28%),
-    var(--bg);
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button,
-select{
-  cursor:pointer;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.container{
-  width:min(1250px,calc(100% - 28px));
-  margin:auto;
-}
-
-/* HEADER */
-
-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  border-bottom:1px solid var(--border);
-  background:rgba(7,9,14,.78);
-  backdrop-filter:blur(18px);
-}
-
-.header{
-  height:72px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  font-size:20px;
-  font-weight:850;
-}
-
-.logo-icon{
-  width:40px;
-  height:40px;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  box-shadow:0 8px 30px rgba(91,140,255,.25);
-}
-
-.logo span{
-  color:#8eaeff;
-}
-
-.header-status{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.status-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 12px var(--green);
-}
-
-/* HERO */
-
-.hero{
-  padding:72px 0 42px;
-  text-align:center;
-}
-
-.hero h1{
-  max-width:900px;
-  margin:auto;
-  font-size:clamp(38px,6vw,72px);
-  line-height:1;
-  letter-spacing:-3px;
-}
-
-.hero h1 span{
-  background:linear-gradient(90deg,#6f9cff,#b17dff);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.hero p{
-  max-width:700px;
-  margin:22px auto 0;
-  color:var(--muted);
-  font-size:16px;
-  line-height:1.7;
-}
-
-/* CONTROLS */
-
-.controls{
-  display:grid;
-  grid-template-columns:minmax(250px,1fr) 180px 180px 150px;
-  gap:10px;
-  margin-bottom:22px;
-}
-
-.input,
-select,
-.filter-button{
-  min-height:50px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  outline:none;
-  color:var(--text);
-  background:rgba(16,20,29,.92);
-}
-
-.input{
-  width:100%;
-  padding:0 16px;
-}
-
-.input::placeholder{
-  color:#657084;
-}
-
-select{
-  padding:0 12px;
-}
-
-select option{
-  background:#10141d;
-}
-
-.filter-button{
-  padding:0 14px;
-  font-weight:700;
-}
-
-.filter-button.active{
-  border-color:#647fff;
-  background:rgba(91,140,255,.15);
-}
-
-/* INFO */
-
-.info-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:16px;
-}
-
-.info-left{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.info-left h2{
-  font-size:22px;
-}
-
-.count{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.updated{
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* GRID */
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  padding-bottom:28px;
-}
-
-.card{
-  overflow:hidden;
-  border:1px solid var(--border);
-  border-radius:15px;
-  background:linear-gradient(145deg,#111620,#0c0f16);
-  transition:.18s ease;
-}
-
-.card:hover{
-  transform:translateY(-4px);
-  border-color:#36435c;
-  box-shadow:0 20px 55px rgba(0,0,0,.32);
-}
-
-.thumb{
-  position:relative;
-  height:180px;
-  background:#151a23;
-}
-
-.thumb img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-}
-
-.online{
-  position:absolute;
-  top:10px;
-  right:10px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 9px;
-  border-radius:8px;
-  color:var(--green);
-  background:rgba(4,7,12,.88);
-  backdrop-filter:blur(8px);
-  font-size:12px;
-  font-weight:750;
-}
-
-.online i{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 8px var(--green);
-}
-
-.hidden-badge{
-  position:absolute;
-  top:10px;
-  left:10px;
-  padding:6px 9px;
-  border-radius:8px;
-  background:linear-gradient(135deg,#7c58ff,#a86cff);
-  color:#fff;
-  font-size:11px;
-  font-weight:800;
-}
-
-.card-body{
-  padding:14px;
-}
-
-.title{
-  margin-bottom:7px;
-  font-size:16px;
-  font-weight:800;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.description{
-  height:38px;
-  margin-bottom:12px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.55;
-  overflow:hidden;
-}
-
-.meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:13px;
-}
-
-.tag{
-  padding:4px 7px;
-  border:1px solid var(--border);
-  border-radius:6px;
-  color:#aeb8c9;
-  font-size:10px;
-}
-
-.bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.stats{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.stats strong{
-  color:#eef2f8;
-}
-
-.play{
-  padding:9px 12px;
-  border-radius:8px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-size:12px;
-  font-weight:800;
-  transition:.15s;
-}
-
-.play:hover{
-  filter:brightness(1.12);
-  transform:scale(1.03);
-}
-
-/* LOAD */
-
-.load-area{
-  display:flex;
-  justify-content:center;
-  padding:5px 0 55px;
-}
-
-.load{
-  min-width:190px;
-  min-height:48px;
-  border:1px solid #35425b;
-  border-radius:10px;
-  background:#131a27;
-  color:white;
-  font-weight:750;
-}
-
-.load:hover{
-  background:#192235;
-}
-
-.load:disabled{
-  cursor:not-allowed;
-  opacity:.45;
-}
-
-/* EMPTY */
-
-.empty{
-  display:none;
-  text-align:center;
-  padding:70px 20px;
-  color:var(--muted);
-}
-
-.empty-icon{
-  margin-bottom:12px;
-  font-size:45px;
-}
-
-/* LOADING */
-
-.loading{
-  padding:60px 20px;
-  color:var(--muted);
-  text-align:center;
-}
-
-/* FOOTER */
-
-footer{
-  border-top:1px solid var(--border);
-  padding:25px 0;
-  color:#657084;
-  text-align:center;
-  font-size:12px;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1050px){
-  .grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .controls{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:700px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .hero{
-    padding-top:48px;
-  }
-
-  .hero h1{
-    letter-spacing:-1.5px;
-  }
-
-  .info-bar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-}
-
 @media(max-width:520px){
-  .container{
-    width:min(100% - 18px,1250px);
-  }
-
-  .header-status{
-    display:none;
-  }
-
-  .controls{
-    grid-template-columns:1fr;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .thumb{
-    height:205px;
-  }
+.wrap{width:calc(100% - 18px)}
+.toolbar{grid-template-columns:1fr}
+.toolbar .q{grid-column:auto}
+.grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -485,470 +85,523 @@ footer{
 <body>
 
 <header>
-  <div class="container header">
+<div class="wrap nav">
 
-    <div class="logo">
-      <div class="logo-icon">💎</div>
-      <div>Roblox <span>Hidden Gems</span></div>
-    </div>
+<a class="brand" href="#">
+<div class="logo">🎮</div>
+<div>
+<b>Roblox Hidden Gems</b>
+<small>Find games worth playing</small>
+</div>
+</a>
 
-    <div class="header-status">
-      <span class="status-dot"></span>
-      Каталог обновляется автоматически
-    </div>
+<div class="topsearch">
+<span class="glass">⌕</span>
+<input id="top" placeholder="Search games..." autocomplete="off">
+</div>
 
-  </div>
+</div>
 </header>
 
-
-<main>
+<main class="wrap">
 
 <section class="hero">
-  <div class="container">
 
-    <h1>
-      Найди игру, которую
-      <span>ещё не нашли все</span>
-    </h1>
+<div>
+<h1>Discover <span>better</span> Roblox games.</h1>
+<p>
+Search the catalog, sort by online and popularity,
+and find games beyond the usual front page.
+</p>
+</div>
 
-    <p>
-      Большой каталог Roblox-игр с поиском, онлайн-игроками,
-      рейтингом и hidden-gem системой. Популярные игры тоже здесь —
-      каждая игра показывается только один раз.
-    </p>
+<div class="stats">
 
-  </div>
-</section>
+<div class="stat">
+<b id="count">—</b>
+<small>games</small>
+</div>
 
+<div class="stat">
+<b id="online">—</b>
+<small>online</small>
+</div>
 
-<section class="container">
-
-  <div class="controls">
-
-    <input
-      id="search"
-      class="input"
-      type="search"
-      placeholder="🔎 Поиск игры..."
-      autocomplete="off"
-    >
-
-    <select id="online">
-      <option value="all">Любой онлайн</option>
-      <option value="0-50">0–50 игроков</option>
-      <option value="50-200">50–200 игроков</option>
-      <option value="200-500">200–500 игроков</option>
-      <option value="500-2000">500–2K игроков</option>
-      <option value="2000-999999999">2K+ игроков</option>
-    </select>
-
-    <select id="sort">
-      <option value="hidden">💎 Hidden gems</option>
-      <option value="online-desc">👥 Онлайн ↓</option>
-      <option value="online-asc">👥 Онлайн ↑</option>
-      <option value="rating">⭐ Рейтинг ↓</option>
-      <option value="new">🆕 Новые</option>
-    </select>
-
-    <button id="hiddenOnly" class="filter-button">
-      💎 Только gems
-    </button>
-
-  </div>
-
-
-  <div class="info-bar">
-
-    <div class="info-left">
-      <h2>🎮 Игры</h2>
-      <span id="count" class="count">Загрузка...</span>
-    </div>
-
-    <div id="updated" class="updated"></div>
-
-  </div>
-
-
-  <div id="loading" class="loading">
-    Загружаем каталог...
-  </div>
-
-  <div id="grid" class="grid"></div>
-
-  <div id="empty" class="empty">
-    <div class="empty-icon">🔍</div>
-    <h3>Ничего не найдено</h3>
-    <p>Попробуй изменить поиск или фильтры.</p>
-  </div>
-
-
-  <div class="load-area">
-    <button id="loadMore" class="load" disabled>
-      Загрузить ещё
-    </button>
-  </div>
+</div>
 
 </section>
+
+<section class="toolbar">
+
+<input
+id="q"
+class="control q"
+placeholder="Search by name, creator or genre..."
+>
+
+<select id="sort" class="control">
+<option value="playing">Online</option>
+<option value="favorites">Favorites</option>
+<option value="visits">Visits</option>
+<option value="newest">Newest</option>
+<option value="updated">Updated</option>
+<option value="name">Name A-Z</option>
+</select>
+
+<select id="genre" class="control">
+<option value="all">All genres</option>
+</select>
+
+<button id="random" class="control">
+🎲 Random
+</button>
+
+</section>
+
+<section id="grid" class="grid">
+<div class="loading">
+<div class="spinner"></div>
+Loading games...
+</div>
+</section>
+
+<nav id="pages" class="pages"></nav>
 
 </main>
 
-
 <footer>
-  Roblox Hidden Gems · Фанатский проект · Не связан с Roblox Corporation
+Roblox Hidden Gems · Catalog updates automatically
 </footer>
 
-
 <script>
-const state = {
-  games: [],
-  visible: 48,
-  hiddenOnly: false
-};
 
-const grid = document.getElementById("grid");
-const search = document.getElementById("search");
-const online = document.getElementById("online");
-const sort = document.getElementById("sort");
-const hiddenOnly = document.getElementById("hiddenOnly");
-const loadMore = document.getElementById("loadMore");
-const count = document.getElementById("count");
-const updated = document.getElementById("updated");
-const loading = document.getElementById("loading");
-const empty = document.getElementById("empty");
+const DATA='games.json';
+const SIZE=24;
 
+let games=[];
+let shown=[];
+let page=1;
 
-function formatNumber(value){
-  return new Intl.NumberFormat("ru-RU").format(Number(value || 0));
+const $=id=>document.getElementById(id);
+
+const grid=$('grid');
+const pages=$('pages');
+const q=$('q');
+const top=$('top');
+const sort=$('sort');
+const genre=$('genre');
+
+const n=x=>
+Number.isFinite(Number(x))
+?Number(x)
+:0;
+
+const fmt=x=>
+new Intl.NumberFormat('en',{
+notation:'compact',
+maximumFractionDigits:1
+}).format(n(x));
+
+const esc=x=>
+String(x??'')
+.replaceAll('&','&amp;')
+.replaceAll('<','&lt;')
+.replaceAll('>','&gt;')
+.replaceAll('"','&quot;')
+.replaceAll("'",'&#039;');
+
+const thumb=g=>
+g.thumbnail||
+`https://thumbnails.roblox.com/v1/games/icons?universeIds=${encodeURIComponent(g.universeId)}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false`;
+
+const creator=g=>
+g.creator?.name||'Unknown creator';
+
+function apply(){
+
+const text=q.value.trim().toLowerCase();
+const g=genre.value;
+
+shown=games.filter(x=>
+(!text||
+[
+x.name,
+x.description,
+x.genre,
+creator(x)
+]
+.join(' ')
+.toLowerCase()
+.includes(text))
+&&
+(g==='all'||String(x.genre||'All')===g)
+);
+
+shown.sort((a,b)=>
+
+sort.value==='playing'
+?n(b.playing)-n(a.playing)
+
+:sort.value==='favorites'
+?n(b.favorites)-n(a.favorites)
+
+:sort.value==='visits'
+?n(b.visits)-n(a.visits)
+
+:sort.value==='newest'
+?Date.parse(b.created||'')-Date.parse(a.created||'')
+
+:sort.value==='updated'
+?Date.parse(b.updated||'')-Date.parse(a.updated||'')
+
+:String(a.name||'')
+.localeCompare(String(b.name||''))
+
+);
+
+page=1;
+render();
+
 }
 
+function card(g){
 
-function escapeHTML(value){
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
+const name=
+esc(g.name||'Unknown game');
+
+const url=
+esc(
+g.url||
+`https://www.roblox.com/games/${g.placeId||g.universeId}`
+);
+
+return `
+
+<article class="card">
+
+<a
+href="${url}"
+target="_blank"
+rel="noopener"
+>
+
+<div class="thumb">
+
+<img
+src="${esc(thumb(g))}"
+alt="${name}"
+loading="lazy"
+referrerpolicy="no-referrer"
+onerror="this.style.display='none'"
+>
+
+<div class="online">
+<i class="dot"></i>
+${fmt(g.playing)}
+</div>
+
+</div>
+
+</a>
+
+<div class="body">
+
+<div class="title">
+${name}
+</div>
+
+<div class="creator">
+by ${esc(creator(g))}
+</div>
+
+<div class="meta">
+
+<span class="pill">
+👥 ${fmt(g.playing)}
+</span>
+
+<span class="pill">
+⭐ ${fmt(g.favorites)}
+</span>
+
+<span class="pill">
+👀 ${fmt(g.visits)}
+</span>
+
+<span class="pill">
+🏷️ ${esc(g.genre||'All')}
+</span>
+
+</div>
+
+<a
+class="play"
+href="${url}"
+target="_blank"
+rel="noopener"
+>
+▶ Play on Roblox
+</a>
+
+</div>
+
+</article>
+
+`;
+
 }
-
-
-function isHiddenGem(game){
-
-  const players = Number(game.playing || 0);
-  const rating = Number(game.rating || 0);
-
-  /*
-    Hidden gem:
-    хороший рейтинг + не огромный онлайн.
-  */
-
-  return (
-    rating >= 85 &&
-    players <= 1000
-  );
-}
-
-
-function getFiltered(){
-
-  const query = search.value.trim().toLowerCase();
-
-  let result = state.games.filter(game => {
-
-    const searchable = [
-      game.name,
-      game.description,
-      ...(game.tags || [])
-    ]
-    .join(" ")
-    .toLowerCase();
-
-    if(query && !searchable.includes(query)){
-      return false;
-    }
-
-    const players = Number(game.playing || 0);
-
-    if(online.value !== "all"){
-
-      const [min,max] = online.value
-        .split("-")
-        .map(Number);
-
-      if(players < min || players > max){
-        return false;
-      }
-    }
-
-    if(state.hiddenOnly && !isHiddenGem(game)){
-      return false;
-    }
-
-    return true;
-  });
-
-
-  result.sort((a,b) => {
-
-    if(sort.value === "online-desc"){
-      return (b.playing || 0) - (a.playing || 0);
-    }
-
-    if(sort.value === "online-asc"){
-      return (a.playing || 0) - (b.playing || 0);
-    }
-
-    if(sort.value === "rating"){
-      return (b.rating || 0) - (a.rating || 0);
-    }
-
-    if(sort.value === "new"){
-      return String(b.created || "")
-        .localeCompare(String(a.created || ""));
-    }
-
-    /*
-      Hidden gem score.
-    */
-
-    const score = game => {
-
-      const rating = Number(game.rating || 0);
-      const players = Number(game.playing || 0);
-
-      return (
-        rating * 2 -
-        Math.log10(players + 1) * 18
-      );
-    };
-
-    return score(b) - score(a);
-  });
-
-  return result;
-}
-
 
 function render(){
 
-  const games = getFiltered();
+const total=
+Math.max(
+1,
+Math.ceil(shown.length/SIZE)
+);
 
-  grid.innerHTML = "";
+page=Math.min(page,total);
 
-  count.textContent =
-    `${formatNumber(games.length)} найдено`;
+const part=
+shown.slice(
+(page-1)*SIZE,
+page*SIZE
+);
 
-  if(!games.length){
+grid.innerHTML=
 
-    empty.style.display = "block";
-    loadMore.style.display = "none";
+part.length
+?
+part.map(card).join('')
+:
+`
+<div class="empty">
+🔎
+<h2>No games found</h2>
+<p>Try another search or genre.</p>
+</div>
+`;
 
-    return;
-  }
-
-  empty.style.display = "none";
-  loadMore.style.display = "block";
-
-
-  const visible = games.slice(0,state.visible);
-
-
-  visible.forEach(game => {
-
-    const card = document.createElement("article");
-
-    card.className = "card";
-
-    const hidden = isHiddenGem(game);
-
-    card.innerHTML = `
-
-      <div class="thumb">
-
-        <img
-          src="${escapeHTML(game.thumbnail || game.icon || "")}"
-          alt="${escapeHTML(game.name)}"
-          loading="lazy"
-          onerror="this.style.display='none'"
-        >
-
-        ${
-          hidden
-          ? `<div class="hidden-badge">💎 HIDDEN GEM</div>`
-          : ""
-        }
-
-        <div class="online">
-          <i></i>
-          ${formatNumber(game.playing)} онлайн
-        </div>
-
-      </div>
-
-
-      <div class="card-body">
-
-        <div class="title">
-          ${escapeHTML(game.name)}
-        </div>
-
-        <div class="description">
-          ${escapeHTML(
-            game.description || "Описание отсутствует."
-          )}
-        </div>
-
-        <div class="meta">
-
-          ${
-            (game.tags || [])
-              .slice(0,3)
-              .map(tag =>
-                `<span class="tag">${escapeHTML(tag)}</span>`
-              )
-              .join("")
-          }
-
-        </div>
-
-
-        <div class="bottom">
-
-          <div class="stats">
-
-            <div>
-              ⭐ <strong>${game.rating || 0}%</strong>
-            </div>
-
-            <div>
-              👥 ${formatNumber(game.playing)}
-              / ${formatNumber(game.maxPlayers)}
-            </div>
-
-          </div>
-
-
-          <a
-            class="play"
-            href="https://www.roblox.com/games/${encodeURIComponent(game.placeId)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Играть →
-          </a>
-
-        </div>
-
-      </div>
-
-    `;
-
-    grid.appendChild(card);
-
-  });
-
-
-  loadMore.disabled =
-    visible.length >= games.length;
-
-  loadMore.textContent =
-    visible.length >= games.length
-      ? "Все игры загружены"
-      : "Загрузить ещё";
+if(total===1){
+pages.innerHTML='';
+return;
 }
 
+let out=
+`
+<button
+class="page"
+${page===1?'disabled':''}
+data-p="${page-1}"
+>
+←
+</button>
+`;
 
-async function loadData(){
+let a=
+Math.max(
+1,
+page-3
+);
 
-  try{
+let b=
+Math.min(
+total,
+a+6
+);
 
-    const response =
-      await fetch("./games.json?cache=" + Date.now());
+if(b-a<6)
+a=Math.max(
+1,
+b-6
+);
 
-    if(!response.ok){
-      throw new Error("games.json not found");
-    }
+for(
+let i=a;
+i<=b;
+i++
+){
 
-    const data = await response.json();
+out+=`
+<button
+class="page ${i===page?'active':''}"
+data-p="${i}"
+>
+${i}
+</button>
+`;
 
-    state.games =
-      Array.isArray(data.games)
-      ? data.games
-      : [];
-
-    if(data.updatedAt){
-
-      const date =
-        new Date(data.updatedAt);
-
-      updated.textContent =
-        "Обновлено: " +
-        date.toLocaleString("ru-RU");
-
-    }
-
-    loading.style.display = "none";
-
-    render();
-
-  }catch(error){
-
-    console.error(error);
-
-    loading.innerHTML = `
-      <strong>Каталог пока не загружен.</strong><br><br>
-      Запусти GitHub Action "Update Roblox Catalog",
-      после этого появится games.json.
-    `;
-
-  }
 }
 
+out+=`
+<button
+class="page"
+${page===total?'disabled':''}
+data-p="${page+1}"
+>
+→
+</button>
+`;
 
-search.addEventListener("input",()=>{
-  state.visible = 48;
-  render();
+pages.innerHTML=out;
+
+pages
+.querySelectorAll('[data-p]')
+.forEach(x=>
+
+x.onclick=()=>{
+
+page=
+Number(
+x.dataset.p
+);
+
+render();
+
+scrollTo({
+top:0,
+behavior:'smooth'
 });
 
-online.addEventListener("change",()=>{
-  state.visible = 48;
-  render();
+}
+
+);
+
+}
+
+function sync(v){
+
+q.value=v;
+top.value=v;
+
+apply();
+
+}
+
+q.oninput=
+()=>sync(q.value);
+
+top.oninput=
+()=>sync(top.value);
+
+sort.onchange=apply;
+genre.onchange=apply;
+
+$('random').onclick=()=>{
+
+if(games.length){
+
+const g=
+games[
+Math.floor(
+Math.random()*games.length
+)
+];
+
+if(g.url)
+open(
+g.url,
+'_blank',
+'noopener'
+);
+
+}
+
+};
+
+fetch(
+DATA+'?v='+Date.now(),
+{
+cache:'no-store'
+}
+)
+
+.then(r=>{
+
+if(!r.ok)
+throw Error(
+'games.json not found'
+);
+
+return r.json();
+
+})
+
+.then(d=>{
+
+games=
+Array.isArray(d.games)
+?d.games
+:[];
+
+$('count').textContent=
+fmt(games.length);
+
+$('online').textContent=
+fmt(
+games.reduce(
+(s,g)=>
+s+n(g.playing),
+0
+)
+);
+
+const set=
+new Set(
+games.map(
+g=>String(
+g.genre||'All'
+)
+)
+);
+
+[
+...set
+]
+.sort()
+.forEach(x=>{
+
+const o=
+document.createElement(
+'option'
+);
+
+o.value=x;
+o.textContent=x;
+
+genre.appendChild(o);
+
 });
 
-sort.addEventListener("change",()=>{
-  state.visible = 48;
-  render();
-});
+apply();
 
-hiddenOnly.addEventListener("click",()=>{
+})
 
-  state.hiddenOnly = !state.hiddenOnly;
+.catch(e=>{
 
-  hiddenOnly.classList.toggle(
-    "active",
-    state.hiddenOnly
-  );
+console.error(e);
 
-  state.visible = 48;
+grid.innerHTML=`
 
-  render();
-});
+<div class="empty">
 
+⚠️
 
-loadMore.addEventListener("click",()=>{
+<h2>
+Could not load games.json
+</h2>
 
-  state.visible += 48;
+<p>
+Put index.html and games.json
+in the same GitHub Pages folder.
+</p>
 
-  render();
+</div>
 
-  window.scrollBy({
-    top:180,
-    behavior:"smooth"
-  });
+`;
 
 });
 
-
-loadData();
 </script>
 
 </body>
 </html>
-```
