@@ -1,897 +1,954 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Roblox Hidden Gems</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #080a0f;
-      --panel: #10141d;
-      --panel-hover: #151b26;
-      --border: #222a38;
-      --text: #f4f7fb;
-      --muted: #8d98aa;
-      --green: #39e58c;
-      --blue: #5b8cff;
-      --purple: #9b6cff;
-      --red: #ff5c70;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: Inter, Arial, sans-serif;
-      background:
-        radial-gradient(circle at 15% 0%, rgba(91,140,255,.15), transparent 30%),
-        radial-gradient(circle at 85% 10%, rgba(155,108,255,.12), transparent 28%),
-        var(--bg);
-      color: var(--text);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1180px, calc(100% - 32px));
-      margin: auto;
-    }
-
-    /* HEADER */
-
-    header {
-      padding: 34px 0 22px;
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(10px);
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 23px;
-      font-weight: 800;
-    }
-
-    .logo-icon {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      box-shadow: 0 8px 30px rgba(91,140,255,.25);
-    }
-
-    .logo span {
-      color: #8daeff;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    /* HERO */
-
-    .hero {
-      padding: 55px 0 35px;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: clamp(34px, 6vw, 64px);
-      line-height: 1;
-      letter-spacing: -2px;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(90deg, #6d9aff, #b084ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: auto;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.6;
-    }
-
-    /* SEARCH */
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 170px 170px;
-      gap: 12px;
-      margin: 20px 0 30px;
-    }
-
-    .search-box,
-    select {
-      height: 52px;
-      border: 1px solid var(--border);
-      background: rgba(16,20,29,.9);
-      color: var(--text);
-      border-radius: 12px;
-      outline: none;
-      font-size: 15px;
-    }
-
-    .search-box {
-      position: relative;
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 100%;
-      padding: 0 18px;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: white;
-      font-size: 15px;
-    }
-
-    .search-box input::placeholder {
-      color: #667184;
-    }
-
-    select {
-      padding: 0 14px;
-      cursor: pointer;
-    }
-
-    select option {
-      background: #10141d;
-      color: white;
-    }
-
-    /* SECTION */
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 17px;
-    }
-
-    .section-title h2 {
-      font-size: 22px;
-    }
-
-    .result-count {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* GAMES */
-
-    .games {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      padding-bottom: 60px;
-    }
-
-    .game-card {
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: linear-gradient(
-        145deg,
-        rgba(20,25,36,.96),
-        rgba(11,14,21,.96)
-      );
-      border-radius: 16px;
-      transition: .2s ease;
-    }
-
-    .game-card:hover {
-      transform: translateY(-4px);
-      border-color: #34415a;
-      background: var(--panel-hover);
-      box-shadow: 0 18px 50px rgba(0,0,0,.3);
-    }
-
-    .game-image {
-      position: relative;
-      height: 180px;
-      overflow: hidden;
-      background: #171c27;
-    }
-
-    .game-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .online-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      border-radius: 9px;
-      background: rgba(4,8,13,.85);
-      backdrop-filter: blur(8px);
-      color: var(--green);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .online-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-
-    .game-body {
-      padding: 16px;
-    }
-
-    .game-name {
-      font-size: 18px;
-      font-weight: 750;
-      margin-bottom: 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .game-description {
-      height: 42px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-      margin-bottom: 13px;
-      overflow: hidden;
-    }
-
-    .tags {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-
-    .tag {
-      padding: 5px 8px;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: #aeb8c9;
-      font-size: 11px;
-    }
-
-    .game-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .stats {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .stats strong {
-      color: #e8edf5;
-      font-size: 13px;
-    }
-
-    .play-button {
-      border: 0;
-      padding: 10px 15px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .play-button:hover {
-      transform: scale(1.04);
-      filter: brightness(1.1);
-    }
-
-    /* EMPTY */
-
-    .empty {
-      display: none;
-      text-align: center;
-      padding: 70px 20px;
-      color: var(--muted);
-    }
-
-    .empty-icon {
-      font-size: 45px;
-      margin-bottom: 15px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 25px 0;
-      color: #667184;
-      text-align: center;
-      font-size: 13px;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 900px) {
-      .games {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .controls {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .search-box {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .container {
-        width: min(100% - 22px, 1180px);
-      }
-
-      .header-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .status {
-        display: none;
-      }
-
-      .hero {
-        padding: 40px 0 25px;
-      }
-
-      .hero h1 {
-        letter-spacing: -1px;
-      }
-
-      .controls {
-        grid-template-columns: 1fr;
-      }
-
-      .search-box {
-        grid-column: auto;
-      }
-
-      .games {
-        grid-template-columns: 1fr;
-      }
-
-      .game-image {
-        height: 200px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Roblox Hidden Gems</title>
+
+<meta name="description"
+content="Каталог Roblox игр с онлайн-игроками, рейтингом и поиском hidden gems.">
+
+<style>
+:root{
+  --bg:#07090e;
+  --card:#10141d;
+  --card2:#151b26;
+  --border:#242c3a;
+  --text:#f5f7fb;
+  --muted:#8d98aa;
+  --blue:#5b8cff;
+  --purple:#9a68ff;
+  --green:#35df87;
+  --red:#ff5d73;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(91,140,255,.18),transparent 30%),
+    radial-gradient(circle at 90% 5%,rgba(154,104,255,.14),transparent 28%),
+    var(--bg);
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button,
+select{
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.container{
+  width:min(1250px,calc(100% - 28px));
+  margin:auto;
+}
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  border-bottom:1px solid var(--border);
+  background:rgba(7,9,14,.78);
+  backdrop-filter:blur(18px);
+}
+
+.header{
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:20px;
+  font-weight:850;
+}
+
+.logo-icon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:0 8px 30px rgba(91,140,255,.25);
+}
+
+.logo span{
+  color:#8eaeff;
+}
+
+.header-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green);
+}
+
+/* HERO */
+
+.hero{
+  padding:72px 0 42px;
+  text-align:center;
+}
+
+.hero h1{
+  max-width:900px;
+  margin:auto;
+  font-size:clamp(38px,6vw,72px);
+  line-height:1;
+  letter-spacing:-3px;
+}
+
+.hero h1 span{
+  background:linear-gradient(90deg,#6f9cff,#b17dff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  max-width:700px;
+  margin:22px auto 0;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.7;
+}
+
+/* CONTROLS */
+
+.controls{
+  display:grid;
+  grid-template-columns:minmax(250px,1fr) 180px 180px 150px;
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.input,
+select,
+.filter-button{
+  min-height:50px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  outline:none;
+  color:var(--text);
+  background:rgba(16,20,29,.92);
+}
+
+.input{
+  width:100%;
+  padding:0 16px;
+}
+
+.input::placeholder{
+  color:#657084;
+}
+
+select{
+  padding:0 12px;
+}
+
+select option{
+  background:#10141d;
+}
+
+.filter-button{
+  padding:0 14px;
+  font-weight:700;
+}
+
+.filter-button.active{
+  border-color:#647fff;
+  background:rgba(91,140,255,.15);
+}
+
+/* INFO */
+
+.info-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:16px;
+}
+
+.info-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.info-left h2{
+  font-size:22px;
+}
+
+.count{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.updated{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  padding-bottom:28px;
+}
+
+.card{
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:linear-gradient(145deg,#111620,#0c0f16);
+  transition:.18s ease;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#36435c;
+  box-shadow:0 20px 55px rgba(0,0,0,.32);
+}
+
+.thumb{
+  position:relative;
+  height:180px;
+  background:#151a23;
+}
+
+.thumb img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
+.online{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border-radius:8px;
+  color:var(--green);
+  background:rgba(4,7,12,.88);
+  backdrop-filter:blur(8px);
+  font-size:12px;
+  font-weight:750;
+}
+
+.online i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+}
+
+.hidden-badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  padding:6px 9px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#7c58ff,#a86cff);
+  color:#fff;
+  font-size:11px;
+  font-weight:800;
+}
+
+.card-body{
+  padding:14px;
+}
+
+.title{
+  margin-bottom:7px;
+  font-size:16px;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.description{
+  height:38px;
+  margin-bottom:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+  overflow:hidden;
+}
+
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:13px;
+}
+
+.tag{
+  padding:4px 7px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:#aeb8c9;
+  font-size:10px;
+}
+
+.bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.stats{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.stats strong{
+  color:#eef2f8;
+}
+
+.play{
+  padding:9px 12px;
+  border-radius:8px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  transition:.15s;
+}
+
+.play:hover{
+  filter:brightness(1.12);
+  transform:scale(1.03);
+}
+
+/* LOAD */
+
+.load-area{
+  display:flex;
+  justify-content:center;
+  padding:5px 0 55px;
+}
+
+.load{
+  min-width:190px;
+  min-height:48px;
+  border:1px solid #35425b;
+  border-radius:10px;
+  background:#131a27;
+  color:white;
+  font-weight:750;
+}
+
+.load:hover{
+  background:#192235;
+}
+
+.load:disabled{
+  cursor:not-allowed;
+  opacity:.45;
+}
+
+/* EMPTY */
+
+.empty{
+  display:none;
+  text-align:center;
+  padding:70px 20px;
+  color:var(--muted);
+}
+
+.empty-icon{
+  margin-bottom:12px;
+  font-size:45px;
+}
+
+/* LOADING */
+
+.loading{
+  padding:60px 20px;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid var(--border);
+  padding:25px 0;
+  color:#657084;
+  text-align:center;
+  font-size:12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .controls{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero{
+    padding-top:48px;
+  }
+
+  .hero h1{
+    letter-spacing:-1.5px;
+  }
+
+  .info-bar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+@media(max-width:520px){
+  .container{
+    width:min(100% - 18px,1250px);
+  }
+
+  .header-status{
+    display:none;
+  }
+
+  .controls{
+    grid-template-columns:1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .thumb{
+    height:205px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="container header-inner">
+<header>
+  <div class="container header">
 
-      <div class="logo">
-        <div class="logo-icon">💎</div>
-        <div>Roblox <span>Hidden Gems</span></div>
-      </div>
-
-      <div class="status">
-        <div class="status-dot"></div>
-        Каталог работает
-      </div>
-
+    <div class="logo">
+      <div class="logo-icon">💎</div>
+      <div>Roblox <span>Hidden Gems</span></div>
     </div>
-  </header>
 
-  <main>
+    <div class="header-status">
+      <span class="status-dot"></span>
+      Каталог обновляется автоматически
+    </div>
 
-    <section class="hero">
-      <div class="container">
+  </div>
+</header>
 
-        <h1>Найди игру, о которой <span>никто не знает</span></h1>
 
-        <p>
-          Каталог интересных Roblox-игр, которые не забиты миллионами игроков.
-          Ищи маленькие проекты, экспериментальные игры и настоящие hidden gems.
-        </p>
+<main>
 
-      </div>
-    </section>
+<section class="hero">
+  <div class="container">
 
-    <section class="container">
+    <h1>
+      Найди игру, которую
+      <span>ещё не нашли все</span>
+    </h1>
 
-      <div class="controls">
+    <p>
+      Большой каталог Roblox-игр с поиском, онлайн-игроками,
+      рейтингом и hidden-gem системой. Популярные игры тоже здесь —
+      каждая игра показывается только один раз.
+    </p>
 
-        <div class="search-box">
-          <input
-            id="search"
-            type="text"
-            placeholder="🔎  Поиск игры..."
-            autocomplete="off"
-          >
+  </div>
+</section>
+
+
+<section class="container">
+
+  <div class="controls">
+
+    <input
+      id="search"
+      class="input"
+      type="search"
+      placeholder="🔎 Поиск игры..."
+      autocomplete="off"
+    >
+
+    <select id="online">
+      <option value="all">Любой онлайн</option>
+      <option value="0-50">0–50 игроков</option>
+      <option value="50-200">50–200 игроков</option>
+      <option value="200-500">200–500 игроков</option>
+      <option value="500-2000">500–2K игроков</option>
+      <option value="2000-999999999">2K+ игроков</option>
+    </select>
+
+    <select id="sort">
+      <option value="hidden">💎 Hidden gems</option>
+      <option value="online-desc">👥 Онлайн ↓</option>
+      <option value="online-asc">👥 Онлайн ↑</option>
+      <option value="rating">⭐ Рейтинг ↓</option>
+      <option value="new">🆕 Новые</option>
+    </select>
+
+    <button id="hiddenOnly" class="filter-button">
+      💎 Только gems
+    </button>
+
+  </div>
+
+
+  <div class="info-bar">
+
+    <div class="info-left">
+      <h2>🎮 Игры</h2>
+      <span id="count" class="count">Загрузка...</span>
+    </div>
+
+    <div id="updated" class="updated"></div>
+
+  </div>
+
+
+  <div id="loading" class="loading">
+    Загружаем каталог...
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+  <div id="empty" class="empty">
+    <div class="empty-icon">🔍</div>
+    <h3>Ничего не найдено</h3>
+    <p>Попробуй изменить поиск или фильтры.</p>
+  </div>
+
+
+  <div class="load-area">
+    <button id="loadMore" class="load" disabled>
+      Загрузить ещё
+    </button>
+  </div>
+
+</section>
+
+</main>
+
+
+<footer>
+  Roblox Hidden Gems · Фанатский проект · Не связан с Roblox Corporation
+</footer>
+
+
+<script>
+const state = {
+  games: [],
+  visible: 48,
+  hiddenOnly: false
+};
+
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const online = document.getElementById("online");
+const sort = document.getElementById("sort");
+const hiddenOnly = document.getElementById("hiddenOnly");
+const loadMore = document.getElementById("loadMore");
+const count = document.getElementById("count");
+const updated = document.getElementById("updated");
+const loading = document.getElementById("loading");
+const empty = document.getElementById("empty");
+
+
+function formatNumber(value){
+  return new Intl.NumberFormat("ru-RU").format(Number(value || 0));
+}
+
+
+function escapeHTML(value){
+  const div = document.createElement("div");
+  div.textContent = value ?? "";
+  return div.innerHTML;
+}
+
+
+function isHiddenGem(game){
+
+  const players = Number(game.playing || 0);
+  const rating = Number(game.rating || 0);
+
+  /*
+    Hidden gem:
+    хороший рейтинг + не огромный онлайн.
+  */
+
+  return (
+    rating >= 85 &&
+    players <= 1000
+  );
+}
+
+
+function getFiltered(){
+
+  const query = search.value.trim().toLowerCase();
+
+  let result = state.games.filter(game => {
+
+    const searchable = [
+      game.name,
+      game.description,
+      ...(game.tags || [])
+    ]
+    .join(" ")
+    .toLowerCase();
+
+    if(query && !searchable.includes(query)){
+      return false;
+    }
+
+    const players = Number(game.playing || 0);
+
+    if(online.value !== "all"){
+
+      const [min,max] = online.value
+        .split("-")
+        .map(Number);
+
+      if(players < min || players > max){
+        return false;
+      }
+    }
+
+    if(state.hiddenOnly && !isHiddenGem(game)){
+      return false;
+    }
+
+    return true;
+  });
+
+
+  result.sort((a,b) => {
+
+    if(sort.value === "online-desc"){
+      return (b.playing || 0) - (a.playing || 0);
+    }
+
+    if(sort.value === "online-asc"){
+      return (a.playing || 0) - (b.playing || 0);
+    }
+
+    if(sort.value === "rating"){
+      return (b.rating || 0) - (a.rating || 0);
+    }
+
+    if(sort.value === "new"){
+      return String(b.created || "")
+        .localeCompare(String(a.created || ""));
+    }
+
+    /*
+      Hidden gem score.
+    */
+
+    const score = game => {
+
+      const rating = Number(game.rating || 0);
+      const players = Number(game.playing || 0);
+
+      return (
+        rating * 2 -
+        Math.log10(players + 1) * 18
+      );
+    };
+
+    return score(b) - score(a);
+  });
+
+  return result;
+}
+
+
+function render(){
+
+  const games = getFiltered();
+
+  grid.innerHTML = "";
+
+  count.textContent =
+    `${formatNumber(games.length)} найдено`;
+
+  if(!games.length){
+
+    empty.style.display = "block";
+    loadMore.style.display = "none";
+
+    return;
+  }
+
+  empty.style.display = "none";
+  loadMore.style.display = "block";
+
+
+  const visible = games.slice(0,state.visible);
+
+
+  visible.forEach(game => {
+
+    const card = document.createElement("article");
+
+    card.className = "card";
+
+    const hidden = isHiddenGem(game);
+
+    card.innerHTML = `
+
+      <div class="thumb">
+
+        <img
+          src="${escapeHTML(game.thumbnail || game.icon || "")}"
+          alt="${escapeHTML(game.name)}"
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
+
+        ${
+          hidden
+          ? `<div class="hidden-badge">💎 HIDDEN GEM</div>`
+          : ""
+        }
+
+        <div class="online">
+          <i></i>
+          ${formatNumber(game.playing)} онлайн
         </div>
 
-        <select id="onlineFilter">
-          <option value="all">Любой онлайн</option>
-          <option value="0-50">До 50 игроков</option>
-          <option value="50-200">50–200 игроков</option>
-          <option value="200-500">200–500 игроков</option>
-          <option value="500-1000">500–1000 игроков</option>
-        </select>
-
-        <select id="sort">
-          <option value="hidden">Сначала hidden gems</option>
-          <option value="online-desc">Онлайн ↓</option>
-          <option value="online-asc">Онлайн ↑</option>
-          <option value="rating">Рейтинг ↓</option>
-        </select>
-
       </div>
 
-      <div class="section-title">
-        <h2>💎 Скрытые жемчужины</h2>
-        <div class="result-count" id="resultCount"></div>
-      </div>
 
-      <div class="games" id="games"></div>
+      <div class="card-body">
 
-      <div class="empty" id="empty">
-        <div class="empty-icon">🔍</div>
-        <h3>Ничего не найдено</h3>
-        <p>Попробуй изменить поиск или фильтр.</p>
-      </div>
+        <div class="title">
+          ${escapeHTML(game.name)}
+        </div>
 
-    </section>
+        <div class="description">
+          ${escapeHTML(
+            game.description || "Описание отсутствует."
+          )}
+        </div>
 
-  </main>
+        <div class="meta">
 
-  <footer>
-    Roblox Hidden Gems · Фанатский проект · Не связан с Roblox Corporation
-  </footer>
+          ${
+            (game.tags || [])
+              .slice(0,3)
+              .map(tag =>
+                `<span class="tag">${escapeHTML(tag)}</span>`
+              )
+              .join("")
+          }
 
+        </div>
 
-  <script>
 
-    /*
-      ============================================
-      ДАННЫЕ ИГР
-      ============================================
+        <div class="bottom">
 
-      Пока здесь находятся примерные игры.
+          <div class="stats">
 
-      Для настоящего сайта сюда можно подключить
-      backend/API и автоматически получать:
-      - название;
-      - thumbnail;
-      - онлайн;
-      - рейтинг;
-      - жанр;
-      - ссылку на Roblox.
-    */
+            <div>
+              ⭐ <strong>${game.rating || 0}%</strong>
+            </div>
 
-    const games = [
-
-      {
-        id: 1,
-        name: "Forgotten Islands",
-        description: "Исследуй загадочные острова и находи тайны, о которых никто не знает.",
-        online: 37,
-        maxPlayers: 100,
-        rating: 94,
-        genre: "Adventure",
-        tags: ["Adventure", "Exploration"],
-        image: "https://placehold.co/800x450/121827/ffffff?text=Forgotten+Islands",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 2,
-        name: "Night Shift",
-        description: "Странная ночная смена. Что-то явно не так с этим местом...",
-        online: 126,
-        maxPlayers: 250,
-        rating: 96,
-        genre: "Horror",
-        tags: ["Horror", "Story"],
-        image: "https://placehold.co/800x450/17121f/ffffff?text=Night+Shift",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 3,
-        name: "Tiny Kingdoms",
-        description: "Создай маленькое королевство и сражайся за контроль над миром.",
-        online: 284,
-        maxPlayers: 500,
-        rating: 91,
-        genre: "Strategy",
-        tags: ["Strategy", "PvP"],
-        image: "https://placehold.co/800x450/111b18/ffffff?text=Tiny+Kingdoms",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 4,
-        name: "Deep Space",
-        description: "Один корабль. Бесконечный космос. И никто не знает, что находится впереди.",
-        online: 63,
-        maxPlayers: 150,
-        rating: 95,
-        genre: "Sci-Fi",
-        tags: ["Space", "Adventure"],
-        image: "https://placehold.co/800x450/111729/ffffff?text=Deep+Space",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 5,
-        name: "Street Legends",
-        description: "Уличные гонки, тюнинг машин и соревнования с другими игроками.",
-        online: 418,
-        maxPlayers: 700,
-        rating: 89,
-        genre: "Racing",
-        tags: ["Cars", "Racing"],
-        image: "https://placehold.co/800x450/1c1414/ffffff?text=Street+Legends",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 6,
-        name: "The Last Camp",
-        description: "Выживание в лесу. Собирай ресурсы, строй лагерь и переживи ночь.",
-        online: 18,
-        maxPlayers: 80,
-        rating: 97,
-        genre: "Survival",
-        tags: ["Survival", "Co-op"],
-        image: "https://placehold.co/800x450/121b15/ffffff?text=The+Last+Camp",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 7,
-        name: "Void Runner",
-        description: "Быстрый roguelike с опасными врагами и случайно создаваемыми уровнями.",
-        online: 76,
-        maxPlayers: 120,
-        rating: 93,
-        genre: "Roguelike",
-        tags: ["Action", "Roguelike"],
-        image: "https://placehold.co/800x450/191322/ffffff?text=Void+Runner",
-        url: "https://www.roblox.com/"
-      },
-
-      {
-        id: 8,
-        name: "Lost Metro",
-        description: "Спустись в заброшенное метро и выясни, почему оно всё ещё работает.",
-        online: 44,
-        maxPlayers: 100,
-        rating: 98,
-        genre: "Mystery",
-        tags: ["Mystery", "Horror"],
-        image: "https://placehold.co/800x450/171717/ffffff?text=Lost+Metro",
-        url: "https://www.roblox.com/"
-      }
-
-    ];
-
-
-    /*
-      ============================================
-      ЭЛЕМЕНТЫ
-      ============================================
-    */
-
-    const gamesContainer = document.getElementById("games");
-    const searchInput = document.getElementById("search");
-    const onlineFilter = document.getElementById("onlineFilter");
-    const sortSelect = document.getElementById("sort");
-    const resultCount = document.getElementById("resultCount");
-    const empty = document.getElementById("empty");
-
-
-    /*
-      ============================================
-      ФОРМАТИРОВАНИЕ ОНЛАЙНА
-      ============================================
-    */
-
-    function formatNumber(number) {
-      return new Intl.NumberFormat("ru-RU").format(number);
-    }
-
-
-    /*
-      ============================================
-      ПРОВЕРКА ФИЛЬТРА ОНЛАЙНА
-      ============================================
-    */
-
-    function checkOnline(game) {
-
-      const filter = onlineFilter.value;
-
-      if (filter === "all") {
-        return true;
-      }
-
-      const [min, max] = filter.split("-").map(Number);
-
-      return game.online >= min && game.online <= max;
-    }
-
-
-    /*
-      ============================================
-      РЕНДЕР ИГР
-      ============================================
-    */
-
-    function renderGames() {
-
-      const search = searchInput.value
-        .toLowerCase()
-        .trim();
-
-      let filtered = games.filter(game => {
-
-        const matchesSearch =
-          game.name.toLowerCase().includes(search) ||
-          game.genre.toLowerCase().includes(search) ||
-          game.tags.some(tag =>
-            tag.toLowerCase().includes(search)
-          );
-
-        return matchesSearch && checkOnline(game);
-
-      });
-
-
-      /*
-        СОРТИРОВКА
-      */
-
-      switch (sortSelect.value) {
-
-        case "online-desc":
-          filtered.sort((a, b) => b.online - a.online);
-          break;
-
-        case "online-asc":
-          filtered.sort((a, b) => a.online - b.online);
-          break;
-
-        case "rating":
-          filtered.sort((a, b) => b.rating - a.rating);
-          break;
-
-        case "hidden":
-          filtered.sort((a, b) => {
-
-            /*
-              Чем меньше онлайн и выше рейтинг,
-              тем выше игра поднимается.
-
-              Это и создаёт эффект "hidden gem".
-            */
-
-            const scoreA =
-              a.rating * 2 - Math.log10(a.online + 1) * 15;
-
-            const scoreB =
-              b.rating * 2 - Math.log10(b.online + 1) * 15;
-
-            return scoreB - scoreA;
-
-          });
-
-          break;
-      }
-
-
-      gamesContainer.innerHTML = "";
-
-      resultCount.textContent =
-        `${filtered.length} игр`;
-
-
-      if (filtered.length === 0) {
-
-        empty.style.display = "block";
-
-        return;
-
-      }
-
-      empty.style.display = "none";
-
-
-      filtered.forEach(game => {
-
-        const card = document.createElement("article");
-
-        card.className = "game-card";
-
-        card.innerHTML = `
-
-          <div class="game-image">
-
-            <img
-              src="${game.image}"
-              alt="${escapeHtml(game.name)}"
-              loading="lazy"
-            >
-
-            <div class="online-badge">
-
-              <div class="online-dot"></div>
-
-              ${formatNumber(game.online)} онлайн
-
+            <div>
+              👥 ${formatNumber(game.playing)}
+              / ${formatNumber(game.maxPlayers)}
             </div>
 
           </div>
 
 
-          <div class="game-body">
+          <a
+            class="play"
+            href="https://www.roblox.com/games/${encodeURIComponent(game.placeId)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Играть →
+          </a>
 
-            <div class="game-name">
-              ${escapeHtml(game.name)}
-            </div>
+        </div>
 
-            <div class="game-description">
-              ${escapeHtml(game.description)}
-            </div>
+      </div>
 
-            <div class="tags">
+    `;
 
-              ${game.tags.map(tag => `
-                <span class="tag">
-                  ${escapeHtml(tag)}
-                </span>
-              `).join("")}
+    grid.appendChild(card);
 
-            </div>
-
-
-            <div class="game-footer">
-
-              <div class="stats">
-
-                <div>
-                  ⭐ <strong>${game.rating}%</strong>
-                </div>
-
-                <div>
-                  👥 ${formatNumber(game.online)}
-                  / ${formatNumber(game.maxPlayers)}
-                </div>
-
-              </div>
+  });
 
 
-              <a
-                class="play-button"
-                href="${game.url}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Играть →
-              </a>
+  loadMore.disabled =
+    visible.length >= games.length;
 
-            </div>
+  loadMore.textContent =
+    visible.length >= games.length
+      ? "Все игры загружены"
+      : "Загрузить ещё";
+}
 
-          </div>
 
-        `;
+async function loadData(){
 
-        gamesContainer.appendChild(card);
+  try{
 
-      });
+    const response =
+      await fetch("./games.json?cache=" + Date.now());
+
+    if(!response.ok){
+      throw new Error("games.json not found");
+    }
+
+    const data = await response.json();
+
+    state.games =
+      Array.isArray(data.games)
+      ? data.games
+      : [];
+
+    if(data.updatedAt){
+
+      const date =
+        new Date(data.updatedAt);
+
+      updated.textContent =
+        "Обновлено: " +
+        date.toLocaleString("ru-RU");
 
     }
 
+    loading.style.display = "none";
 
-    /*
-      ============================================
-      ЗАЩИТА ОТ HTML В ТЕКСТЕ
-      ============================================
-    */
+    render();
 
-    function escapeHtml(text) {
+  }catch(error){
 
-      const div = document.createElement("div");
+    console.error(error);
 
-      div.textContent = text;
+    loading.innerHTML = `
+      <strong>Каталог пока не загружен.</strong><br><br>
+      Запусти GitHub Action "Update Roblox Catalog",
+      после этого появится games.json.
+    `;
 
-      return div.innerHTML;
-
-    }
-
-
-    /*
-      ============================================
-      СОБЫТИЯ
-      ============================================
-    */
-
-    searchInput.addEventListener(
-      "input",
-      renderGames
-    );
-
-    onlineFilter.addEventListener(
-      "change",
-      renderGames
-    );
-
-    sortSelect.addEventListener(
-      "change",
-      renderGames
-    );
+  }
+}
 
 
-    /*
-      ============================================
-      ЗАПУСК
-      ============================================
-    */
+search.addEventListener("input",()=>{
+  state.visible = 48;
+  render();
+});
 
-    renderGames();
+online.addEventListener("change",()=>{
+  state.visible = 48;
+  render();
+});
 
-  </script>
+sort.addEventListener("change",()=>{
+  state.visible = 48;
+  render();
+});
+
+hiddenOnly.addEventListener("click",()=>{
+
+  state.hiddenOnly = !state.hiddenOnly;
+
+  hiddenOnly.classList.toggle(
+    "active",
+    state.hiddenOnly
+  );
+
+  state.visible = 48;
+
+  render();
+});
+
+
+loadMore.addEventListener("click",()=>{
+
+  state.visible += 48;
+
+  render();
+
+  window.scrollBy({
+    top:180,
+    behavior:"smooth"
+  });
+
+});
+
+
+loadData();
+</script>
 
 </body>
-  </html>
+</html>
+```
