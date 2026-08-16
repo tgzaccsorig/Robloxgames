@@ -9,15 +9,14 @@ on:
   push:
     paths:
       - "collector.py"
-      - ".github/workflows/update-games.yml"
+      - ".github/workflows/update-game.yml"
 
 permissions:
   contents: write
 
-# Не позволяем двум сборщикам одновременно менять games.json
 concurrency:
-  group: roblox-catalog-update
-  cancel-in-progress: true
+  group: roblox-catalog
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -25,7 +24,7 @@ jobs:
 
     steps:
 
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -36,25 +35,23 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install requests
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
-      # Получаем самые свежие изменения перед запуском collector.py
-      - name: Sync with main
+      - name: Sync repository
         run: |
-          git config pull.rebase true
-          git config rebase.autoStash true
-
           git fetch origin main
+          git checkout main
           git reset --hard origin/main
 
-      - name: Collect Roblox games
+      - name: Run collector
+        timeout-minutes: 12
         run: |
-          python collector.py
+          python -u collector.py
 
-      - name: Check catalog
+      - name: Check games.json
         run: |
           python - <<'PY'
           import json
@@ -65,24 +62,29 @@ jobs:
           games = data.get("games", [])
 
           ids = [
-              game.get("universeId")
-              for game in games
-              if game.get("universeId")
+              x.get("universeId")
+              for x in games
+              if x.get("universeId")
           ]
 
           print("Games:", len(games))
           print("Unique:", len(set(ids)))
 
-          if len(ids) != len(set(ids)):
-              raise SystemExit("ERROR: Duplicate games found")
-
           if not games:
-              raise SystemExit("ERROR: games.json is empty")
+              raise SystemExit(
+                  "games.json is empty!"
+              )
 
-          print("Catalog check: OK")
+          if len(ids) != len(set(ids)):
+              raise SystemExit(
+                  "Duplicate universeId detected!"
+              )
+
+          print("Catalog check OK!")
+
           PY
 
-      - name: Commit updated catalog
+      - name: Commit catalog
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -90,31 +92,36 @@ jobs:
           git add games.json
 
           if git diff --cached --quiet; then
-            echo "No changes to games.json"
+            echo "No changes."
             exit 0
           fi
 
           git commit -m "Update Roblox game catalog"
 
-      # Если кто-то успел сделать новый commit,
-      # подтягиваем его и повторяем push
-      - name: Push updated catalog
+      - name: Push catalog
         run: |
-          for i in 1 2 3 4 5; do
-
-            echo "Push attempt $i..."
-
-            if git push origin HEAD:main; then
-              echo "Push successful!"
-              exit 0
-            fi
-
-            echo "Push rejected. Syncing with origin/main..."
+          for attempt in 1 2 3 4 5
+          do
+            echo "Push attempt $attempt"
 
             git fetch origin main
-            git rebase origin/main
+
+            if git rebase origin/main; then
+
+              if git push origin HEAD:main; then
+                echo "SUCCESS!"
+                exit 0
+              fi
+
+            else
+              echo "Rebase failed."
+              git rebase --abort || true
+            fi
+
+            echo "Retrying in 3 seconds..."
+            sleep 3
 
           done
 
-          echo "ERROR: Could not push after 5 attempts."
+          echo "Could not push catalog."
           exit 1
