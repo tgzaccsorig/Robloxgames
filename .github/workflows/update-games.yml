@@ -1,127 +1,18 @@
-name: Update Roblox Catalog
-
-on:
-  workflow_dispatch:
-
-  schedule:
-    - cron: "17 */6 * * *"
-
-  push:
-    paths:
-      - "collector.py"
-      - ".github/workflows/update-game.yml"
-
-permissions:
-  contents: write
-
-concurrency:
-  group: roblox-catalog
-  cancel-in-progress: false
-
-jobs:
-  update:
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install requests
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
-
-      - name: Sync repository
-        run: |
-          git fetch origin main
-          git checkout main
-          git reset --hard origin/main
-
-      - name: Run collector
-        timeout-minutes: 12
-        run: |
-          python -u collector.py
-
-      - name: Check games.json
-        run: |
-          python - <<'PY'
-          import json
-
-          with open("games.json", encoding="utf-8") as f:
-              data = json.load(f)
-
-          games = data.get("games", [])
-
-          ids = [
-              x.get("universeId")
-              for x in games
-              if x.get("universeId")
-          ]
-
-          print("Games:", len(games))
-          print("Unique:", len(set(ids)))
-
-          if not games:
-              raise SystemExit(
-                  "games.json is empty!"
-              )
-
-          if len(ids) != len(set(ids)):
-              raise SystemExit(
-                  "Duplicate universeId detected!"
-              )
-
-          print("Catalog check OK!")
-
-          PY
-
-      - name: Commit catalog
+      - name: Commit updated catalog
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add games.json
-
+          git add .
+          
           if git diff --cached --quiet; then
-            echo "No changes."
+            echo "No changes to commit"
             exit 0
           fi
 
           git commit -m "Update Roblox game catalog"
 
-      - name: Push catalog
-        run: |
-          for attempt in 1 2 3 4 5
-          do
-            echo "Push attempt $attempt"
+          git fetch origin main
+          git rebase origin/main
 
-            git fetch origin main
-
-            if git rebase origin/main; then
-
-              if git push origin HEAD:main; then
-                echo "SUCCESS!"
-                exit 0
-              fi
-
-            else
-              echo "Rebase failed."
-              git rebase --abort || true
-            fi
-
-            echo "Retrying in 3 seconds..."
-            sleep 3
-
-          done
-
-          echo "Could not push catalog."
-          exit 1
+          git push origin HEAD:main
