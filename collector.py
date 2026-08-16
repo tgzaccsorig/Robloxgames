@@ -2,95 +2,300 @@ import json
 import os
 import time
 import uuid
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Set
 
 import requests
 
 
+# ============================================================
+# НАСТРОЙКИ
+# ============================================================
+
 OUTPUT_FILE = "games.json"
+
+# Максимальный размер каталога.
 TARGET_GAMES = 10000
 
+# Сколько страниц Search API пытаться получить для каждого запроса.
+PAGES_PER_SEARCH = 8
+
+# Сколько уже найденных игр использовать как источники рекомендаций.
+MAX_RECOMMENDATION_SEEDS = 350
+
+# Сколько запросов рекомендаций делать за один запуск.
+MAX_RECOMMENDATION_REQUESTS = 350
+
+# Небольшая пауза между запросами, чтобы не долбить API.
+REQUEST_DELAY = 0.15
+
 SEARCH_URL = "https://apis.roblox.com/search-api/omni-search"
+
 DETAILS_URL = "https://games.roblox.com/v1/games"
 
+RECOMMENDATIONS_URL = (
+    "https://games.roblox.com/v1/games/"
+    "recommendations/game/{universe_id}"
+)
+
+
 HEADERS = {
-    "User-Agent": "RobloxGameFinder/1.0",
+    "User-Agent": "RobloxHiddenGems/2.0",
     "Accept": "application/json",
 }
 
 
-# Слова нужны для того, чтобы находить разные категории игр.
-# Это не означает, что игра обязана содержать слово в названии.
+# ============================================================
+# ПОИСКОВЫЕ ЗАПРОСЫ
+# ============================================================
+
 SEARCH_TERMS = [
+    # Общие
     "a",
+    "e",
+    "i",
+    "o",
+    "s",
+    "t",
+    "r",
+    "n",
+    "m",
     "b",
     "c",
     "d",
-    "e",
     "f",
     "g",
     "h",
-    "i",
     "j",
     "k",
     "l",
-    "m",
-    "n",
-    "o",
     "p",
     "q",
-    "r",
-    "s",
-    "t",
     "u",
     "v",
     "w",
     "x",
     "y",
     "z",
-    "roblox",
+
+    # Roblox-жанры
     "obby",
+    "obby 2",
+    "obby 3",
     "simulator",
     "tycoon",
+    "roleplay",
+    "rp",
+    "rpg",
     "horror",
     "survival",
-    "roleplay",
-    "rpg",
-    "anime",
-    "fps",
-    "shooter",
-    "racing",
     "adventure",
     "story",
     "pvp",
+    "fps",
+    "shooter",
+    "racing",
+    "rpg",
+    "fighting",
     "battle",
     "parkour",
     "tower",
     "escape",
-    "obby",
-    "fighting",
-    "school",
-    "city",
     "murder",
     "zombie",
-    "halloween",
-    "fun",
+    "zombies",
+    "anime",
+    "magic",
+    "war",
+    "military",
+    "city",
+    "school",
+    "family",
+    "life",
+    "social",
+    "hangout",
+    "building",
+    "sandbox",
+    "strategy",
+    "horror story",
+    "scary",
+    "survival horror",
+    "open world",
+    "adventure game",
+
+    # Популярные механики
+    "pets",
+    "pet",
+    "cars",
+    "car",
+    "driving",
+    "house",
+    "houses",
+    "restaurant",
+    "shop",
+    "store",
+    "business",
+    "casino",
+    "island",
+    "islands",
+    "space",
+    "planet",
+    "ocean",
+    "pirate",
+    "pirates",
+    "prison",
+    "police",
+    "superhero",
+    "superheroes",
+    "ninja",
+    "samurai",
+    "knight",
+    "medieval",
+    "dragon",
+    "dragons",
+    "monster",
+    "monsters",
+    "dungeon",
+    "dungeons",
+    "quest",
+    "quests",
+    "boss",
+    "bosses",
+    "guns",
+    "gun",
+    "war",
+    "army",
+    "zombie",
+    "vampire",
+    "vampires",
+    "witch",
+    "magic",
+    "fantasy",
+    "sci fi",
+    "sci-fi",
+    "space",
+    "alien",
+    "aliens",
+
+    # Разные виды игр
+    "clicker",
+    "idle",
+    "incremental",
+    "tower defense",
+    "defense",
+    "defend",
+    "capture",
+    "capture the flag",
+    "bedwars",
+    "battlegrounds",
+    "battle royale",
+    "deathmatch",
+    "duel",
+    "duels",
+    "1v1",
+    "2v2",
+    "3v3",
+    "4v4",
+    "team",
+    "teams",
+    "hide and seek",
+    "hide",
+    "seek",
+    "escape room",
+    "escape",
+    "maze",
+    "puzzle",
+    "puzzles",
+    "quiz",
+    "minigames",
+    "mini games",
+    "party",
     "friends",
+    "funny",
+    "fun",
+
+    # Тематики
+    "minecraft",
+    "backrooms",
+    "doors",
+    "rainbow",
+    "night",
+    "day",
+    "city",
+    "town",
+    "village",
+    "farm",
+    "farming",
+    "fishing",
+    "camping",
+    "hospital",
+    "airport",
+    "train",
+    "subway",
+    "bus",
+    "school",
+    "university",
+    "hotel",
+    "mall",
+    "supermarket",
+    "bank",
+    "museum",
+    "theme park",
+    "amusement park",
+
+    # Anime / fandom-style searches
+    "one piece",
+    "naruto",
+    "dragon ball",
+    "bleach",
+    "demon slayer",
+    "jujutsu",
+    "my hero",
+    "pokemon",
+    "anime fighters",
+    "anime adventures",
+    "anime battle",
+    "anime rpg",
+    "anime simulator",
+
+    # Слова для менее популярных игр
+    "new",
+    "new game",
+    "indie",
+    "small game",
+    "hidden gem",
+    "underrated",
+    "beta",
+    "early access",
+    "testing",
+    "test",
+    "demo",
+    "original",
+    "unique",
+    "random",
+    "simple",
 ]
 
+
+# ============================================================
+# HTTP
+# ============================================================
 
 session = requests.Session()
 session.headers.update(HEADERS)
 
 
-def request_json(
+def get_json(
     url: str,
-    params: Dict[str, Any] | None = None,
-    retries: int = 3,
-) -> Any:
-    """GET JSON с несколькими попытками."""
+    params: Optional[Dict[str, Any]] = None,
+    retries: int = 4,
+) -> Optional[Any]:
+    """
+    Надёжный GET-запрос.
+    Обрабатывает временные ошибки и rate limit.
+    """
 
     for attempt in range(1, retries + 1):
+
         try:
             response = session.get(
                 url,
@@ -101,6 +306,34 @@ def request_json(
             if response.status_code == 200:
                 return response.json()
 
+            if response.status_code == 429:
+                wait_time = min(15, attempt * 4)
+
+                print(
+                    f"Rate limit. Waiting "
+                    f"{wait_time}s..."
+                )
+
+                time.sleep(wait_time)
+                continue
+
+            if response.status_code in (
+                500,
+                502,
+                503,
+                504,
+            ):
+                wait_time = attempt * 2
+
+                print(
+                    f"Server error "
+                    f"{response.status_code}. "
+                    f"Retry in {wait_time}s..."
+                )
+
+                time.sleep(wait_time)
+                continue
+
             print(
                 f"HTTP {response.status_code}: "
                 f"{url}"
@@ -108,40 +341,70 @@ def request_json(
 
         except requests.RequestException as error:
             print(
-                f"Request error ({attempt}/{retries}): "
+                f"Request error "
+                f"({attempt}/{retries}): "
                 f"{error}"
             )
 
-        time.sleep(attempt * 2)
+            time.sleep(attempt * 2)
 
     return None
 
 
-def extract_universe_id(item: Dict[str, Any]) -> int | None:
-    """Пытается найти Universe ID в разных форматах ответа."""
+# ============================================================
+# ID
+# ============================================================
 
-    possible_keys = [
+def to_int(value: Any) -> Optional[int]:
+
+    if isinstance(value, bool):
+        return None
+
+    if isinstance(value, int):
+        return value
+
+    if isinstance(value, str):
+        value = value.strip()
+
+        if value.isdigit():
+            return int(value)
+
+    return None
+
+
+def extract_universe_id(
+    item: Dict[str, Any],
+) -> Optional[int]:
+
+    keys = [
         "universeId",
         "universeID",
+        "universe_id",
         "id",
         "gameId",
     ]
 
-    for key in possible_keys:
-        value = item.get(key)
+    for key in keys:
 
-        if isinstance(value, int):
+        value = to_int(item.get(key))
+
+        if value:
             return value
 
-        if isinstance(value, str) and value.isdigit():
-            return int(value)
+    for key in (
+        "game",
+        "experience",
+        "universe",
+        "place",
+    ):
 
-    # Иногда данные могут находиться внутри nested-полей.
-    for key in ["game", "experience", "universe"]:
         nested = item.get(key)
 
         if isinstance(nested, dict):
-            result = extract_universe_id(nested)
+
+            result = extract_universe_id(
+                nested
+            )
 
             if result:
                 return result
@@ -149,26 +412,173 @@ def extract_universe_id(item: Dict[str, Any]) -> int | None:
     return None
 
 
-def extract_search_games(data: Any) -> List[Dict[str, Any]]:
-    """Извлекает игры из ответа Search API."""
+# ============================================================
+# SEARCH API
+# ============================================================
 
-    result: List[Dict[str, Any]] = []
+def find_search_items(
+    data: Any,
+) -> List[Dict[str, Any]]:
 
-    if not isinstance(data, dict):
-        return result
+    found: List[Dict[str, Any]] = []
 
-    # Рекурсивно ищем объекты, похожие на игры.
-    def walk(value: Any) -> None:
+    def walk(value: Any):
+
         if isinstance(value, dict):
-            universe_id = extract_universe_id(value)
+
+            universe_id = extract_universe_id(
+                value
+            )
 
             if universe_id:
-                result.append(value)
+                found.append(value)
 
             for child in value.values():
                 walk(child)
 
         elif isinstance(value, list):
+
+            for child in value:
+                walk(child)
+
+    walk(data)
+
+    return found
+
+
+def search_page(
+    keyword: str,
+    page_token: str = "",
+) -> tuple[List[int], str]:
+
+    params = {
+        "searchQuery": keyword,
+        "sessionId": str(uuid.uuid4()),
+        "pageType": "all",
+        "pageToken": page_token,
+    }
+
+    data = get_json(
+        SEARCH_URL,
+        params=params,
+    )
+
+    if not data:
+        return [], ""
+
+    items = find_search_items(data)
+
+    ids: List[int] = []
+
+    for item in items:
+
+        universe_id = extract_universe_id(
+            item
+        )
+
+        if universe_id and universe_id not in ids:
+            ids.append(universe_id)
+
+    # Search API has changed its response shape
+    # over time, so support several possible names.
+    next_token = ""
+
+    for key in (
+        "nextPageToken",
+        "nextPageCursor",
+        "nextCursor",
+        "pageToken",
+    ):
+
+        value = data.get(key)
+
+        if isinstance(value, str) and value:
+            next_token = value
+            break
+
+    return ids, next_token
+
+
+def search_keyword(
+    keyword: str,
+    known_ids: Set[int],
+) -> Set[int]:
+
+    found: Set[int] = set()
+
+    token = ""
+
+    for page in range(
+        1,
+        PAGES_PER_SEARCH + 1,
+    ):
+
+        ids, next_token = search_page(
+            keyword,
+            token,
+        )
+
+        if not ids:
+            break
+
+        new_count = 0
+
+        for universe_id in ids:
+
+            if universe_id not in known_ids:
+                found.add(universe_id)
+                new_count += 1
+
+        print(
+            f"    page {page}: "
+            f"{len(ids)} found, "
+            f"{new_count} new"
+        )
+
+        if len(found) >= TARGET_GAMES:
+            break
+
+        if not next_token:
+            break
+
+        if next_token == token:
+            break
+
+        token = next_token
+
+        time.sleep(
+            REQUEST_DELAY
+        )
+
+    return found
+
+
+# ============================================================
+# RECOMMENDATIONS
+# ============================================================
+
+def extract_recommendation_ids(
+    data: Any,
+) -> Set[int]:
+
+    result: Set[int] = set()
+
+    def walk(value: Any):
+
+        if isinstance(value, dict):
+
+            universe_id = extract_universe_id(
+                value
+            )
+
+            if universe_id:
+                result.add(universe_id)
+
+            for child in value.values():
+                walk(child)
+
+        elif isinstance(value, list):
+
             for child in value:
                 walk(child)
 
@@ -177,190 +587,293 @@ def extract_search_games(data: Any) -> List[Dict[str, Any]]:
     return result
 
 
-def search_games(keyword: str) -> List[int]:
-    """Ищет Universe IDs через Roblox Search API."""
+def get_recommendations(
+    universe_id: int,
+) -> Set[int]:
 
-    session_id = str(uuid.uuid4())
-
-    params = {
-        "searchQuery": keyword,
-        "sessionId": session_id,
-        "pageType": "all",
-    }
-
-    data = request_json(
-        SEARCH_URL,
-        params=params,
+    url = RECOMMENDATIONS_URL.format(
+        universe_id=universe_id
     )
 
-    if data is None:
-        return []
+    data = get_json(url)
 
-    items = extract_search_games(data)
+    if not data:
+        return set()
 
-    ids: List[int] = []
-
-    for item in items:
-        universe_id = extract_universe_id(item)
-
-        if universe_id and universe_id not in ids:
-            ids.append(universe_id)
-
-    return ids
+    return extract_recommendation_ids(
+        data
+    )
 
 
-def get_game_details(universe_ids: List[int]) -> List[Dict[str, Any]]:
-    """Получает подробную информацию об играх."""
+# ============================================================
+# GAME DETAILS
+# ============================================================
 
-    if not universe_ids:
-        return []
+def get_details(
+    universe_ids: List[int],
+) -> List[Dict[str, Any]]:
 
-    results: List[Dict[str, Any]] = []
+    result: List[Dict[str, Any]] = []
 
-    # Roblox принимает список universeIds.
-    # Небольшие пачки безопаснее для запроса.
-    for start in range(0, len(universe_ids), 50):
-        batch = universe_ids[start:start + 50]
+    for start in range(
+        0,
+        len(universe_ids),
+        50,
+    ):
+
+        batch = universe_ids[
+            start:start + 50
+        ]
 
         params = {
             "universeIds": ",".join(
-                str(game_id)
-                for game_id in batch
+                str(x)
+                for x in batch
             )
         }
 
-        data = request_json(
+        data = get_json(
             DETAILS_URL,
             params=params,
         )
 
-        if not data:
-            continue
+        if isinstance(data, dict):
 
-        games = data.get("data", [])
+            games = data.get(
+                "data",
+                [],
+            )
 
-        if isinstance(games, list):
-            results.extend(games)
+            if isinstance(
+                games,
+                list,
+            ):
+                result.extend(games)
 
-        time.sleep(0.2)
+        time.sleep(
+            REQUEST_DELAY
+        )
 
-    return results
+    return result
 
 
-def normalize_game(game: Dict[str, Any]) -> Dict[str, Any] | None:
-    """Приводит игру к удобному формату для сайта."""
+# ============================================================
+# NORMALIZE
+# ============================================================
 
-    universe_id = game.get("id")
+def normalize_game(
+    game: Dict[str, Any],
+) -> Optional[Dict[str, Any]]:
+
+    universe_id = to_int(
+        game.get("id")
+    )
 
     if not universe_id:
-        universe_id = game.get("universeId")
-
-    root_place_id = game.get("rootPlaceId")
-
-    name = game.get("name") or "Без названия"
+        universe_id = to_int(
+            game.get("universeId")
+        )
 
     if not universe_id:
         return None
 
-    try:
-        universe_id = int(universe_id)
-    except (TypeError, ValueError):
-        return None
+    place_id = to_int(
+        game.get("rootPlaceId")
+    )
 
-    if root_place_id:
-        try:
-            root_place_id = int(root_place_id)
-        except (TypeError, ValueError):
-            root_place_id = None
+    if not place_id:
+        place_id = to_int(
+            game.get("placeId")
+        )
+
+    creator = game.get(
+        "creator"
+    )
+
+    if not isinstance(
+        creator,
+        dict,
+    ):
+        creator = None
 
     return {
         "universeId": universe_id,
-        "placeId": root_place_id,
-        "name": name,
-        "description": game.get("description") or "",
-        "playing": int(game.get("playing") or 0),
-        "visits": int(game.get("visits") or 0),
-        "favorites": int(game.get("favoritedCount") or 0),
-        "maxPlayers": int(game.get("maxPlayers") or 0),
-        "created": game.get("created"),
-        "updated": game.get("updated"),
-        "creator": game.get("creator"),
-        "genre": game.get("genre"),
-        "isAllGenre": game.get("isAllGenre"),
+        "placeId": place_id,
+        "name": (
+            game.get("name")
+            or "Unknown game"
+        ),
+        "description": (
+            game.get("description")
+            or ""
+        ),
+        "playing": to_int(
+            game.get("playing")
+        ) or 0,
+        "visits": to_int(
+            game.get("visits")
+        ) or 0,
+        "favorites": (
+            to_int(
+                game.get(
+                    "favoritedCount"
+                )
+            )
+            or 0
+        ),
+        "maxPlayers": (
+            to_int(
+                game.get(
+                    "maxPlayers"
+                )
+            )
+            or 0
+        ),
+        "created": game.get(
+            "created"
+        ),
+        "updated": game.get(
+            "updated"
+        ),
+        "creator": creator,
+        "genre": game.get(
+            "genre"
+        ),
         "url": (
             f"https://www.roblox.com/games/"
-            f"{root_place_id}"
-        )
-        if root_place_id
-        else (
+            f"{place_id}"
+            if place_id
+            else
             f"https://www.roblox.com/games/"
             f"{universe_id}"
         ),
     }
 
 
-def load_existing_games() -> Dict[int, Dict[str, Any]]:
-    """Загружает уже существующий games.json."""
+# ============================================================
+# FILE
+# ============================================================
 
-    if not os.path.exists(OUTPUT_FILE):
+def load_games() -> Dict[int, Dict[str, Any]]:
+
+    if not os.path.exists(
+        OUTPUT_FILE
+    ):
         return {}
 
     try:
+
         with open(
             OUTPUT_FILE,
             "r",
             encoding="utf-8",
         ) as file:
+
             data = json.load(file)
 
-        games = data.get("games", [])
+        games = data.get(
+            "games",
+            [],
+        )
 
-        result: Dict[int, Dict[str, Any]] = {}
+        result: Dict[
+            int,
+            Dict[str, Any]
+        ] = {}
 
-        for game in games:
-            universe_id = game.get("universeId")
+        if isinstance(
+            games,
+            list,
+        ):
 
-            if universe_id:
-                result[int(universe_id)] = game
+            for game in games:
+
+                if not isinstance(
+                    game,
+                    dict,
+                ):
+                    continue
+
+                universe_id = to_int(
+                    game.get(
+                        "universeId"
+                    )
+                )
+
+                if universe_id:
+                    result[
+                        universe_id
+                    ] = game
 
         return result
 
     except Exception as error:
+
         print(
-            f"Could not read existing games.json: "
-            f"{error}"
+            "Could not load games.json:"
         )
+
+        print(error)
 
         return {}
 
 
-def save_games(games: List[Dict[str, Any]]) -> None:
-    """Сохраняет каталог."""
+def save_games(
+    games: Dict[
+        int,
+        Dict[str, Any]
+    ],
+) -> None:
 
-    games.sort(
+    values = list(
+        games.values()
+    )
+
+    # Сортировка по онлайну.
+    values.sort(
         key=lambda game: (
-            int(game.get("playing") or 0),
-            int(game.get("visits") or 0),
+            int(
+                game.get(
+                    "playing",
+                    0
+                )
+                or 0
+            ),
+            int(
+                game.get(
+                    "visits",
+                    0
+                )
+                or 0
+            ),
         ),
         reverse=True,
     )
 
-    games = games[:TARGET_GAMES]
+    values = values[
+        :TARGET_GAMES
+    ]
 
     output = {
         "updatedAt": time.strftime(
             "%Y-%m-%dT%H:%M:%SZ",
             time.gmtime(),
         ),
-        "count": len(games),
-        "games": games,
+        "count": len(values),
+        "games": values,
     }
 
+    temp_file = (
+        OUTPUT_FILE
+        + ".tmp"
+    )
+
     with open(
-        OUTPUT_FILE,
+        temp_file,
         "w",
         encoding="utf-8",
     ) as file:
+
         json.dump(
             output,
             file,
@@ -368,123 +881,311 @@ def save_games(games: List[Dict[str, Any]]) -> None:
             indent=2,
         )
 
-    print(
-        f"Saved {len(games)} unique games "
-        f"to {OUTPUT_FILE}"
+    os.replace(
+        temp_file,
+        OUTPUT_FILE,
     )
 
+    print(
+        f"Saved {len(values)} "
+        f"unique games."
+    )
+
+
+# ============================================================
+# MAIN
+# ============================================================
 
 def main() -> None:
-    print("================================")
-    print(" Roblox Game Collector")
-    print("================================")
+
+    print()
+    print(
+        "========================================"
+    )
+    print(
+        " Roblox Hidden Gems Collector 2.0"
+    )
+    print(
+        "========================================"
+    )
     print()
 
-    existing = load_existing_games()
+    games = load_games()
 
-    print(
-        f"Existing games: {len(existing)}"
+    known_ids: Set[int] = set(
+        games.keys()
     )
 
-    universe_ids = set(existing.keys())
+    print(
+        f"Existing catalog: "
+        f"{len(known_ids)} games"
+    )
 
-    # Ищем игры по разным запросам.
+    if len(known_ids) >= TARGET_GAMES:
+
+        print(
+            "Target already reached."
+        )
+
+        save_games(games)
+
+        return
+
+    # --------------------------------------------------------
+    # ЭТАП 1: Search API
+    # --------------------------------------------------------
+
+    print()
+    print(
+        "========== SEARCH =========="
+    )
+
     for index, keyword in enumerate(
         SEARCH_TERMS,
         start=1,
     ):
-        if len(universe_ids) >= TARGET_GAMES:
+
+        if len(known_ids) >= TARGET_GAMES:
             break
 
+        print()
         print(
             f"[{index}/{len(SEARCH_TERMS)}] "
-            f"Searching: {keyword}"
+            f"Search: {keyword}"
         )
 
-        ids = search_games(keyword)
+        found = search_keyword(
+            keyword,
+            known_ids,
+        )
 
-        before = len(universe_ids)
+        before = len(
+            known_ids
+        )
 
-        for universe_id in ids:
-            universe_ids.add(universe_id)
-
-            if len(universe_ids) >= TARGET_GAMES:
-                break
-
-        added = len(universe_ids) - before
+        known_ids.update(
+            found
+        )
 
         print(
-            f"  Found: {len(ids)} | "
-            f"New: {added} | "
-            f"Total: {len(universe_ids)}"
+            f"    New total: "
+            f"{len(known_ids)} "
+            f"(+{len(known_ids) - before})"
         )
 
-        time.sleep(0.5)
+        time.sleep(
+            REQUEST_DELAY
+        )
 
-    # Получаем детали новых игр.
-    new_ids = [
-        game_id
-        for game_id in universe_ids
-        if game_id not in existing
-    ]
+    # --------------------------------------------------------
+    # ЭТАП 2: рекомендации
+    # --------------------------------------------------------
 
     print()
     print(
-        f"Need details for {len(new_ids)} games."
+        "======= RECOMMENDATIONS ======="
+    )
+
+    seeds = list(
+        known_ids
+    )
+
+    # Берём разные игры, а не только самые популярные.
+    # Поэтому каталог не должен превращаться в список
+    # только из топовых игр.
+    seeds.sort()
+
+    if len(seeds) > MAX_RECOMMENDATION_SEEDS:
+
+        step = max(
+            1,
+            len(seeds)
+            // MAX_RECOMMENDATION_SEEDS,
+        )
+
+        seeds = seeds[
+            ::step
+        ][
+            :MAX_RECOMMENDATION_SEEDS
+        ]
+
+    recommendation_count = 0
+
+    for index, universe_id in enumerate(
+        seeds,
+        start=1,
+    ):
+
+        if len(known_ids) >= TARGET_GAMES:
+            break
+
+        if (
+            recommendation_count
+            >= MAX_RECOMMENDATION_REQUESTS
+        ):
+            break
+
+        print(
+            f"[{index}/{len(seeds)}] "
+            f"Recommendations for "
+            f"{universe_id}"
+        )
+
+        recommendations = (
+            get_recommendations(
+                universe_id
+            )
+        )
+
+        before = len(
+            known_ids
+        )
+
+        for recommended_id in (
+            recommendations
+        ):
+
+            known_ids.add(
+                recommended_id
+            )
+
+        added = (
+            len(known_ids)
+            - before
+        )
+
+        print(
+            f"    Found "
+            f"{len(recommendations)} "
+            f"recommendations, "
+            f"+{added} new"
+        )
+
+        recommendation_count += 1
+
+        time.sleep(
+            REQUEST_DELAY
+        )
+
+    # --------------------------------------------------------
+    # ЭТАП 3: Details
+    # --------------------------------------------------------
+
+    print()
+    print(
+        "=========== DETAILS ==========="
+    )
+
+    missing_ids = [
+        universe_id
+        for universe_id in known_ids
+        if universe_id not in games
+    ]
+
+    # Если новых игр больше 10k, не нужно
+    # делать запросы для всех.
+    missing_ids = missing_ids[
+        :TARGET_GAMES
+    ]
+
+    print(
+        f"New games requiring details: "
+        f"{len(missing_ids)}"
     )
 
     for start in range(
         0,
-        len(new_ids),
+        len(missing_ids),
         50,
     ):
-        batch = new_ids[start:start + 50]
+
+        batch = missing_ids[
+            start:start + 50
+        ]
 
         print(
             f"Details "
             f"{start + 1}-"
-            f"{min(start + 50, len(new_ids))}"
+            f"{min(start + 50, len(missing_ids))}"
         )
 
-        details = get_game_details(batch)
+        details = get_details(
+            batch
+        )
+
+        added = 0
 
         for raw_game in details:
-            game = normalize_game(raw_game)
 
-            if game:
-                existing[
-                    game["universeId"]
-                ] = game
+            game = normalize_game(
+                raw_game
+            )
 
-        # Сохраняем промежуточный результат.
-        # Если GitHub Actions оборвётся, уже собранные игры
-        # останутся в games.json.
-        save_games(
-            list(existing.values())
+            if not game:
+                continue
+
+            universe_id = (
+                game[
+                    "universeId"
+                ]
+            )
+
+            if universe_id not in games:
+                added += 1
+
+            games[
+                universe_id
+            ] = game
+
+        print(
+            f"    Added/updated: "
+            f"{added}"
         )
 
-    final_games = list(existing.values())
+        # Сохраняем после каждой пачки.
+        save_games(
+            games
+        )
 
-    # Убираем дубликаты ещё раз.
-    unique: Dict[int, Dict[str, Any]] = {}
+    # --------------------------------------------------------
+    # ФИНАЛЬНАЯ ОЧИСТКА
+    # --------------------------------------------------------
 
-    for game in final_games:
-        universe_id = game.get("universeId")
+    clean: Dict[
+        int,
+        Dict[str, Any]
+    ] = {}
+
+    for game in games.values():
+
+        universe_id = to_int(
+            game.get(
+                "universeId"
+            )
+        )
 
         if universe_id:
-            unique[int(universe_id)] = game
+            clean[
+                universe_id
+            ] = game
 
     save_games(
-        list(unique.values())
+        clean
     )
 
     print()
-    print("================================")
     print(
-        f"Finished. Games: "
-        f"{min(len(unique), TARGET_GAMES)}"
+        "========================================"
     )
-    print("================================")
+    print(
+        f"FINAL: {min(len(clean), TARGET_GAMES)} games"
+    )
+    print(
+        "Duplicates removed."
+    )
+    print(
+        "========================================"
+    )
 
 
 if __name__ == "__main__":
