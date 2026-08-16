@@ -8,25 +8,24 @@ import requests
 
 
 # ============================================================
-# НАСТРОЙКИ
+# SETTINGS
 # ============================================================
 
 OUTPUT_FILE = "games.json"
 
-# Максимальный размер каталога.
+# Maximum number of games stored by the collector.
 TARGET_GAMES = 10000
 
-# Сколько страниц Search API пытаться получить для каждого запроса.
-PAGES_PER_SEARCH = 8
+# Number of pages requested for every search term.
+PAGES_PER_SEARCH = 15
 
-# Сколько уже найденных игр использовать как источники рекомендаций.
-MAX_RECOMMENDATION_SEEDS = 350
+# Recommendation seeds.
+MAX_RECOMMENDATION_SEEDS = 500
 
-# Сколько запросов рекомендаций делать за один запуск.
-MAX_RECOMMENDATION_REQUESTS = 350
+# Maximum recommendation requests per run.
+MAX_RECOMMENDATION_REQUESTS = 500
 
-# Небольшая пауза между запросами, чтобы не долбить API.
-REQUEST_DELAY = 0.15
+REQUEST_DELAY = 0.25
 
 SEARCH_URL = "https://apis.roblox.com/search-api/omni-search"
 
@@ -37,50 +36,41 @@ RECOMMENDATIONS_URL = (
     "recommendations/game/{universe_id}"
 )
 
-
 HEADERS = {
-    "User-Agent": "RobloxHiddenGems/2.0",
+    "User-Agent": "RobloxHiddenGems/3.0",
     "Accept": "application/json",
 }
 
 
 # ============================================================
-# ПОИСКОВЫЕ ЗАПРОСЫ
+# SEARCH TERMS
 # ============================================================
 
 SEARCH_TERMS = [
-    # Общие
-    "a",
-    "e",
-    "i",
-    "o",
-    "s",
-    "t",
-    "r",
-    "n",
-    "m",
-    "b",
-    "c",
-    "d",
-    "f",
-    "g",
-    "h",
-    "j",
-    "k",
-    "l",
-    "p",
-    "q",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
+    # Alphabet
+    "a", "b", "c", "d", "e", "f", "g", "h", "i",
+    "j", "k", "l", "m", "n", "o", "p", "q", "r",
+    "s", "t", "u", "v", "w", "x", "y", "z",
 
-    # Roblox-жанры
+    # General
+    "roblox",
+    "game",
+    "new",
+    "fun",
+    "popular",
+    "best",
+    "original",
+    "unique",
+    "random",
+    "test",
+    "beta",
+    "alpha",
+    "adventure",
+    "arcade",
+
+    # Genres
     "obby",
-    "obby 2",
-    "obby 3",
+    "obby game",
     "simulator",
     "tycoon",
     "roleplay",
@@ -94,7 +84,6 @@ SEARCH_TERMS = [
     "fps",
     "shooter",
     "racing",
-    "rpg",
     "fighting",
     "battle",
     "parkour",
@@ -102,27 +91,17 @@ SEARCH_TERMS = [
     "escape",
     "murder",
     "zombie",
-    "zombies",
     "anime",
-    "magic",
-    "war",
-    "military",
-    "city",
-    "school",
-    "family",
-    "life",
+    "strategy",
+    "sandbox",
     "social",
     "hangout",
-    "building",
-    "sandbox",
-    "strategy",
-    "horror story",
-    "scary",
-    "survival horror",
-    "open world",
-    "adventure game",
+    "minigames",
+    "party",
+    "puzzle",
+    "quiz",
 
-    # Популярные механики
+    # Mechanics
     "pets",
     "pet",
     "cars",
@@ -130,13 +109,12 @@ SEARCH_TERMS = [
     "driving",
     "house",
     "houses",
+    "building",
     "restaurant",
     "shop",
     "store",
     "business",
-    "casino",
     "island",
-    "islands",
     "space",
     "planet",
     "ocean",
@@ -145,48 +123,45 @@ SEARCH_TERMS = [
     "prison",
     "police",
     "superhero",
-    "superheroes",
     "ninja",
     "samurai",
     "knight",
     "medieval",
     "dragon",
-    "dragons",
     "monster",
-    "monsters",
     "dungeon",
-    "dungeons",
     "quest",
-    "quests",
     "boss",
-    "bosses",
-    "guns",
-    "gun",
-    "war",
-    "army",
-    "zombie",
-    "vampire",
-    "vampires",
-    "witch",
     "magic",
     "fantasy",
     "sci fi",
-    "sci-fi",
-    "space",
     "alien",
-    "aliens",
+    "vampire",
+    "witch",
+    "farm",
+    "farming",
+    "fishing",
+    "camping",
+    "school",
+    "city",
+    "town",
+    "village",
+    "hospital",
+    "airport",
+    "train",
+    "subway",
+    "bus",
+    "hotel",
+    "mall",
+    "museum",
+    "theme park",
 
-    # Разные виды игр
-    "clicker",
-    "idle",
-    "incremental",
-    "tower defense",
-    "defense",
-    "defend",
-    "capture",
-    "capture the flag",
-    "bedwars",
-    "battlegrounds",
+    # Combat
+    "war",
+    "army",
+    "military",
+    "gun",
+    "guns",
     "battle royale",
     "deathmatch",
     "duel",
@@ -196,53 +171,31 @@ SEARCH_TERMS = [
     "3v3",
     "4v4",
     "team",
-    "teams",
-    "hide and seek",
-    "hide",
-    "seek",
-    "escape room",
-    "escape",
-    "maze",
-    "puzzle",
-    "puzzles",
-    "quiz",
-    "minigames",
-    "mini games",
-    "party",
-    "friends",
-    "funny",
-    "fun",
+    "capture",
+    "defense",
+    "tower defense",
+    "bedwars",
+    "battlegrounds",
 
-    # Тематики
-    "minecraft",
+    # Horror
+    "scary",
+    "creepy",
+    "horror story",
+    "survival horror",
     "backrooms",
-    "doors",
-    "rainbow",
+    "monster",
+    "escape room",
+    "maze",
     "night",
-    "day",
-    "city",
-    "town",
-    "village",
-    "farm",
-    "farming",
-    "fishing",
-    "camping",
-    "hospital",
-    "airport",
-    "train",
-    "subway",
-    "bus",
-    "school",
-    "university",
-    "hotel",
-    "mall",
-    "supermarket",
-    "bank",
-    "museum",
-    "theme park",
-    "amusement park",
+    "dark",
 
-    # Anime / fandom-style searches
+    # Anime
+    "anime",
+    "anime rpg",
+    "anime simulator",
+    "anime fighters",
+    "anime battle",
+    "anime adventures",
     "one piece",
     "naruto",
     "dragon ball",
@@ -251,28 +204,30 @@ SEARCH_TERMS = [
     "jujutsu",
     "my hero",
     "pokemon",
-    "anime fighters",
-    "anime adventures",
-    "anime battle",
-    "anime rpg",
-    "anime simulator",
 
-    # Слова для менее популярных игр
-    "new",
-    "new game",
-    "indie",
-    "small game",
+    # More discovery terms
+    "hidden",
     "hidden gem",
     "underrated",
-    "beta",
-    "early access",
-    "testing",
-    "test",
-    "demo",
-    "original",
-    "unique",
-    "random",
-    "simple",
+    "small game",
+    "indie",
+    "community",
+    "multiplayer",
+    "friends",
+    "chill",
+    "casual",
+    "competitive",
+    "hard",
+    "easy",
+    "challenge",
+    "speedrun",
+    "clicker",
+    "idle",
+    "incremental",
+    "grinding",
+    "quest",
+    "survival",
+    "open world",
 ]
 
 
@@ -287,12 +242,8 @@ session.headers.update(HEADERS)
 def get_json(
     url: str,
     params: Optional[Dict[str, Any]] = None,
-    retries: int = 4,
+    retries: int = 5,
 ) -> Optional[Any]:
-    """
-    Надёжный GET-запрос.
-    Обрабатывает временные ошибки и rate limit.
-    """
 
     for attempt in range(1, retries + 1):
 
@@ -307,14 +258,13 @@ def get_json(
                 return response.json()
 
             if response.status_code == 429:
-                wait_time = min(15, attempt * 4)
+                wait = min(30, attempt * 5)
 
                 print(
-                    f"Rate limit. Waiting "
-                    f"{wait_time}s..."
+                    f"Rate limit. Waiting {wait}s..."
                 )
 
-                time.sleep(wait_time)
+                time.sleep(wait)
                 continue
 
             if response.status_code in (
@@ -323,15 +273,15 @@ def get_json(
                 503,
                 504,
             ):
-                wait_time = attempt * 2
+                wait = attempt * 3
 
                 print(
                     f"Server error "
                     f"{response.status_code}. "
-                    f"Retry in {wait_time}s..."
+                    f"Waiting {wait}s..."
                 )
 
-                time.sleep(wait_time)
+                time.sleep(wait)
                 continue
 
             print(
@@ -340,19 +290,22 @@ def get_json(
             )
 
         except requests.RequestException as error:
+
             print(
                 f"Request error "
-                f"({attempt}/{retries}): "
+                f"{attempt}/{retries}: "
                 f"{error}"
             )
 
-            time.sleep(attempt * 2)
+            time.sleep(
+                attempt * 2
+            )
 
     return None
 
 
 # ============================================================
-# ID
+# ID HELPERS
 # ============================================================
 
 def to_int(value: Any) -> Optional[int]:
@@ -364,6 +317,7 @@ def to_int(value: Any) -> Optional[int]:
         return value
 
     if isinstance(value, str):
+
         value = value.strip()
 
         if value.isdigit():
@@ -376,17 +330,17 @@ def extract_universe_id(
     item: Dict[str, Any],
 ) -> Optional[int]:
 
-    keys = [
+    for key in (
         "universeId",
         "universeID",
         "universe_id",
-        "id",
         "gameId",
-    ]
+        "id",
+    ):
 
-    for key in keys:
-
-        value = to_int(item.get(key))
+        value = to_int(
+            item.get(key)
+        )
 
         if value:
             return value
@@ -395,32 +349,34 @@ def extract_universe_id(
         "game",
         "experience",
         "universe",
-        "place",
     ):
 
         nested = item.get(key)
 
-        if isinstance(nested, dict):
+        if isinstance(
+            nested,
+            dict,
+        ):
 
-            result = extract_universe_id(
+            value = extract_universe_id(
                 nested
             )
 
-            if result:
-                return result
+            if value:
+                return value
 
     return None
 
 
 # ============================================================
-# SEARCH API
+# SEARCH
 # ============================================================
 
-def find_search_items(
+def extract_search_items(
     data: Any,
 ) -> List[Dict[str, Any]]:
 
-    found: List[Dict[str, Any]] = []
+    result = []
 
     def walk(value: Any):
 
@@ -431,7 +387,7 @@ def find_search_items(
             )
 
             if universe_id:
-                found.append(value)
+                result.append(value)
 
             for child in value.values():
                 walk(child)
@@ -443,32 +399,40 @@ def find_search_items(
 
     walk(data)
 
-    return found
+    return result
 
 
 def search_page(
     keyword: str,
+    session_id: str,
     page_token: str = "",
 ) -> tuple[List[int], str]:
 
     params = {
         "searchQuery": keyword,
-        "sessionId": str(uuid.uuid4()),
+        "sessionId": session_id,
         "pageType": "all",
-        "pageToken": page_token,
     }
+
+    if page_token:
+        params["pageToken"] = page_token
 
     data = get_json(
         SEARCH_URL,
         params=params,
     )
 
-    if not data:
+    if not isinstance(
+        data,
+        dict,
+    ):
         return [], ""
 
-    items = find_search_items(data)
+    items = extract_search_items(
+        data
+    )
 
-    ids: List[int] = []
+    ids = []
 
     for item in items:
 
@@ -476,23 +440,29 @@ def search_page(
             item
         )
 
-        if universe_id and universe_id not in ids:
-            ids.append(universe_id)
+        if (
+            universe_id
+            and universe_id not in ids
+        ):
+            ids.append(
+                universe_id
+            )
 
-    # Search API has changed its response shape
-    # over time, so support several possible names.
     next_token = ""
 
     for key in (
         "nextPageToken",
         "nextPageCursor",
         "nextCursor",
-        "pageToken",
     ):
 
         value = data.get(key)
 
-        if isinstance(value, str) and value:
+        if (
+            isinstance(value, str)
+            and value
+        ):
+
             next_token = value
             break
 
@@ -504,9 +474,16 @@ def search_keyword(
     known_ids: Set[int],
 ) -> Set[int]:
 
-    found: Set[int] = set()
+    found = set()
 
-    token = ""
+    # IMPORTANT:
+    # The same session ID is kept for all pages
+    # of this search.
+    session_id = str(
+        uuid.uuid4()
+    )
+
+    page_token = ""
 
     for page in range(
         1,
@@ -515,36 +492,47 @@ def search_keyword(
 
         ids, next_token = search_page(
             keyword,
-            token,
+            session_id,
+            page_token,
         )
 
         if not ids:
             break
 
-        new_count = 0
+        before = len(found)
 
         for universe_id in ids:
 
             if universe_id not in known_ids:
-                found.add(universe_id)
-                new_count += 1
+                found.add(
+                    universe_id
+                )
+
+            if (
+                len(found)
+                >= TARGET_GAMES
+            ):
+                break
 
         print(
             f"    page {page}: "
-            f"{len(ids)} found, "
-            f"{new_count} new"
+            f"{len(ids)} results, "
+            f"{len(found) - before} new"
         )
 
-        if len(found) >= TARGET_GAMES:
+        if (
+            len(found)
+            >= TARGET_GAMES
+        ):
             break
 
         if not next_token:
             break
 
-        if next_token == token:
+        if next_token == page_token:
             break
 
-        token = next_token
+        page_token = next_token
 
         time.sleep(
             REQUEST_DELAY
@@ -557,11 +545,11 @@ def search_keyword(
 # RECOMMENDATIONS
 # ============================================================
 
-def extract_recommendation_ids(
+def extract_ids_from_any(
     data: Any,
 ) -> Set[int]:
 
-    result: Set[int] = set()
+    result = set()
 
     def walk(value: Any):
 
@@ -572,7 +560,9 @@ def extract_recommendation_ids(
             )
 
             if universe_id:
-                result.add(universe_id)
+                result.add(
+                    universe_id
+                )
 
             for child in value.values():
                 walk(child)
@@ -595,25 +585,27 @@ def get_recommendations(
         universe_id=universe_id
     )
 
-    data = get_json(url)
+    data = get_json(
+        url
+    )
 
     if not data:
         return set()
 
-    return extract_recommendation_ids(
+    return extract_ids_from_any(
         data
     )
 
 
 # ============================================================
-# GAME DETAILS
+# DETAILS
 # ============================================================
 
-def get_details(
+def get_game_details(
     universe_ids: List[int],
 ) -> List[Dict[str, Any]]:
 
-    result: List[Dict[str, Any]] = []
+    result = []
 
     for start in range(
         0,
@@ -637,7 +629,10 @@ def get_details(
             params=params,
         )
 
-        if isinstance(data, dict):
+        if isinstance(
+            data,
+            dict,
+        ):
 
             games = data.get(
                 "data",
@@ -648,7 +643,9 @@ def get_details(
                 games,
                 list,
             ):
-                result.extend(games)
+                result.extend(
+                    games
+                )
 
         time.sleep(
             REQUEST_DELAY
@@ -686,16 +683,6 @@ def normalize_game(
             game.get("placeId")
         )
 
-    creator = game.get(
-        "creator"
-    )
-
-    if not isinstance(
-        creator,
-        dict,
-    ):
-        creator = None
-
     return {
         "universeId": universe_id,
         "placeId": place_id,
@@ -707,12 +694,18 @@ def normalize_game(
             game.get("description")
             or ""
         ),
-        "playing": to_int(
-            game.get("playing")
-        ) or 0,
-        "visits": to_int(
-            game.get("visits")
-        ) or 0,
+        "playing": (
+            to_int(
+                game.get("playing")
+            )
+            or 0
+        ),
+        "visits": (
+            to_int(
+                game.get("visits")
+            )
+            or 0
+        ),
         "favorites": (
             to_int(
                 game.get(
@@ -735,7 +728,9 @@ def normalize_game(
         "updated": game.get(
             "updated"
         ),
-        "creator": creator,
+        "creator": game.get(
+            "creator"
+        ),
         "genre": game.get(
             "genre"
         ),
@@ -751,10 +746,13 @@ def normalize_game(
 
 
 # ============================================================
-# FILE
+# LOAD / SAVE
 # ============================================================
 
-def load_games() -> Dict[int, Dict[str, Any]]:
+def load_games() -> Dict[
+    int,
+    Dict[str, Any]
+]:
 
     if not os.path.exists(
         OUTPUT_FILE
@@ -776,10 +774,7 @@ def load_games() -> Dict[int, Dict[str, Any]]:
             [],
         )
 
-        result: Dict[
-            int,
-            Dict[str, Any]
-        ] = {}
+        result = {}
 
         if isinstance(
             games,
@@ -810,10 +805,9 @@ def load_games() -> Dict[int, Dict[str, Any]]:
     except Exception as error:
 
         print(
-            "Could not load games.json:"
+            f"games.json read error: "
+            f"{error}"
         )
-
-        print(error)
 
         return {}
 
@@ -829,7 +823,9 @@ def save_games(
         games.values()
     )
 
-    # Сортировка по онлайну.
+    # No duplicates because the dictionary
+    # is keyed by universeId.
+
     values.sort(
         key=lambda game: (
             int(
@@ -887,8 +883,7 @@ def save_games(
     )
 
     print(
-        f"Saved {len(values)} "
-        f"unique games."
+        f"Saved {len(values)} games."
     )
 
 
@@ -896,29 +891,27 @@ def save_games(
 # MAIN
 # ============================================================
 
-def main() -> None:
+def main():
 
     print()
     print(
-        "========================================"
+        "=========================================="
     )
     print(
-        " Roblox Hidden Gems Collector 2.0"
+        " Roblox Hidden Gems Collector"
     )
     print(
-        "========================================"
+        "=========================================="
     )
-    print()
 
     games = load_games()
 
-    known_ids: Set[int] = set(
+    known_ids = set(
         games.keys()
     )
 
     print(
-        f"Existing catalog: "
-        f"{len(known_ids)} games"
+        f"Existing games: {len(known_ids)}"
     )
 
     if len(known_ids) >= TARGET_GAMES:
@@ -927,22 +920,20 @@ def main() -> None:
             "Target already reached."
         )
 
-        save_games(games)
-
         return
 
     # --------------------------------------------------------
-    # ЭТАП 1: Search API
+    # SEARCH
     # --------------------------------------------------------
 
     print()
     print(
-        "========== SEARCH =========="
+        "=============== SEARCH =================="
     )
 
     for index, keyword in enumerate(
         SEARCH_TERMS,
-        start=1,
+        1,
     ):
 
         if len(known_ids) >= TARGET_GAMES:
@@ -951,7 +942,7 @@ def main() -> None:
         print()
         print(
             f"[{index}/{len(SEARCH_TERMS)}] "
-            f"Search: {keyword}"
+            f"Searching: {keyword}"
         )
 
         found = search_keyword(
@@ -968,7 +959,7 @@ def main() -> None:
         )
 
         print(
-            f"    New total: "
+            f"    Total: "
             f"{len(known_ids)} "
             f"(+{len(known_ids) - before})"
         )
@@ -978,23 +969,20 @@ def main() -> None:
         )
 
     # --------------------------------------------------------
-    # ЭТАП 2: рекомендации
+    # RECOMMENDATIONS
     # --------------------------------------------------------
 
     print()
     print(
-        "======= RECOMMENDATIONS ======="
+        "============ RECOMMENDATIONS ==========="
     )
 
     seeds = list(
         known_ids
     )
 
-    # Берём разные игры, а не только самые популярные.
-    # Поэтому каталог не должен превращаться в список
-    # только из топовых игр.
-    seeds.sort()
-
+    # Распределяем seeds по всему каталогу,
+    # а не берём только первые ID.
     if len(seeds) > MAX_RECOMMENDATION_SEEDS:
 
         step = max(
@@ -1009,26 +997,23 @@ def main() -> None:
             :MAX_RECOMMENDATION_SEEDS
         ]
 
-    recommendation_count = 0
-
     for index, universe_id in enumerate(
         seeds,
-        start=1,
+        1,
     ):
 
         if len(known_ids) >= TARGET_GAMES:
             break
 
         if (
-            recommendation_count
-            >= MAX_RECOMMENDATION_REQUESTS
+            index
+            > MAX_RECOMMENDATION_REQUESTS
         ):
             break
 
         print(
             f"[{index}/{len(seeds)}] "
-            f"Recommendations for "
-            f"{universe_id}"
+            f"Game {universe_id}"
         )
 
         recommendations = (
@@ -1049,71 +1034,66 @@ def main() -> None:
                 recommended_id
             )
 
-        added = (
-            len(known_ids)
-            - before
-        )
+            if (
+                len(known_ids)
+                >= TARGET_GAMES
+            ):
+                break
 
         print(
-            f"    Found "
-            f"{len(recommendations)} "
-            f"recommendations, "
-            f"+{added} new"
+            f"    Recommendations: "
+            f"{len(recommendations)} | "
+            f"New: "
+            f"{len(known_ids) - before}"
         )
-
-        recommendation_count += 1
 
         time.sleep(
             REQUEST_DELAY
         )
 
     # --------------------------------------------------------
-    # ЭТАП 3: Details
+    # DETAILS
     # --------------------------------------------------------
 
     print()
     print(
-        "=========== DETAILS ==========="
+        "=============== DETAILS ================"
     )
 
-    missing_ids = [
+    missing = [
         universe_id
         for universe_id in known_ids
         if universe_id not in games
     ]
 
-    # Если новых игр больше 10k, не нужно
-    # делать запросы для всех.
-    missing_ids = missing_ids[
+    missing = missing[
         :TARGET_GAMES
     ]
 
     print(
-        f"New games requiring details: "
-        f"{len(missing_ids)}"
+        f"Games needing details: "
+        f"{len(missing)}"
     )
 
     for start in range(
         0,
-        len(missing_ids),
+        len(missing),
         50,
     ):
 
-        batch = missing_ids[
+        batch = missing[
             start:start + 50
         ]
 
         print(
-            f"Details "
+            f"Batch "
             f"{start + 1}-"
-            f"{min(start + 50, len(missing_ids))}"
+            f"{min(start + 50, len(missing))}"
         )
 
-        details = get_details(
+        details = get_game_details(
             batch
         )
-
-        added = 0
 
         for raw_game in details:
 
@@ -1130,17 +1110,9 @@ def main() -> None:
                 ]
             )
 
-            if universe_id not in games:
-                added += 1
-
             games[
                 universe_id
             ] = game
-
-        print(
-            f"    Added/updated: "
-            f"{added}"
-        )
 
         # Сохраняем после каждой пачки.
         save_games(
@@ -1148,13 +1120,10 @@ def main() -> None:
         )
 
     # --------------------------------------------------------
-    # ФИНАЛЬНАЯ ОЧИСТКА
+    # FINAL CLEANUP
     # --------------------------------------------------------
 
-    clean: Dict[
-        int,
-        Dict[str, Any]
-    ] = {}
+    clean = {}
 
     for game in games.values():
 
@@ -1175,16 +1144,17 @@ def main() -> None:
 
     print()
     print(
-        "========================================"
+        "=========================================="
     )
     print(
-        f"FINAL: {min(len(clean), TARGET_GAMES)} games"
+        f"Finished: "
+        f"{min(len(clean), TARGET_GAMES)} games"
     )
     print(
-        "Duplicates removed."
+        "Duplicates: removed"
     )
     print(
-        "========================================"
+        "==========================================" 
     )
 
 
