@@ -2,17 +2,21 @@ import json
 import os
 import time
 import random
-import requests
+import urllib.parse
+import urllib.request
+import urllib.error
 
 OUTPUT = "games.json"
-TARGET = 10000
 
-TIMEOUT = 12
-RETRIES = 2
-DELAY = 0.25
+TARGET_GAMES = 10000
+
+REQUEST_TIMEOUT = 15
+MAX_RETRIES = 2
+SAVE_EVERY = 25
 
 SEARCH_URL = "https://apis.roblox.com/search-api/omni-search"
 DETAIL_URL = "https://games.roblox.com/v1/games"
+
 THUMB_URL = (
     "https://thumbnails.roblox.com/v1/games/icons"
     "?universeIds={}"
@@ -86,119 +90,247 @@ SEARCHES = [
     "island",
     "ocean",
     "dragon",
+    "war",
+    "battle",
+    "magic",
+    "fantasy",
+    "horror story",
+    "survival horror",
+    "roleplay city",
+    "roleplay school",
+    "car",
+    "motorcycle",
+    "train",
+    "airport",
+    "boat",
+    "helicopter",
+    "simulator games",
+    "fun",
+    "popular",
+    "new",
+    "hidden gems"
 ]
 
-session = requests.Session()
 
-session.headers.update({
-    "User-Agent": "RobloxHiddenGems/5.0",
-    "Accept": "application/json",
-})
+def get_json(url, params=None):
+    """
+    Выполняет GET-запрос без requests.
+    Используется стандартный urllib из Python.
+    """
 
+    if params:
+        query = urllib.parse.urlencode(params)
+        separator = "&" if "?" in url else "?"
+        url = url + separator + query
 
-def request_json(url, params=None):
-    for attempt in range(RETRIES + 1):
+    headers = {
+        "User-Agent": "Mozilla/5.0 RobloxHiddenGemsCollector/6.0",
+        "Accept": "application/json",
+    }
+
+    request = urllib.request.Request(
+        url,
+        headers=headers,
+        method="GET"
+    )
+
+    for attempt in range(MAX_RETRIES + 1):
+
         try:
-            r = session.get(
-                url,
-                params=params,
-                timeout=TIMEOUT
+
+            with urllib.request.urlopen(
+                request,
+                timeout=REQUEST_TIMEOUT
+            ) as response:
+
+                status = response.status
+
+                if status != 200:
+                    print(
+                        f"HTTP {status}",
+                        flush=True
+                    )
+
+                    if attempt < MAX_RETRIES:
+                        time.sleep(2)
+                        continue
+
+                    return None
+
+                raw = response.read()
+
+                return json.loads(
+                    raw.decode("utf-8")
+                )
+
+        except urllib.error.HTTPError as error:
+
+            print(
+                f"HTTP Error {error.code}",
+                flush=True
             )
 
-            if r.status_code == 200:
-                return r.json()
+            if error.code == 429:
 
-            if r.status_code == 429:
-                wait = 2 + attempt * 2
+                wait = 3 + attempt * 3
+
                 print(
                     f"Rate limit. Waiting {wait}s...",
                     flush=True
                 )
+
                 time.sleep(wait)
+
                 continue
 
-            if r.status_code >= 500:
+            if error.code >= 500:
+
+                time.sleep(2)
+
+                continue
+
+            return None
+
+        except urllib.error.URLError as error:
+
+            print(
+                f"Network error: {error}",
+                flush=True
+            )
+
+            if attempt < MAX_RETRIES:
                 time.sleep(2)
                 continue
 
-            print(
-                f"HTTP {r.status_code}",
-                flush=True
-            )
             return None
 
-        except requests.RequestException as e:
+        except TimeoutError:
+
             print(
-                f"Request error: {e}",
+                "Request timeout",
                 flush=True
             )
-            time.sleep(1)
+
+            if attempt < MAX_RETRIES:
+                time.sleep(2)
+                continue
+
+            return None
+
+        except Exception as error:
+
+            print(
+                f"Request failed: {error}",
+                flush=True
+            )
+
+            if attempt < MAX_RETRIES:
+                time.sleep(2)
+                continue
+
+            return None
 
     return None
 
 
 def load_games():
+
     if not os.path.exists(OUTPUT):
         return {}
 
     try:
+
         with open(
             OUTPUT,
             "r",
             encoding="utf-8"
-        ) as f:
-            data = json.load(f)
+        ) as file:
+
+            data = json.load(file)
 
         result = {}
 
-        for game in data.get("games", []):
-            uid = game.get("universeId")
+        for game in data.get(
+            "games",
+            []
+        ):
 
-            if uid:
-                result[str(uid)] = game
+            universe_id = game.get(
+                "universeId"
+            )
+
+            if universe_id:
+
+                result[
+                    str(universe_id)
+                ] = game
 
         return result
 
-    except Exception as e:
+    except Exception as error:
+
         print(
-            f"Could not load games.json: {e}",
+            f"Could not read games.json: {error}",
             flush=True
         )
+
         return {}
 
 
 def save_games(games):
-    values = list(games.values())
+
+    values = list(
+        games.values()
+    )
 
     values.sort(
-        key=lambda x: int(
-            x.get("playing") or 0
+        key=lambda game:
+        int(
+            game.get(
+                "playing",
+                0
+            ) or 0
         ),
         reverse=True
     )
 
-    values = values[:TARGET]
+    values = values[
+        :TARGET_GAMES
+    ]
 
     data = {
-        "updatedAt": time.strftime(
-            "%Y-%m-%dT%H:%M:%SZ",
-            time.gmtime()
-        ),
-        "count": len(values),
-        "games": values
+        "updatedAt":
+            time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ",
+                time.gmtime()
+            ),
+
+        "count":
+            len(values),
+
+        "games":
+            values
     }
 
+    temporary = OUTPUT + ".tmp"
+
     with open(
-        OUTPUT,
+        temporary,
         "w",
         encoding="utf-8"
-    ) as f:
+    ) as file:
+
         json.dump(
             data,
-            f,
+            file,
             ensure_ascii=False,
             indent=2
         )
+
+    os.replace(
+        temporary,
+        OUTPUT
+    )
 
     print(
         f"Saved {len(values)} games",
@@ -206,13 +338,73 @@ def save_games(games):
     )
 
 
-def find_ids(query, known):
-    found = set()
+def extract_universe_ids(data):
+
+    result = set()
+
+    def scan(value):
+
+        if isinstance(
+            value,
+            dict
+        ):
+
+            for key in (
+                "universeId",
+                "universeID",
+                "universe_id"
+            ):
+
+                possible = value.get(
+                    key
+                )
+
+                if possible:
+
+                    try:
+
+                        result.add(
+                            int(possible)
+                        )
+
+                    except Exception:
+                        pass
+
+            for child in value.values():
+
+                scan(child)
+
+        elif isinstance(
+            value,
+            list
+        ):
+
+            for child in value:
+                scan(child)
+
+    scan(data)
+
+    return result
+
+
+def search_games(
+    query,
+    known_ids
+):
 
     session_id = (
-        str(random.randint(100000, 999999))
+        str(
+            random.randint(
+                100000,
+                999999
+            )
+        )
         + "-"
-        + str(int(time.time()))
+        + str(
+            int(
+                time.time()
+            )
+        )
     )
 
     params = {
@@ -221,57 +413,46 @@ def find_ids(query, known):
         "pageType": "all"
     }
 
-    data = request_json(
+    data = get_json(
         SEARCH_URL,
         params
     )
 
     if not data:
-        return found
+        return set()
 
-    def scan(value):
-        if isinstance(value, dict):
+    ids = extract_universe_ids(
+        data
+    )
 
-            for key in (
-                "universeId",
-                "universeID",
-                "universe_id"
-            ):
-                value_id = value.get(key)
-
-                if value_id:
-                    try:
-                        uid = int(value_id)
-
-                        if uid not in known:
-                            found.add(uid)
-
-                    except Exception:
-                        pass
-
-            for child in value.values():
-                scan(child)
-
-        elif isinstance(value, list):
-            for child in value:
-                scan(child)
-
-    scan(data)
-
-    return found
-
-
-def get_details(ids):
-    if not ids:
-        return []
-
-    params = {
-        "universeIds": ",".join(
-            str(x) for x in ids
-        )
+    return {
+        uid
+        for uid in ids
+        if uid not in known_ids
     }
 
-    data = request_json(
+
+def get_game_details(
+    universe_ids
+):
+
+    if not universe_ids:
+        return []
+
+    universe_ids = [
+        int(x)
+        for x in universe_ids
+    ]
+
+    params = {
+        "universeIds":
+            ",".join(
+                str(x)
+                for x in universe_ids
+            )
+    }
+
+    data = get_json(
         DETAIL_URL,
         params
     )
@@ -279,78 +460,181 @@ def get_details(ids):
     if not data:
         return []
 
-    return data.get("data", [])
+    return data.get(
+        "data",
+        []
+    )
 
 
 def make_game(raw):
-    uid = raw.get("id")
 
-    if not uid:
+    universe_id = raw.get(
+        "id"
+    )
+
+    if not universe_id:
         return None
 
-    uid = int(uid)
+    place_id = raw.get(
+        "rootPlaceId"
+    )
 
-    place = raw.get("rootPlaceId")
+    creator = raw.get(
+        "creator"
+    )
 
-    if place:
-        place = int(place)
-
-    creator = raw.get("creator")
-
-    if not isinstance(creator, dict):
+    if not isinstance(
+        creator,
+        dict
+    ):
         creator = {}
 
-    return {
-        "universeId": uid,
-        "placeId": place,
-        "name": raw.get(
-            "name",
-            "Unknown game"
-        ),
-        "description": raw.get(
-            "description",
-            ""
-        ),
-        "playing": int(
-            raw.get("playing") or 0
-        ),
-        "visits": int(
-            raw.get("visits") or 0
-        ),
-        "favorites": int(
-            raw.get("favoritedCount") or 0
-        ),
-        "maxPlayers": int(
-            raw.get("maxPlayers") or 0
-        ),
-        "created": raw.get("created"),
-        "updated": raw.get("updated"),
-        "creator": creator,
-        "genre": raw.get(
-            "genre",
-            "All"
-        ),
-        "thumbnail": THUMB_URL.format(uid),
-        "url": (
-            f"https://www.roblox.com/games/{place}"
-            if place
-            else f"https://www.roblox.com/games/{uid}"
+    try:
+        playing = int(
+            raw.get(
+                "playing",
+                0
+            ) or 0
         )
+    except Exception:
+        playing = 0
+
+    try:
+        visits = int(
+            raw.get(
+                "visits",
+                0
+            ) or 0
+        )
+    except Exception:
+        visits = 0
+
+    try:
+        favorites = int(
+            raw.get(
+                "favoritedCount",
+                0
+            ) or 0
+        )
+    except Exception:
+        favorites = 0
+
+    try:
+        max_players = int(
+            raw.get(
+                "maxPlayers",
+                0
+            ) or 0
+        )
+    except Exception:
+        max_players = 0
+
+    universe_id = int(
+        universe_id
+    )
+
+    if place_id:
+        try:
+            place_id = int(
+                place_id
+            )
+        except Exception:
+            place_id = None
+
+    if place_id:
+
+        game_url = (
+            "https://www.roblox.com/games/"
+            + str(place_id)
+        )
+
+    else:
+
+        game_url = (
+            "https://www.roblox.com/games/"
+            + str(universe_id)
+        )
+
+    return {
+
+        "universeId":
+            universe_id,
+
+        "placeId":
+            place_id,
+
+        "name":
+            raw.get(
+                "name",
+                "Unknown game"
+            ),
+
+        "description":
+            raw.get(
+                "description",
+                ""
+            ),
+
+        "playing":
+            playing,
+
+        "visits":
+            visits,
+
+        "favorites":
+            favorites,
+
+        "maxPlayers":
+            max_players,
+
+        "created":
+            raw.get(
+                "created"
+            ),
+
+        "updated":
+            raw.get(
+                "updated"
+            ),
+
+        "creator":
+            creator,
+
+        "genre":
+            raw.get(
+                "genre",
+                "All"
+            ),
+
+        "thumbnail":
+            THUMB_URL.format(
+                universe_id
+            ),
+
+        "url":
+            game_url
     }
 
 
 def main():
 
     print(
-        "================================",
+        "======================================",
         flush=True
     )
+
     print(
-        " Roblox Hidden Gems Collector 5.0",
+        " Roblox Hidden Gems Collector 6.0",
         flush=True
     )
+
     print(
-        "================================",
+        " No requests dependency",
+        flush=True
+    )
+
+    print(
+        "======================================",
         flush=True
     )
 
@@ -361,113 +645,184 @@ def main():
         flush=True
     )
 
-    # ------------------------------------------------
-    # SEARCH
-    # ------------------------------------------------
+    if len(games) >= TARGET_GAMES:
 
-    random.shuffle(SEARCHES)
+        print(
+            "Target already reached.",
+            flush=True
+        )
+
+    queries = SEARCHES.copy()
+
+    random.shuffle(
+        queries
+    )
+
+    total_added = 0
 
     for index, query in enumerate(
-        SEARCHES,
+        queries,
         1
     ):
 
-        if len(games) >= TARGET:
+        if len(games) >= TARGET_GAMES:
             break
 
         print(
-            f"[{index}/{len(SEARCHES)}] Searching: {query}",
+            "",
             flush=True
         )
-
-        ids = find_ids(
-            query,
-            {
-                int(x)
-                for x in games.keys()
-            }
-        )
-
-        if not ids:
-            print(
-                "  No new games",
-                flush=True
-            )
-            continue
 
         print(
-            f"  Found {len(ids)} new IDs",
+            f"[{index}/{len(queries)}] "
+            f"Searching: {query}",
             flush=True
         )
 
-        # Small batches = much less chance
-        # of hitting Roblox limits.
-        ids = list(ids)[:100]
+        known_ids = {
+            int(x)
+            for x in games.keys()
+            if str(x).isdigit()
+        }
+
+        new_ids = search_games(
+            query,
+            known_ids
+        )
+
+        print(
+            f"Found {len(new_ids)} new IDs",
+            flush=True
+        )
+
+        if not new_ids:
+
+            time.sleep(0.5)
+
+            continue
+
+        new_ids = list(
+            new_ids
+        )
+
+        # Не делаем гигантские запросы.
+        new_ids = new_ids[
+            :100
+        ]
 
         for start in range(
             0,
-            len(ids),
+            len(new_ids),
             50
         ):
 
-            batch = ids[
+            batch = new_ids[
                 start:start + 50
             ]
 
-            details = get_details(
+            details = get_game_details(
                 batch
             )
 
-            added = 0
+            added_now = 0
 
             for raw in details:
 
-                game = make_game(raw)
+                game = make_game(
+                    raw
+                )
 
                 if not game:
                     continue
 
                 uid = str(
-                    game["universeId"]
+                    game[
+                        "universeId"
+                    ]
                 )
 
                 if uid not in games:
-                    games[uid] = game
-                    added += 1
+
+                    games[
+                        uid
+                    ] = game
+
+                    added_now += 1
+
+                    total_added += 1
 
             print(
-                f"  Added {added}",
+                f"Added this batch: {added_now}",
                 flush=True
             )
 
-            save_games(games)
+            print(
+                f"Total catalog: {len(games)}",
+                flush=True
+            )
 
-            time.sleep(DELAY)
+            if (
+                added_now > 0
+                and
+                (
+                    total_added
+                    % SAVE_EVERY
+                    == 0
+                )
+            ):
 
-        time.sleep(DELAY)
+                save_games(
+                    games
+                )
 
-    # ------------------------------------------------
-    # REFRESH ONLY THE MOST ACTIVE 300
-    # ------------------------------------------------
+            time.sleep(
+                0.4
+            )
+
+        save_games(
+            games
+        )
+
+        time.sleep(
+            0.7
+        )
 
     print(
-        "Refreshing live stats...",
+        "",
         flush=True
     )
 
-    active = sorted(
+    print(
+        "Refreshing active games...",
+        flush=True
+    )
+
+    active_games = sorted(
         games.values(),
-        key=lambda x: int(
-            x.get("playing") or 0
+        key=lambda game:
+        int(
+            game.get(
+                "playing",
+                0
+            ) or 0
         ),
         reverse=True
     )
 
-    refresh_ids = [
-        int(x["universeId"])
-        for x in active[:300]
-        if x.get("universeId")
-    ]
+    refresh_ids = []
+
+    for game in active_games[
+        :300
+    ]:
+
+        uid = game.get(
+            "universeId"
+        )
+
+        if uid:
+            refresh_ids.append(
+                int(uid)
+            )
 
     for start in range(
         0,
@@ -479,34 +834,50 @@ def main():
             start:start + 50
         ]
 
-        details = get_details(
+        details = get_game_details(
             batch
         )
 
         for raw in details:
 
-            game = make_game(raw)
+            updated_game = make_game(
+                raw
+            )
 
-            if not game:
+            if not updated_game:
                 continue
 
             uid = str(
-                game["universeId"]
+                updated_game[
+                    "universeId"
+                ]
             )
 
             if uid in games:
-                old = games[uid]
 
-                # Keep any old fields.
-                old.update(game)
+                games[
+                    uid
+                ].update(
+                    updated_game
+                )
 
-        save_games(games)
+        save_games(
+            games
+        )
 
-        time.sleep(DELAY)
+        time.sleep(
+            0.4
+        )
 
-    # ------------------------------------------------
-    # FINAL CLEANUP
-    # ------------------------------------------------
+    print(
+        "",
+        flush=True
+    )
+
+    print(
+        "Cleaning duplicates...",
+        flush=True
+    )
 
     clean = {}
 
@@ -519,23 +890,41 @@ def main():
         if not uid:
             continue
 
-        uid = str(uid)
+        uid = str(
+            uid
+        )
 
-        game["thumbnail"] = THUMB_URL.format(
+        game[
+            "thumbnail"
+        ] = THUMB_URL.format(
             int(uid)
         )
 
-        clean[uid] = game
+        clean[
+            uid
+        ] = game
 
-    save_games(clean)
+    save_games(
+        clean
+    )
 
     print(
-        "================================",
+        "",
         flush=True
     )
 
     print(
-        f"FINAL: {len(clean)} unique games",
+        "======================================",
+        flush=True
+    )
+
+    print(
+        f"FINAL GAMES: {len(clean)}",
+        flush=True
+    )
+
+    print(
+        f"ADDED THIS RUN: {total_added}",
         flush=True
     )
 
@@ -545,7 +934,7 @@ def main():
     )
 
     print(
-        "================================",
+        "======================================",
         flush=True
     )
 
