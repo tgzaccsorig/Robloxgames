@@ -25,6 +25,8 @@ body {
     overflow-x: hidden;
 }
 
+/* HEADER */
+
 .header {
     position: sticky;
     top: 0;
@@ -35,7 +37,7 @@ body {
 }
 
 .header-inner {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
     padding: 18px 22px;
 }
@@ -51,29 +53,38 @@ body {
 }
 
 .subtitle {
-    margin-top: 4px;
+    margin-top: 5px;
     color: #8f98a8;
     font-size: 14px;
 }
 
+/* FILTERS */
+
 .controls {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
-    padding: 18px 22px;
+    padding: 18px 22px 10px;
+
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .search {
     flex: 1;
-    min-width: 230px;
+    min-width: 240px;
+
     background: #151922;
     border: 1px solid #282e3a;
+
     color: white;
+
     padding: 13px 16px;
+
     border-radius: 12px;
+
     outline: none;
+
     font-size: 15px;
 }
 
@@ -81,20 +92,71 @@ body {
     border-color: #00aaff;
 }
 
+.number-input {
+    width: 170px;
+
+    background: #151922;
+    border: 1px solid #282e3a;
+
+    color: white;
+
+    padding: 13px 14px;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.number-input:focus {
+    border-color: #00aaff;
+}
+
 .select {
     background: #151922;
     border: 1px solid #282e3a;
+
     color: white;
-    padding: 13px 16px;
+
+    padding: 13px 15px;
+
     border-radius: 12px;
+
     outline: none;
+
+    font-size: 14px;
 }
 
+.reset {
+    background: #202631;
+    border: 1px solid #303744;
+
+    color: white;
+
+    padding: 13px 16px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-weight: 700;
+}
+
+.reset:hover {
+    background: #2a313e;
+}
+
+/* STATS */
+
 .stats {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
-    padding: 0 22px 18px;
+
+    padding: 8px 22px 18px;
+
     color: #8f98a8;
+
     font-size: 14px;
 }
 
@@ -102,66 +164,109 @@ body {
     color: #00aaff;
 }
 
+/* GRID */
+
 .grid {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
+
     padding: 0 22px 50px;
+
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(240px, 1fr)
+        );
+
     gap: 18px;
 }
 
+/* CARD */
+
 .card {
     background: #151922;
+
     border: 1px solid #242a35;
+
     border-radius: 16px;
+
     overflow: hidden;
-    transition: transform 0.18s ease,
-                border-color 0.18s ease,
-                box-shadow 0.18s ease;
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
 .card:hover {
     transform: translateY(-4px);
+
     border-color: #00aaff;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
 }
+
+/* IMAGE */
 
 .image-wrap {
     position: relative;
+
     width: 100%;
+
     aspect-ratio: 16 / 9;
+
     background: #0f1117;
+
     overflow: hidden;
 }
 
 .game-image {
     width: 100%;
     height: 100%;
+
     object-fit: cover;
+
     display: block;
 }
 
+/* ONLINE BADGE */
+
 .online {
     position: absolute;
+
     right: 10px;
     top: 10px;
-    background: rgba(0, 0, 0, 0.78);
+
+    background: rgba(0, 0, 0, 0.80);
+
     border: 1px solid rgba(255,255,255,0.12);
+
     border-radius: 9px;
+
     padding: 6px 9px;
+
     font-size: 12px;
+
     font-weight: 700;
 }
 
 .online-dot {
     display: inline-block;
+
     width: 7px;
     height: 7px;
+
     border-radius: 50%;
+
     background: #20e070;
+
     margin-right: 5px;
 }
+
+/* CARD BODY */
 
 .card-body {
     padding: 14px;
@@ -169,70 +274,113 @@ body {
 
 .game-name {
     font-size: 17px;
+
     font-weight: 800;
+
     line-height: 1.25;
+
     margin-bottom: 7px;
 
     display: -webkit-box;
+
     -webkit-line-clamp: 2;
+
     -webkit-box-orient: vertical;
+
     overflow: hidden;
 }
 
 .description {
     color: #8f98a8;
+
     font-size: 13px;
+
     line-height: 1.45;
+
     min-height: 38px;
 
     display: -webkit-box;
+
     -webkit-line-clamp: 2;
+
     -webkit-box-orient: vertical;
+
     overflow: hidden;
 }
 
+/* INFO */
+
 .info {
     display: flex;
-    gap: 12px;
+
+    gap: 10px;
+
     flex-wrap: wrap;
+
     margin-top: 12px;
+
     color: #aeb6c5;
+
     font-size: 12px;
 }
 
+/* PLAY BUTTON */
+
 .play {
     display: block;
+
     width: 100%;
+
     margin-top: 14px;
+
     padding: 11px;
+
     text-align: center;
+
     text-decoration: none;
+
     background: #00aaff;
+
     color: white;
+
     font-weight: 800;
+
     border-radius: 10px;
-    transition: background 0.15s ease;
+
+    transition:
+        background 0.15s ease;
 }
 
 .play:hover {
     background: #008ed1;
 }
 
+/* LOADING */
+
 .loading {
     grid-column: 1 / -1;
+
     text-align: center;
+
     padding: 80px 20px;
+
     color: #8f98a8;
 }
 
 .spinner {
     width: 42px;
     height: 42px;
+
     margin: 0 auto 18px;
+
     border: 4px solid #252b36;
+
     border-top-color: #00aaff;
+
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+
+    animation:
+        spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -241,29 +389,56 @@ body {
     }
 }
 
+/* ERROR */
+
 .error {
     grid-column: 1 / -1;
+
     text-align: center;
+
     padding: 70px 20px;
+
     color: #ff6874;
 }
 
+/* EMPTY */
+
 .empty {
     grid-column: 1 / -1;
+
     text-align: center;
+
     padding: 70px 20px;
+
     color: #8f98a8;
 }
 
+.empty-title {
+    font-size: 22px;
+
+    color: white;
+
+    margin-bottom: 8px;
+}
+
+/* FOOTER */
+
 .footer {
     border-top: 1px solid #20242d;
+
     padding: 25px;
+
     text-align: center;
+
     color: #697384;
+
     font-size: 13px;
 }
 
-@media (max-width: 600px) {
+/* MOBILE */
+
+@media (max-width: 700px) {
+
     .logo {
         font-size: 23px;
     }
@@ -273,17 +448,43 @@ body {
     }
 
     .controls {
-        padding: 14px 15px;
+        padding:
+            14px 15px 8px;
     }
 
     .stats {
-        padding: 0 15px 15px;
+        padding:
+            8px 15px 15px;
     }
 
     .grid {
-        padding: 0 15px 35px;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding:
+            0 15px 35px;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
         gap: 10px;
+    }
+
+    .search {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .number-input {
+        flex: 1;
+        min-width: 0;
+        width: 0;
+    }
+
+    .select {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .reset {
+        width: 100%;
     }
 
     .card {
@@ -304,7 +505,7 @@ body {
 
     .info {
         font-size: 10px;
-        gap: 7px;
+        gap: 6px;
     }
 
     .play {
@@ -318,16 +519,23 @@ body {
 <body>
 
 <header class="header">
+
     <div class="header-inner">
+
         <div class="logo">
             Roblox <span>Hidden Gems</span>
         </div>
 
         <div class="subtitle">
-            Находи интересные игры Roblox, а не только топ-популярные
+            Находи интересные игры Roblox, а не только самые популярные
         </div>
+
     </div>
+
 </header>
+
+
+<!-- FILTERS -->
 
 <div class="controls">
 
@@ -339,116 +547,286 @@ body {
         autocomplete="off"
     >
 
-    <select id="sort" class="select">
-        <option value="online">🔥 Онлайн</option>
-        <option value="new">🆕 Новые</option>
-        <option value="visits">👀 Посещения</option>
-        <option value="favorites">⭐ Избранное</option>
-        <option value="name">🔤 Название</option>
-        <option value="random">🎲 Случайные</option>
+    <input
+        id="minOnline"
+        class="number-input"
+        type="number"
+        min="0"
+        placeholder="Мин. онлайн"
+    >
+
+    <input
+        id="maxOnline"
+        class="number-input"
+        type="number"
+        min="0"
+        placeholder="Макс. онлайн"
+    >
+
+    <select
+        id="sort"
+        class="select"
+    >
+
+        <option value="online">
+            🔥 По онлайну
+        </option>
+
+        <option value="new">
+            🆕 Новые
+        </option>
+
+        <option value="visits">
+            👀 Посещения
+        </option>
+
+        <option value="favorites">
+            ⭐ Избранное
+        </option>
+
+        <option value="name">
+            🔤 Название
+        </option>
+
+        <option value="random">
+            🎲 Случайные
+        </option>
+
     </select>
 
+    <button
+        id="reset"
+        class="reset"
+        type="button"
+    >
+        Сбросить
+    </button>
+
 </div>
+
+
+<!-- STATS -->
 
 <div class="stats">
-    Найдено игр:
+
+    Показано игр:
     <b id="count">0</b>
+
     ·
-    <span id="status">Загрузка каталога...</span>
+
+    Всего:
+    <b id="total">0</b>
+
+    ·
+
+    <span id="status">
+        Загрузка каталога...
+    </span>
+
 </div>
 
-<main id="grid" class="grid">
+
+<!-- GAMES -->
+
+<main
+    id="grid"
+    class="grid"
+>
 
     <div class="loading">
+
         <div class="spinner"></div>
-        <div>Загрузка игр...</div>
+
+        <div>
+            Загрузка игр...
+        </div>
+
     </div>
 
 </main>
 
+
 <footer class="footer">
+
     Roblox Hidden Gems · Каталог обновляется автоматически
+
 </footer>
+
 
 <script>
 
+/* =========================================
+   CONFIG
+========================================= */
+
 const DATA_URL = "./games.json";
 
+
+/* =========================================
+   VARIABLES
+========================================= */
+
 let allGames = [];
+
 let filteredGames = [];
 
-const grid = document.getElementById("grid");
-const searchInput = document.getElementById("search");
-const sortSelect = document.getElementById("sort");
-const countElement = document.getElementById("count");
-const statusElement = document.getElementById("status");
 
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const grid =
+    document.getElementById("grid");
+
+const searchInput =
+    document.getElementById("search");
+
+const minOnlineInput =
+    document.getElementById("minOnline");
+
+const maxOnlineInput =
+    document.getElementById("maxOnline");
+
+const sortSelect =
+    document.getElementById("sort");
+
+const resetButton =
+    document.getElementById("reset");
+
+const countElement =
+    document.getElementById("count");
+
+const totalElement =
+    document.getElementById("total");
+
+const statusElement =
+    document.getElementById("status");
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
 function escapeHTML(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
         return "";
     }
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 }
 
 
+/* =========================================
+   FORMAT NUMBERS
+========================================= */
+
 function formatNumber(number) {
 
-    number = Number(number) || 0;
+    number =
+        Number(number) || 0;
 
     if (number >= 1000000000) {
+
         return (
             (number / 1000000000)
-            .toFixed(1)
-            .replace(".0", "")
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                )
             + "B"
         );
     }
 
     if (number >= 1000000) {
+
         return (
             (number / 1000000)
-            .toFixed(1)
-            .replace(".0", "")
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                )
             + "M"
         );
     }
 
     if (number >= 1000) {
+
         return (
             (number / 1000)
-            .toFixed(1)
-            .replace(".0", "")
+                .toFixed(1)
+                .replace(
+                    ".0",
+                    ""
+                )
             + "K"
         );
     }
 
-    return number.toLocaleString("ru-RU");
+    return number.toLocaleString(
+        "ru-RU"
+    );
 }
 
 
+/* =========================================
+   THUMBNAIL
+========================================= */
+
 function getThumbnail(game) {
+
+    /*
+       Сначала используем thumbnail,
+       который записал collector.py.
+    */
 
     if (
         game.thumbnail &&
         typeof game.thumbnail === "string"
     ) {
+
         return game.thumbnail;
     }
+
+
+    /*
+       Запасной вариант:
+       Roblox thumbnail API.
+    */
 
     if (game.universeId) {
 
         return (
             "https://thumbnails.roblox.com/v1/games/icons" +
             "?universeIds=" +
-            encodeURIComponent(game.universeId) +
+            encodeURIComponent(
+                game.universeId
+            ) +
             "&returnPolicy=PlaceHolder" +
             "&size=512x512" +
             "&format=Png" +
@@ -456,13 +834,19 @@ function getThumbnail(game) {
         );
     }
 
+
     return "";
 }
 
 
+/* =========================================
+   GAME URL
+========================================= */
+
 function getGameURL(game) {
 
     if (game.url) {
+
         return game.url;
     }
 
@@ -486,51 +870,86 @@ function getGameURL(game) {
 }
 
 
+/* =========================================
+   DATE
+========================================= */
+
 function getDate(game) {
 
     if (!game.created) {
         return 0;
     }
 
-    const date = new Date(
-        game.created
-    );
+    const date =
+        new Date(
+            game.created
+        );
 
-    return date.getTime() || 0;
+    return (
+        date.getTime() || 0
+    );
 }
 
 
+/* =========================================
+   SORT
+========================================= */
+
 function sortGames(games) {
 
-    const mode = sortSelect.value;
+    const mode =
+        sortSelect.value;
 
-    const result = [...games];
+    const result =
+        [...games];
+
 
     if (mode === "online") {
 
         result.sort(
             (a, b) =>
-                (Number(b.playing) || 0) -
-                (Number(a.playing) || 0)
+                (
+                    Number(b.playing) || 0
+                ) -
+                (
+                    Number(a.playing) || 0
+                )
         );
 
-    } else if (mode === "visits") {
+    }
+
+
+    else if (mode === "visits") {
 
         result.sort(
             (a, b) =>
-                (Number(b.visits) || 0) -
-                (Number(a.visits) || 0)
+                (
+                    Number(b.visits) || 0
+                ) -
+                (
+                    Number(a.visits) || 0
+                )
         );
 
-    } else if (mode === "favorites") {
+    }
+
+
+    else if (mode === "favorites") {
 
         result.sort(
             (a, b) =>
-                (Number(b.favorites) || 0) -
-                (Number(a.favorites) || 0)
+                (
+                    Number(b.favorites) || 0
+                ) -
+                (
+                    Number(a.favorites) || 0
+                )
         );
 
-    } else if (mode === "new") {
+    }
+
+
+    else if (mode === "new") {
 
         result.sort(
             (a, b) =>
@@ -538,33 +957,49 @@ function sortGames(games) {
                 getDate(a)
         );
 
-    } else if (mode === "name") {
+    }
+
+
+    else if (mode === "name") {
 
         result.sort(
             (a, b) =>
-                String(a.name || "")
-                    .localeCompare(
-                        String(b.name || ""),
-                        "ru"
-                    )
+                String(
+                    a.name || ""
+                ).localeCompare(
+                    String(
+                        b.name || ""
+                    ),
+                    "ru"
+                )
         );
 
-    } else if (mode === "random") {
+    }
+
+
+    else if (mode === "random") {
 
         result.sort(
-            () => Math.random() - 0.5
+            () =>
+                Math.random() - 0.5
         );
     }
+
 
     return result;
 }
 
 
+/* =========================================
+   CREATE CARD
+========================================= */
+
 function createCard(game) {
 
     const name =
         escapeHTML(
-            game.name || "Без названия"
+            game.name ||
+            "Без названия"
         );
 
     const description =
@@ -574,13 +1009,19 @@ function createCard(game) {
         );
 
     const playing =
-        Number(game.playing) || 0;
+        Number(
+            game.playing
+        ) || 0;
 
     const visits =
-        Number(game.visits) || 0;
+        Number(
+            game.visits
+        ) || 0;
 
     const favorites =
-        Number(game.favorites) || 0;
+        Number(
+            game.favorites
+        ) || 0;
 
     const thumbnail =
         escapeHTML(
@@ -592,7 +1033,9 @@ function createCard(game) {
             getGameURL(game)
         );
 
+
     return `
+
         <article class="card">
 
             <div class="image-wrap">
@@ -603,15 +1046,24 @@ function createCard(game) {
                     alt="${name}"
                     loading="lazy"
                     referrerpolicy="no-referrer"
-                    onerror="this.onerror=null; this.src='https://placehold.co/600x338/151922/ffffff?text=Roblox';"
+                    onerror="
+                        this.onerror=null;
+                        this.src='https://placehold.co/600x338/151922/ffffff?text=Roblox';
+                    "
                 >
 
                 <div class="online">
+
                     <span class="online-dot"></span>
-                    ${formatNumber(playing)}
+
+                    ${formatNumber(
+                        playing
+                    )}
+
                 </div>
 
             </div>
+
 
             <div class="card-body">
 
@@ -619,25 +1071,37 @@ function createCard(game) {
                     ${name}
                 </div>
 
+
                 <div class="description">
                     ${description}
                 </div>
 
+
                 <div class="info">
 
                     <span>
-                        👥 ${formatNumber(playing)}
+                        👥
+                        ${formatNumber(
+                            playing
+                        )}
                     </span>
 
                     <span>
-                        👀 ${formatNumber(visits)}
+                        👀
+                        ${formatNumber(
+                            visits
+                        )}
                     </span>
 
                     <span>
-                        ⭐ ${formatNumber(favorites)}
+                        ⭐
+                        ${formatNumber(
+                            favorites
+                        )}
                     </span>
 
                 </div>
+
 
                 <a
                     class="play"
@@ -651,95 +1115,237 @@ function createCard(game) {
             </div>
 
         </article>
+
     `;
 }
 
 
-function render() {
+/* =========================================
+   FILTER
+========================================= */
+
+function applyFilters() {
 
     const query =
         searchInput.value
             .trim()
             .toLowerCase();
 
-    if (!query) {
 
-        filteredGames = [...allGames];
+    let minOnline =
+        parseInt(
+            minOnlineInput.value,
+            10
+        );
 
-    } else {
+    let maxOnline =
+        parseInt(
+            maxOnlineInput.value,
+            10
+        );
 
-        filteredGames =
-            allGames.filter(
-                game => {
 
-                    const name =
-                        String(
-                            game.name || ""
-                        ).toLowerCase();
+    /*
+       Если поле пустое,
+       фильтр не используется.
+    */
 
-                    const description =
-                        String(
-                            game.description || ""
-                        ).toLowerCase();
-
-                    return (
-                        name.includes(query) ||
-                        description.includes(query)
-                    );
-                }
-            );
+    if (
+        Number.isNaN(
+            minOnline
+        )
+    ) {
+        minOnline = 0;
     }
 
+
+    if (
+        Number.isNaN(
+            maxOnline
+        )
+    ) {
+        maxOnline = Infinity;
+    }
+
+
+    /*
+       Если пользователь случайно
+       ввёл максимум меньше минимума,
+       меняем их местами.
+    */
+
+    if (
+        maxOnline !== Infinity &&
+        maxOnline < minOnline
+    ) {
+
+        const temp =
+            minOnline;
+
+        minOnline =
+            maxOnline;
+
+        maxOnline =
+            temp;
+    }
+
+
     filteredGames =
-        sortGames(filteredGames);
+        allGames.filter(
+            game => {
+
+                const name =
+                    String(
+                        game.name || ""
+                    ).toLowerCase();
+
+
+                const description =
+                    String(
+                        game.description || ""
+                    ).toLowerCase();
+
+
+                const online =
+                    Number(
+                        game.playing
+                    ) || 0;
+
+
+                /*
+                   Поиск
+                */
+
+                const matchesSearch =
+                    !query ||
+                    name.includes(
+                        query
+                    ) ||
+                    description.includes(
+                        query
+                    );
+
+
+                /*
+                   Минимальный онлайн
+                */
+
+                const matchesMin =
+                    online >= minOnline;
+
+
+                /*
+                   Максимальный онлайн
+                */
+
+                const matchesMax =
+                    online <= maxOnline;
+
+
+                return (
+                    matchesSearch &&
+                    matchesMin &&
+                    matchesMax
+                );
+            }
+        );
+
+
+    filteredGames =
+        sortGames(
+            filteredGames
+        );
+
+
+    render();
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function render() {
 
     countElement.textContent =
         filteredGames.length.toLocaleString(
             "ru-RU"
         );
 
-    if (filteredGames.length === 0) {
+
+    totalElement.textContent =
+        allGames.length.toLocaleString(
+            "ru-RU"
+        );
+
+
+    if (
+        filteredGames.length === 0
+    ) {
 
         grid.innerHTML = `
+
             <div class="empty">
-                😔 Игр не найдено
+
+                <div class="empty-title">
+                    😔 Ничего не найдено
+                </div>
+
+                <div>
+                    Попробуй изменить фильтры
+                    или уменьшить минимальный онлайн.
+                </div>
+
             </div>
+
         `;
 
         return;
     }
 
+
     grid.innerHTML =
         filteredGames
-            .map(createCard)
+            .map(
+                createCard
+            )
             .join("");
 }
 
+
+/* =========================================
+   LOAD GAMES
+========================================= */
 
 async function loadGames() {
 
     try {
 
         statusElement.textContent =
-            "Загружаем games.json...";
+            "Загружаем каталог...";
+
 
         /*
-         * cache-busting нужен, чтобы браузер
-         * не показывал старый games.json.
-         */
+           Добавляем timestamp,
+           чтобы браузер не использовал
+           старый games.json из кеша.
+        */
 
         const url =
             DATA_URL +
             "?v=" +
             Date.now();
 
+
         const response =
             await fetch(
                 url,
                 {
-                    cache: "no-store"
+                    cache:
+                        "no-store"
                 }
             );
+
 
         if (!response.ok) {
 
@@ -749,50 +1355,77 @@ async function loadGames() {
             );
         }
 
+
         const data =
             await response.json();
 
+
         /*
-         * Поддерживаем оба варианта:
-         *
-         * { games: [...] }
-         *
-         * и просто [...]
-         */
+           Поддерживаем:
 
-        if (Array.isArray(data)) {
+           {
+               "games": [...]
+           }
 
-            allGames = data;
+           и:
 
-        } else if (
-            data &&
-            Array.isArray(data.games)
+           [...]
+        */
+
+        if (
+            Array.isArray(
+                data
+            )
         ) {
 
-            allGames = data.games;
+            allGames =
+                data;
 
-        } else {
+        }
+
+        else if (
+            data &&
+            Array.isArray(
+                data.games
+            )
+        ) {
+
+            allGames =
+                data.games;
+
+        }
+
+        else {
 
             throw new Error(
                 "games.json не содержит массив games"
             );
         }
 
+
         /*
-         * Удаляем дубли по universeId.
-         */
+           Убираем дубли.
+        */
 
         const unique =
             new Map();
 
-        for (const game of allGames) {
+
+        for (
+            const game of allGames
+        ) {
 
             const id =
                 game.universeId ||
                 game.placeId ||
                 game.name;
 
-            if (!unique.has(String(id))) {
+
+            if (
+                !unique.has(
+                    String(id)
+                )
+            ) {
 
                 unique.set(
                     String(id),
@@ -801,27 +1434,46 @@ async function loadGames() {
             }
         }
 
+
         allGames =
             Array.from(
                 unique.values()
             );
 
+
+        totalElement.textContent =
+            allGames.length.toLocaleString(
+                "ru-RU"
+            );
+
+
         statusElement.textContent =
             "Каталог загружен ✓";
 
-        render();
 
-    } catch (error) {
+        /*
+           Первоначальный рендер.
+        */
+
+        applyFilters();
+
+
+    }
+
+    catch (error) {
 
         console.error(
             "Catalog error:",
             error
         );
 
+
         statusElement.textContent =
             "Ошибка загрузки";
 
+
         grid.innerHTML = `
+
             <div class="error">
 
                 <h2>
@@ -841,6 +1493,7 @@ async function loadGames() {
                     <b>index.html</b>.
                 </p>
 
+
                 <button
                     onclick="location.reload()"
                     style="
@@ -858,24 +1511,65 @@ async function loadGames() {
                 </button>
 
             </div>
+
         `;
     }
 }
 
 
+/* =========================================
+   EVENTS
+========================================= */
+
 searchInput.addEventListener(
     "input",
-    render
+    applyFilters
 );
+
+
+minOnlineInput.addEventListener(
+    "input",
+    applyFilters
+);
+
+
+maxOnlineInput.addEventListener(
+    "input",
+    applyFilters
+);
+
 
 sortSelect.addEventListener(
     "change",
-    render
+    applyFilters
 );
+
+
+resetButton.addEventListener(
+    "click",
+    () => {
+
+        searchInput.value = "";
+
+        minOnlineInput.value = "";
+
+        maxOnlineInput.value = "";
+
+        sortSelect.value =
+            "online";
+
+        applyFilters();
+    }
+);
+
+
+/* =========================================
+   START
+========================================= */
 
 loadGames();
 
 </script>
 
 </body>
-</html>
+    </html>
