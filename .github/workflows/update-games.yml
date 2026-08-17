@@ -36,9 +36,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          python -m pip install requests
           if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+            python -m pip install -r requirements.txt
           fi
+
+      - name: Verify requests
+        run: |
+          python -c "import requests; print('requests OK:', requests.__version__)"
 
       - name: Collect Roblox games
         run: |
@@ -62,7 +67,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -A
           git commit -m "Update Roblox game catalog"
 
@@ -75,18 +79,4 @@ jobs:
       - name: Push catalog
         if: steps.changes.outputs.changed == 'true'
         run: |
-          for i in 1 2 3 4 5; do
-            echo "Push attempt $i..."
-
-            if git push origin HEAD:main; then
-              echo "Push successful."
-              exit 0
-            fi
-
-            echo "Push rejected. Updating from remote..."
-            git fetch origin main
-            git rebase origin/main
-          done
-
-          echo "Push failed after 5 attempts."
-          exit 1
+          git push origin HEAD:main
