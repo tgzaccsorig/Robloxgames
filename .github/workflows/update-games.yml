@@ -1,27 +1,17 @@
 name: Update Roblox Catalog
 
 on:
-  workflow_dispatch:
-
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/30 * * * *"
 
-  push:
-    paths:
-      - "collector.py"
-      - ".github/workflows/update-games.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: roblox-catalog-update
-  cancel-in-progress: false
-
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
 
@@ -29,97 +19,48 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install requests
+      - name: Install dependencies
         run: |
-          python -m ensurepip --upgrade
           python -m pip install --upgrade pip
-          python -m pip install --user requests
-
-      - name: Verify Python and requests
-        run: |
-          which python
-          python --version
-          python -m pip --version
-          python -m pip show requests
-          python -c "import sys; print(sys.executable)"
-          python -c "import requests; print('REQUESTS OK:', requests.__version__)"
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
 
       - name: Collect Roblox games
         run: |
-          python -u collector.py
+          python collector.py
 
-      - name: Check catalog
+      - name: Save online history
         run: |
-          python - <<'PY'
-          import json
+          python history.py
 
-          with open("games.json", "r", encoding="utf-8") as f:
-              data = json.load(f)
+      - name: Check catalog changes
+        run: |
+          git status --short
 
-          games = data.get("games", [])
-
-          ids = [
-              str(game.get("universeId"))
-              for game in games
-              if game.get("universeId")
-          ]
-
-          print("Games:", len(games))
-          print("Unique:", len(set(ids)))
-
-          if not games:
-              raise SystemExit("games.json is empty")
-
-          if len(ids) != len(set(ids)):
-              raise SystemExit("Duplicate universeId detected")
-
-          print("Catalog OK")
-          PY
-
-      - name: Commit catalog
+      - name: Commit updated catalog
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add -A
+          git add games.json history/
 
           if git diff --cached --quiet; then
-            echo "Nothing to commit."
-            exit 0
+            echo "No changes to commit."
+          else
+            git commit -m "Update Roblox catalog and online history"
           fi
 
-          git commit -m "Update Roblox game catalog"
+      - name: Sync with main before push
+        run: |
+          git pull --rebase origin main
 
       - name: Push catalog
         run: |
-          for attempt in 1 2 3 4 5
-          do
-            echo "Push attempt $attempt"
-
-            git fetch origin main
-
-            if ! git rebase origin/main; then
-              git rebase --abort || true
-              echo "Rebase failed."
-              sleep 5
-              continue
-            fi
-
-            if git push origin HEAD:main; then
-              echo "Push successful."
-              exit 0
-            fi
-
-            echo "Push failed. Retrying..."
-            sleep 5
-          done
-
-          echo "Push failed after 5 attempts."
-          exit 1
+          git push origin HEAD:main
