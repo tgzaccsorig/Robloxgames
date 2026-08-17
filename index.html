@@ -25,13 +25,15 @@ body {
     overflow-x: hidden;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(11, 13, 18, 0.94);
+    background: rgba(11, 13, 18, 0.95);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid #20242d;
 }
@@ -58,12 +60,54 @@ body {
     font-size: 14px;
 }
 
-/* FILTERS */
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav {
+    max-width: 1450px;
+    margin: auto;
+    padding: 0 22px 14px;
+
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    border: 1px solid #292f3a;
+    background: #151922;
+    color: #aeb6c5;
+
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    transition: 0.15s;
+}
+
+.nav-button:hover {
+    border-color: #00aaff;
+    color: white;
+}
+
+.nav-button.active {
+    background: #00aaff;
+    border-color: #00aaff;
+    color: white;
+}
+
+/* =========================
+   FILTERS
+========================= */
 
 .controls {
     max-width: 1450px;
     margin: auto;
-    padding: 18px 22px 10px;
+    padding: 8px 22px 10px;
 
     display: flex;
     gap: 10px;
@@ -147,7 +191,9 @@ body {
     background: #2a313e;
 }
 
-/* STATS */
+/* =========================
+   STATS
+========================= */
 
 .stats {
     max-width: 1450px;
@@ -164,7 +210,9 @@ body {
     color: #00aaff;
 }
 
-/* GRID */
+/* =========================
+   GRID
+========================= */
 
 .grid {
     max-width: 1450px;
@@ -183,9 +231,13 @@ body {
     gap: 18px;
 }
 
-/* CARD */
+/* =========================
+   CARD
+========================= */
 
 .card {
+    position: relative;
+
     background: #151922;
 
     border: 1px solid #242a35;
@@ -209,7 +261,9 @@ body {
         0 12px 35px rgba(0, 0, 0, 0.35);
 }
 
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
 
 .image-wrap {
     position: relative;
@@ -232,7 +286,63 @@ body {
     display: block;
 }
 
-/* ONLINE BADGE */
+/* =========================
+   PIN BUTTON
+========================= */
+
+.favorite-button {
+    position: absolute;
+
+    left: 10px;
+    top: 10px;
+
+    z-index: 5;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    background: rgba(0,0,0,0.78);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 19px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        transform 0.15s,
+        background 0.15s,
+        border-color 0.15s;
+}
+
+.favorite-button:hover {
+    transform: scale(1.08);
+
+    background: rgba(0,170,255,0.9);
+
+    border-color: #00aaff;
+}
+
+.favorite-button.active {
+    background: #00aaff;
+
+    border-color: #00aaff;
+
+    box-shadow:
+        0 0 15px rgba(0,170,255,0.35);
+}
+
+/* =========================
+   ONLINE
+========================= */
 
 .online {
     position: absolute;
@@ -266,7 +376,9 @@ body {
     margin-right: 5px;
 }
 
-/* CARD BODY */
+/* =========================
+   CARD BODY
+========================= */
 
 .card-body {
     padding: 14px;
@@ -308,7 +420,9 @@ body {
     overflow: hidden;
 }
 
-/* INFO */
+/* =========================
+   INFO
+========================= */
 
 .info {
     display: flex;
@@ -324,7 +438,9 @@ body {
     font-size: 12px;
 }
 
-/* PLAY BUTTON */
+/* =========================
+   PLAY
+========================= */
 
 .play {
     display: block;
@@ -355,7 +471,9 @@ body {
     background: #008ed1;
 }
 
-/* LOADING */
+/* =========================
+   LOADING
+========================= */
 
 .loading {
     grid-column: 1 / -1;
@@ -384,24 +502,16 @@ body {
 }
 
 @keyframes spin {
+
     to {
         transform: rotate(360deg);
     }
+
 }
 
-/* ERROR */
-
-.error {
-    grid-column: 1 / -1;
-
-    text-align: center;
-
-    padding: 70px 20px;
-
-    color: #ff6874;
-}
-
-/* EMPTY */
+/* =========================
+   EMPTY
+========================= */
 
 .empty {
     grid-column: 1 / -1;
@@ -421,7 +531,23 @@ body {
     margin-bottom: 8px;
 }
 
-/* FOOTER */
+/* =========================
+   ERROR
+========================= */
+
+.error {
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 70px 20px;
+
+    color: #ff6874;
+}
+
+/* =========================
+   FOOTER
+========================= */
 
 .footer {
     border-top: 1px solid #20242d;
@@ -435,7 +561,9 @@ body {
     font-size: 13px;
 }
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 700px) {
 
@@ -447,9 +575,14 @@ body {
         padding: 15px;
     }
 
+    .nav {
+        padding:
+            0 15px 12px;
+    }
+
     .controls {
         padding:
-            14px 15px 8px;
+            8px 15px 8px;
     }
 
     .stats {
@@ -512,6 +645,39 @@ body {
         font-size: 12px;
         padding: 9px;
     }
+
+    .favorite-button {
+        width: 34px;
+        height: 34px;
+
+        font-size: 17px;
+    }
+
+}
+
+/* =========================
+   FAVORITE ANIMATION
+========================= */
+
+@keyframes pinPop {
+
+    0% {
+        transform: scale(0.8);
+    }
+
+    60% {
+        transform: scale(1.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+
+.favorite-button.pop {
+    animation:
+        pinPop 0.25s ease;
 }
 </style>
 </head>
@@ -535,9 +701,42 @@ body {
 </header>
 
 
-<!-- FILTERS -->
+<!-- =========================
+     NAVIGATION
+========================= -->
 
-<div class="controls">
+<nav class="nav">
+
+    <button
+        id="allTab"
+        class="nav-button active"
+        type="button"
+    >
+        🎮 Все игры
+    </button>
+
+    <button
+        id="favoritesTab"
+        class="nav-button"
+        type="button"
+    >
+        📌 Избранное
+        <span id="favoriteCount">
+            0
+        </span>
+    </button>
+
+</nav>
+
+
+<!-- =========================
+     FILTERS
+========================= -->
+
+<div
+    id="filters"
+    class="controls"
+>
 
     <input
         id="search"
@@ -581,7 +780,7 @@ body {
         </option>
 
         <option value="favorites">
-            ⭐ Избранное
+            ⭐ Избранное Roblox
         </option>
 
         <option value="name">
@@ -605,7 +804,9 @@ body {
 </div>
 
 
-<!-- STATS -->
+<!-- =========================
+     STATS
+========================= -->
 
 <div class="stats">
 
@@ -626,7 +827,9 @@ body {
 </div>
 
 
-<!-- GAMES -->
+<!-- =========================
+     GAMES
+========================= -->
 
 <main
     id="grid"
@@ -661,6 +864,9 @@ body {
 
 const DATA_URL = "./games.json";
 
+const FAVORITES_KEY =
+    "roblox_hidden_gems_favorites_v1";
+
 
 /* =========================================
    VARIABLES
@@ -669,6 +875,8 @@ const DATA_URL = "./games.json";
 let allGames = [];
 
 let filteredGames = [];
+
+let currentTab = "all";
 
 
 /* =========================================
@@ -701,6 +909,146 @@ const totalElement =
 
 const statusElement =
     document.getElementById("status");
+
+const allTab =
+    document.getElementById("allTab");
+
+const favoritesTab =
+    document.getElementById("favoritesTab");
+
+const favoriteCount =
+    document.getElementById("favoriteCount");
+
+
+/* =========================================
+   FAVORITES
+========================================= */
+
+function getFavorites() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                FAVORITES_KEY
+            );
+
+        if (!saved) {
+            return [];
+        }
+
+        const parsed =
+            JSON.parse(saved);
+
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
+
+        return parsed.map(
+            id => String(id)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Favorites error:",
+            error
+        );
+
+        return [];
+    }
+}
+
+
+function saveFavorites(list) {
+
+    try {
+
+        localStorage.setItem(
+            FAVORITES_KEY,
+            JSON.stringify(list)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not save favorites:",
+            error
+        );
+    }
+}
+
+
+function getGameId(game) {
+
+    return String(
+        game.universeId ||
+        game.placeId ||
+        game.id ||
+        game.name
+    );
+}
+
+
+function isFavorite(game) {
+
+    const favorites =
+        getFavorites();
+
+    return favorites.includes(
+        getGameId(game)
+    );
+}
+
+
+function toggleFavorite(gameId) {
+
+    let favorites =
+        getFavorites();
+
+    gameId =
+        String(gameId);
+
+
+    if (
+        favorites.includes(
+            gameId
+        )
+    ) {
+
+        favorites =
+            favorites.filter(
+                id =>
+                    id !== gameId
+            );
+
+    } else {
+
+        favorites.push(
+            gameId
+        );
+    }
+
+
+    saveFavorites(
+        favorites
+    );
+
+
+    updateFavoriteCount();
+
+    render();
+}
+
+
+function updateFavoriteCount() {
+
+    const amount =
+        getFavorites().length;
+
+    favoriteCount.textContent =
+        amount;
+}
 
 
 /* =========================================
@@ -741,7 +1089,7 @@ function escapeHTML(value) {
 
 
 /* =========================================
-   FORMAT NUMBERS
+   FORMAT NUMBER
 ========================================= */
 
 function formatNumber(number) {
@@ -749,7 +1097,10 @@ function formatNumber(number) {
     number =
         Number(number) || 0;
 
-    if (number >= 1000000000) {
+
+    if (
+        number >= 1000000000
+    ) {
 
         return (
             (number / 1000000000)
@@ -762,7 +1113,10 @@ function formatNumber(number) {
         );
     }
 
-    if (number >= 1000000) {
+
+    if (
+        number >= 1000000
+    ) {
 
         return (
             (number / 1000000)
@@ -775,7 +1129,10 @@ function formatNumber(number) {
         );
     }
 
-    if (number >= 1000) {
+
+    if (
+        number >= 1000
+    ) {
 
         return (
             (number / 1000)
@@ -787,6 +1144,7 @@ function formatNumber(number) {
             + "K"
         );
     }
+
 
     return number.toLocaleString(
         "ru-RU"
@@ -800,11 +1158,6 @@ function formatNumber(number) {
 
 function getThumbnail(game) {
 
-    /*
-       Сначала используем thumbnail,
-       который записал collector.py.
-    */
-
     if (
         game.thumbnail &&
         typeof game.thumbnail === "string"
@@ -814,10 +1167,14 @@ function getThumbnail(game) {
     }
 
 
-    /*
-       Запасной вариант:
-       Roblox thumbnail API.
-    */
+    if (
+        game.image &&
+        typeof game.image === "string"
+    ) {
+
+        return game.image;
+    }
+
 
     if (game.universeId) {
 
@@ -846,9 +1203,9 @@ function getThumbnail(game) {
 function getGameURL(game) {
 
     if (game.url) {
-
         return game.url;
     }
+
 
     if (game.placeId) {
 
@@ -858,6 +1215,7 @@ function getGameURL(game) {
         );
     }
 
+
     if (game.universeId) {
 
         return (
@@ -865,6 +1223,7 @@ function getGameURL(game) {
             game.universeId
         );
     }
+
 
     return "#";
 }
@@ -880,10 +1239,12 @@ function getDate(game) {
         return 0;
     }
 
+
     const date =
         new Date(
             game.created
         );
+
 
     return (
         date.getTime() || 0
@@ -900,56 +1261,77 @@ function sortGames(games) {
     const mode =
         sortSelect.value;
 
+
     const result =
         [...games];
 
 
-    if (mode === "online") {
+    if (
+        mode === "online"
+    ) {
 
         result.sort(
             (a, b) =>
                 (
-                    Number(b.playing) || 0
+                    Number(
+                        b.playing
+                    ) || 0
                 ) -
                 (
-                    Number(a.playing) || 0
+                    Number(
+                        a.playing
+                    ) || 0
                 )
         );
 
     }
 
 
-    else if (mode === "visits") {
+    else if (
+        mode === "visits"
+    ) {
 
         result.sort(
             (a, b) =>
                 (
-                    Number(b.visits) || 0
+                    Number(
+                        b.visits
+                    ) || 0
                 ) -
                 (
-                    Number(a.visits) || 0
+                    Number(
+                        a.visits
+                    ) || 0
                 )
         );
 
     }
 
 
-    else if (mode === "favorites") {
+    else if (
+        mode === "favorites"
+    ) {
 
         result.sort(
             (a, b) =>
                 (
-                    Number(b.favorites) || 0
+                    Number(
+                        b.favorites
+                    ) || 0
                 ) -
                 (
-                    Number(a.favorites) || 0
+                    Number(
+                        a.favorites
+                    ) || 0
                 )
         );
 
     }
 
 
-    else if (mode === "new") {
+    else if (
+        mode === "new"
+    ) {
 
         result.sort(
             (a, b) =>
@@ -960,7 +1342,9 @@ function sortGames(games) {
     }
 
 
-    else if (mode === "name") {
+    else if (
+        mode === "name"
+    ) {
 
         result.sort(
             (a, b) =>
@@ -977,7 +1361,9 @@ function sortGames(games) {
     }
 
 
-    else if (mode === "random") {
+    else if (
+        mode === "random"
+    ) {
 
         result.sort(
             () =>
@@ -996,11 +1382,20 @@ function sortGames(games) {
 
 function createCard(game) {
 
+    const gameId =
+        getGameId(game);
+
+
+    const favorite =
+        isFavorite(game);
+
+
     const name =
         escapeHTML(
             game.name ||
             "Без названия"
         );
+
 
     const description =
         escapeHTML(
@@ -1008,25 +1403,30 @@ function createCard(game) {
             "Описание отсутствует."
         );
 
+
     const playing =
         Number(
             game.playing
         ) || 0;
+
 
     const visits =
         Number(
             game.visits
         ) || 0;
 
+
     const favorites =
         Number(
             game.favorites
         ) || 0;
 
+
     const thumbnail =
         escapeHTML(
             getThumbnail(game)
         );
+
 
     const url =
         escapeHTML(
@@ -1051,6 +1451,23 @@ function createCard(game) {
                         this.src='https://placehold.co/600x338/151922/ffffff?text=Roblox';
                     "
                 >
+
+
+                <button
+                    class="favorite-button ${favorite ? "active" : ""}"
+                    type="button"
+                    title="${
+                        favorite
+                        ? "Убрать из избранного"
+                        : "Добавить в избранное"
+                    }"
+                    onclick="
+                        toggleFavorite('${escapeHTML(gameId)}')
+                    "
+                >
+                    📌
+                </button>
+
 
                 <div class="online">
 
@@ -1121,7 +1538,7 @@ function createCard(game) {
 
 
 /* =========================================
-   FILTER
+   APPLY FILTERS
 ========================================= */
 
 function applyFilters() {
@@ -1138,6 +1555,7 @@ function applyFilters() {
             10
         );
 
+
     let maxOnline =
         parseInt(
             maxOnlineInput.value,
@@ -1145,16 +1563,12 @@ function applyFilters() {
         );
 
 
-    /*
-       Если поле пустое,
-       фильтр не используется.
-    */
-
     if (
         Number.isNaN(
             minOnline
         )
     ) {
+
         minOnline = 0;
     }
 
@@ -1164,34 +1578,40 @@ function applyFilters() {
             maxOnline
         )
     ) {
-        maxOnline = Infinity;
+
+        maxOnline =
+            Infinity;
     }
 
 
+    let sourceGames;
+
+
     /*
-       Если пользователь случайно
-       ввёл максимум меньше минимума,
-       меняем их местами.
+       Если открыта вкладка
+       "Избранное", сначала берём
+       только сохранённые игры.
     */
 
     if (
-        maxOnline !== Infinity &&
-        maxOnline < minOnline
+        currentTab === "favorites"
     ) {
 
-        const temp =
-            minOnline;
+        sourceGames =
+            allGames.filter(
+                game =>
+                    isFavorite(game)
+            );
 
-        minOnline =
-            maxOnline;
+    } else {
 
-        maxOnline =
-            temp;
+        sourceGames =
+            [...allGames];
     }
 
 
     filteredGames =
-        allGames.filter(
+        sourceGames.filter(
             game => {
 
                 const name =
@@ -1212,10 +1632,6 @@ function applyFilters() {
                     ) || 0;
 
 
-                /*
-                   Поиск
-                */
-
                 const matchesSearch =
                     !query ||
                     name.includes(
@@ -1226,17 +1642,9 @@ function applyFilters() {
                     );
 
 
-                /*
-                   Минимальный онлайн
-                */
-
                 const matchesMin =
                     online >= minOnline;
 
-
-                /*
-                   Максимальный онлайн
-                */
 
                 const matchesMax =
                     online <= maxOnline;
@@ -1247,6 +1655,7 @@ function applyFilters() {
                     matchesMin &&
                     matchesMax
                 );
+
             }
         );
 
@@ -1283,22 +1692,46 @@ function render() {
         filteredGames.length === 0
     ) {
 
-        grid.innerHTML = `
+        if (
+            currentTab === "favorites"
+        ) {
 
-            <div class="empty">
+            grid.innerHTML = `
 
-                <div class="empty-title">
-                    😔 Ничего не найдено
+                <div class="empty">
+
+                    <div class="empty-title">
+                        📌 Избранное пока пустое
+                    </div>
+
+                    <div>
+                        Нажми 📌 на карточке игры,
+                        чтобы добавить её сюда.
+                    </div>
+
                 </div>
 
-                <div>
-                    Попробуй изменить фильтры
-                    или уменьшить минимальный онлайн.
+            `;
+
+        } else {
+
+            grid.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-title">
+                        😔 Ничего не найдено
+                    </div>
+
+                    <div>
+                        Попробуй изменить фильтры
+                        или уменьшить минимальный онлайн.
+                    </div>
+
                 </div>
 
-            </div>
-
-        `;
+            `;
+        }
 
         return;
     }
@@ -1314,6 +1747,50 @@ function render() {
 
 
 /* =========================================
+   SWITCH TAB
+========================================= */
+
+function switchTab(tab) {
+
+    currentTab =
+        tab;
+
+
+    if (
+        currentTab === "all"
+    ) {
+
+        allTab.classList.add(
+            "active"
+        );
+
+        favoritesTab.classList.remove(
+            "active"
+        );
+
+        statusElement.textContent =
+            "Каталог загружен ✓";
+
+    } else {
+
+        favoritesTab.classList.add(
+            "active"
+        );
+
+        allTab.classList.remove(
+            "active"
+        );
+
+        statusElement.textContent =
+            "Избранные игры";
+    }
+
+
+    applyFilters();
+}
+
+
+/* =========================================
    LOAD GAMES
 ========================================= */
 
@@ -1324,12 +1801,6 @@ async function loadGames() {
         statusElement.textContent =
             "Загружаем каталог...";
 
-
-        /*
-           Добавляем timestamp,
-           чтобы браузер не использовал
-           старый games.json из кеша.
-        */
 
         const url =
             DATA_URL +
@@ -1416,19 +1887,15 @@ async function loadGames() {
         ) {
 
             const id =
-                game.universeId ||
-                game.placeId ||
-                game.name;
+                getGameId(game);
 
 
             if (
-                !unique.has(
-                    String(id)
-                )
+                !unique.has(id)
             ) {
 
                 unique.set(
-                    String(id),
+                    id,
                     game
                 );
             }
@@ -1451,12 +1918,10 @@ async function loadGames() {
             "Каталог загружен ✓";
 
 
-        /*
-           Первоначальный рендер.
-        */
+        updateFavoriteCount();
+
 
         applyFilters();
-
 
     }
 
@@ -1549,11 +2014,14 @@ resetButton.addEventListener(
     "click",
     () => {
 
-        searchInput.value = "";
+        searchInput.value =
+            "";
 
-        minOnlineInput.value = "";
+        minOnlineInput.value =
+            "";
 
-        maxOnlineInput.value = "";
+        maxOnlineInput.value =
+            "";
 
         sortSelect.value =
             "online";
@@ -1563,9 +2031,35 @@ resetButton.addEventListener(
 );
 
 
+allTab.addEventListener(
+    "click",
+    () => {
+
+        switchTab(
+            "all"
+        );
+
+    }
+);
+
+
+favoritesTab.addEventListener(
+    "click",
+    () => {
+
+        switchTab(
+            "favorites"
+        );
+
+    }
+);
+
+
 /* =========================================
    START
 ========================================= */
+
+updateFavoriteCount();
 
 loadGames();
 
