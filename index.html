@@ -62,6 +62,26 @@ body {
 }
 
 /* =========================
+   DISCLAIMER
+========================= */
+
+.disclaimer {
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 10px 22px;
+
+    text-align: center;
+
+    color: #8f98a8;
+    background: #0b0d12;
+
+    border-bottom: 1px solid #20242d;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================
    NAV
 ========================= */
 
@@ -171,6 +191,10 @@ body {
 
     cursor: pointer;
     font-weight: 700;
+}
+
+.reset:hover {
+    border-color: #00aaff;
 }
 
 /* =========================
@@ -300,10 +324,7 @@ body {
     justify-content: center;
 }
 
-.favorite-button:hover {
-    background: #00aaff;
-}
-
+.favorite-button:hover,
 .favorite-button.active {
     background: #00aaff;
     border-color: #00aaff;
@@ -383,7 +404,7 @@ body {
 .info {
     display: flex;
 
-    gap: 10px;
+    gap: 7px;
     flex-wrap: wrap;
 
     margin-top: 12px;
@@ -391,6 +412,18 @@ body {
     color: #aeb6c5;
 
     font-size: 12px;
+}
+
+.genre-badge {
+    background: rgba(0,170,255,.12);
+
+    border: 1px solid rgba(0,170,255,.25);
+
+    color: #66caff;
+
+    padding: 4px 7px;
+
+    border-radius: 7px;
 }
 
 /* =========================
@@ -641,17 +674,6 @@ body {
     display: block;
 }
 
-.chart-loading {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    height: 100%;
-
-    color: #8f98a8;
-}
-
 .chart-message {
     display: flex;
 
@@ -739,6 +761,11 @@ body {
         padding: 15px;
     }
 
+    .disclaimer {
+        padding: 9px 15px;
+        font-size: 11px;
+    }
+
     .nav {
         padding: 0 15px 12px;
     }
@@ -794,7 +821,7 @@ body {
 
     .info {
         font-size: 10px;
-        gap: 6px;
+        gap: 5px;
     }
 
     .play {
@@ -823,7 +850,6 @@ body {
     .modal-content {
         padding: 16px;
     }
-
 }
 </style>
 </head>
@@ -846,6 +872,10 @@ body {
 
 </header>
 
+<div class="disclaimer">
+    ⚠️ Это фанатский проект для поиска классных игр в Roblox
+    и никак не связан с Roblox Corporation.
+</div>
 
 <nav class="nav">
 
@@ -869,10 +899,7 @@ body {
 </nav>
 
 
-<div
-    id="filters"
-    class="controls"
->
+<div class="controls">
 
     <input
         id="search"
@@ -881,6 +908,70 @@ body {
         placeholder="🔎 Поиск игры..."
         autocomplete="off"
     >
+
+    <select
+        id="genreFilter"
+        class="select"
+    >
+        <option value="all">🎭 Все жанры</option>
+
+        <option value="Simulator">
+            ⚙️ Simulator
+        </option>
+
+        <option value="RNG">
+            🎲 RNG
+        </option>
+
+        <option value="Horror">
+            👻 Horror
+        </option>
+
+        <option value="RPG">
+            ⚔️ RPG
+        </option>
+
+        <option value="Tycoon">
+            🏗️ Tycoon
+        </option>
+
+        <option value="Obby">
+            🏃 Obby
+        </option>
+
+        <option value="Racing">
+            🏎️ Racing
+        </option>
+
+        <option value="Fighting">
+            🥊 Fighting
+        </option>
+
+        <option value="Adventure">
+            🗺️ Adventure
+        </option>
+
+        <option value="Survival">
+            🧟 Survival
+        </option>
+
+        <option value="FPS">
+            🔫 FPS
+        </option>
+
+        <option value="Sports">
+            ⚽ Sports
+        </option>
+
+        <option value="Town and City">
+            🏙️ Town & City
+        </option>
+
+        <option value="Comedy">
+            😂 Comedy
+        </option>
+    </select>
+
 
     <input
         id="minOnline"
@@ -897,6 +988,7 @@ body {
         min="0"
         placeholder="Макс. онлайн"
     >
+
 
     <select
         id="sort"
@@ -928,6 +1020,7 @@ body {
         </option>
 
     </select>
+
 
     <button
         id="reset"
@@ -973,13 +1066,6 @@ body {
     </div>
 
 </main>
-
-
-<footer class="footer">
-
-    Roblox Hidden Gems · Каталог обновляется автоматически
-
-</footer>
 
 
 <!-- =========================
@@ -1112,10 +1198,7 @@ body {
 
             <div class="chart-container">
 
-                <canvas
-                    id="chart"
-                ></canvas>
-
+                <canvas id="chart"></canvas>
 
                 <div
                     id="chartMessage"
@@ -1149,7 +1232,6 @@ body {
                     ▶ Играть в Roblox
                 </a>
 
-
                 <button
                     id="modalFavorite"
                     class="modal-favorite"
@@ -1169,9 +1251,9 @@ body {
 
 <script>
 
-/* =========================================
+/* =========================
    CONFIG
-========================================= */
+========================= */
 
 const DATA_URL = "./games.json";
 
@@ -1179,9 +1261,9 @@ const FAVORITES_KEY =
     "roblox_hidden_gems_favorites_v1";
 
 
-/* =========================================
+/* =========================
    VARIABLES
-========================================= */
+========================= */
 
 let allGames = [];
 
@@ -1192,15 +1274,18 @@ let currentTab = "all";
 let currentModalGame = null;
 
 
-/* =========================================
+/* =========================
    ELEMENTS
-========================================= */
+========================= */
 
 const grid =
     document.getElementById("grid");
 
 const searchInput =
     document.getElementById("search");
+
+const genreFilter =
+    document.getElementById("genreFilter");
 
 const minOnlineInput =
     document.getElementById("minOnline");
@@ -1272,9 +1357,9 @@ const modalFavorite =
     document.getElementById("modalFavorite");
 
 
-/* =========================================
+/* =========================
    FAVORITES
-========================================= */
+========================= */
 
 function getFavorites() {
 
@@ -1327,10 +1412,9 @@ function getGameId(game) {
 
 function isFavorite(game) {
 
-    return getFavorites()
-        .includes(
-            getGameId(game)
-        );
+    return getFavorites().includes(
+        getGameId(game)
+    );
 }
 
 
@@ -1344,41 +1428,32 @@ function toggleFavorite(gameId) {
 
 
     if (
-        favorites.includes(
-            gameId
-        )
+        favorites.includes(gameId)
     ) {
 
         favorites =
             favorites.filter(
-                id =>
-                    id !== gameId
+                id => id !== gameId
             );
 
     } else {
 
-        favorites.push(
-            gameId
-        );
+        favorites.push(gameId);
     }
 
 
-    saveFavorites(
-        favorites
-    );
+    saveFavorites(favorites);
 
     updateFavoriteCount();
 
-    if (
-        currentModalGame
-    ) {
+    if (currentModalGame) {
 
         updateModalFavorite(
             currentModalGame
         );
     }
 
-    render();
+    applyFilters();
 }
 
 
@@ -1389,9 +1464,9 @@ function updateFavoriteCount() {
 }
 
 
-/* =========================================
+/* =========================
    HELPERS
-========================================= */
+========================= */
 
 function escapeHTML(value) {
 
@@ -1417,9 +1492,7 @@ function formatNumber(number) {
         Number(number) || 0;
 
 
-    if (
-        number >= 1000000000
-    ) {
+    if (number >= 1000000000) {
 
         return (
             (number / 1000000000)
@@ -1430,9 +1503,7 @@ function formatNumber(number) {
     }
 
 
-    if (
-        number >= 1000000
-    ) {
+    if (number >= 1000000) {
 
         return (
             (number / 1000000)
@@ -1443,9 +1514,7 @@ function formatNumber(number) {
     }
 
 
-    if (
-        number >= 1000
-    ) {
+    if (number >= 1000) {
 
         return (
             (number / 1000)
@@ -1482,9 +1551,7 @@ function getThumbnail(game) {
     }
 
 
-    if (
-        game.universeId
-    ) {
+    if (game.universeId) {
 
         return (
             "https://thumbnails.roblox.com/v1/games/icons" +
@@ -1538,9 +1605,145 @@ function getDate(game) {
 }
 
 
-/* =========================================
+/* =========================
+   GENRE DETECTION
+========================= */
+
+/*
+   В games.json уже есть поле genre.
+   Если Roblox отдаёт "All", дополнительно
+   определяем жанр по названию и описанию.
+*/
+
+function getGameGenres(game) {
+
+    const genres =
+        new Set();
+
+
+    const baseGenre =
+        String(
+            game.genre || ""
+        ).trim();
+
+
+    if (
+        baseGenre &&
+        baseGenre !== "All"
+    ) {
+
+        genres.add(
+            baseGenre
+        );
+    }
+
+
+    const text = [
+        game.name || "",
+        game.description || "",
+        game.genre || ""
+    ]
+        .join(" ")
+        .toLowerCase();
+
+
+    const rules = [
+
+        [
+            "Simulator",
+            /\bsimulator\b|simulation|simulator game/
+        ],
+
+        [
+            "RNG",
+            /\brng\b|random number|random luck|luck based|gacha|roll for/
+        ],
+
+        [
+            "Horror",
+            /\bhorror\b|scary|terrifying|survive the night|monster|killer|creepy/
+        ],
+
+        [
+            "RPG",
+            /\brpg\b|role.?playing|level up|quest|dungeon|character class/
+        ],
+
+        [
+            "Tycoon",
+            /\btycoon\b|build your empire|factory|business simulator/
+        ],
+
+        [
+            "Obby",
+            /\bobby\b|obstacle course|tower of hell|parkour/
+        ],
+
+        [
+            "Racing",
+            /\bracing\b|race cars|racing game|driving simulator|kart/
+        ],
+
+        [
+            "Fighting",
+            /\bfighting\b|fighter|combat|pvp|duel|battle arena/
+        ],
+
+        [
+            "Adventure",
+            /\badventure\b|explore|exploration|quest/
+        ],
+
+        [
+            "Survival",
+            /\bsurvival\b|survive|zombie apocalypse|crafting/
+        ],
+
+        [
+            "FPS",
+            /\bfps\b|first person shooter|shooter/
+        ],
+
+        [
+            "Sports",
+            /\bsports?\b|football|soccer|basketball|baseball|tennis/
+        ],
+
+        [
+            "Town and City",
+            /town|city|roleplay city|life in the city/
+        ],
+
+        [
+            "Comedy",
+            /\bcomedy\b|funny|meme|troll/
+        ]
+    ];
+
+
+    for (
+        const [name, regex]
+        of rules
+    ) {
+
+        if (
+            regex.test(text)
+        ) {
+
+            genres.add(
+                name
+            );
+        }
+    }
+
+
+    return genres;
+}
+
+
+/* =========================
    SORT
-========================================= */
+========================= */
 
 function sortGames(games) {
 
@@ -1556,59 +1759,55 @@ function sortGames(games) {
     ) {
 
         result.sort(
-            (a,b) =>
+            (a, b) =>
                 (Number(b.playing) || 0) -
                 (Number(a.playing) || 0)
         );
 
     }
 
-
     else if (
         mode === "visits"
     ) {
 
         result.sort(
-            (a,b) =>
+            (a, b) =>
                 (Number(b.visits) || 0) -
                 (Number(a.visits) || 0)
         );
 
     }
 
-
     else if (
         mode === "favorites"
     ) {
 
         result.sort(
-            (a,b) =>
+            (a, b) =>
                 (Number(b.favorites) || 0) -
                 (Number(a.favorites) || 0)
         );
 
     }
 
-
     else if (
         mode === "new"
     ) {
 
         result.sort(
-            (a,b) =>
+            (a, b) =>
                 getDate(b) -
                 getDate(a)
         );
 
     }
 
-
     else if (
         mode === "name"
     ) {
 
         result.sort(
-            (a,b) =>
+            (a, b) =>
                 String(
                     a.name || ""
                 ).localeCompare(
@@ -1620,7 +1819,6 @@ function sortGames(games) {
         );
 
     }
-
 
     else if (
         mode === "random"
@@ -1637,9 +1835,9 @@ function sortGames(games) {
 }
 
 
-/* =========================================
+/* =========================
    CARD
-========================================= */
+========================= */
 
 function createCard(game) {
 
@@ -1687,11 +1885,34 @@ function createCard(game) {
         );
 
 
+    const genres =
+        Array.from(
+            getGameGenres(game)
+        );
+
+
+    const visibleGenres =
+        genres
+            .slice(0, 2)
+            .map(
+                genre => `
+                    <span class="genre-badge">
+                        🎭 ${escapeHTML(genre)}
+                    </span>
+                `
+            )
+            .join("");
+
+
     return `
 
         <article
             class="card"
-            onclick="openGameStats('${escapeHTML(gameId)}')"
+            onclick="
+                openGameStats(
+                    '${escapeHTML(gameId)}'
+                )
+            "
         >
 
             <div class="image-wrap">
@@ -1710,12 +1931,18 @@ function createCard(game) {
 
 
                 <button
-                    class="favorite-button ${favorite ? "active" : ""}"
+                    class="favorite-button ${
+                        favorite
+                            ? "active"
+                            : ""
+                    }"
                     type="button"
                     title="Избранное"
                     onclick="
                         event.stopPropagation();
-                        toggleFavorite('${escapeHTML(gameId)}')
+                        toggleFavorite(
+                            '${escapeHTML(gameId)}'
+                        )
                     "
                 >
                     📌
@@ -1749,6 +1976,9 @@ function createCard(game) {
 
                 <div class="info">
 
+                    ${visibleGenres}
+
+
                     <span>
                         👥
                         ${formatNumber(
@@ -1756,12 +1986,14 @@ function createCard(game) {
                         )}
                     </span>
 
+
                     <span>
                         👀
                         ${formatNumber(
                             visits
                         )}
                     </span>
+
 
                     <span>
                         ⭐
@@ -1778,7 +2010,9 @@ function createCard(game) {
                     href="${url}"
                     target="_blank"
                     rel="noopener noreferrer"
-                    onclick="event.stopPropagation()"
+                    onclick="
+                        event.stopPropagation()
+                    "
                 >
                     ▶ Играть в Roblox
                 </a>
@@ -1791,9 +2025,9 @@ function createCard(game) {
 }
 
 
-/* =========================================
+/* =========================
    FILTER
-========================================= */
+========================= */
 
 function applyFilters() {
 
@@ -1803,11 +2037,16 @@ function applyFilters() {
             .toLowerCase();
 
 
+    const selectedGenre =
+        genreFilter.value;
+
+
     let minOnline =
         parseInt(
             minOnlineInput.value,
             10
         );
+
 
     let maxOnline =
         parseInt(
@@ -1821,6 +2060,7 @@ function applyFilters() {
             minOnline
         )
     ) {
+
         minOnline = 0;
     }
 
@@ -1830,6 +2070,7 @@ function applyFilters() {
             maxOnline
         )
     ) {
+
         maxOnline = Infinity;
     }
 
@@ -1876,13 +2117,32 @@ function applyFilters() {
                     ) || 0;
 
 
+                const genreMatches =
+                    selectedGenre === "all" ||
+                    getGameGenres(game)
+                        .has(
+                            selectedGenre
+                        );
+
+
                 return (
+
                     (
                         !query ||
                         name.includes(query) ||
                         description.includes(query)
-                    ) &&
-                    online >= minOnline &&
+                    )
+
+                    &&
+
+                    genreMatches
+
+                    &&
+
+                    online >= minOnline
+
+                    &&
+
                     online <= maxOnline
                 );
             }
@@ -1899,20 +2159,24 @@ function applyFilters() {
 }
 
 
-/* =========================================
+/* =========================
    RENDER
-========================================= */
+========================= */
 
 function render() {
 
     countElement.textContent =
         filteredGames.length
-            .toLocaleString("ru-RU");
+            .toLocaleString(
+                "ru-RU"
+            );
 
 
     totalElement.textContent =
         allGames.length
-            .toLocaleString("ru-RU");
+            .toLocaleString(
+                "ru-RU"
+            );
 
 
     if (
@@ -1965,14 +2229,16 @@ function render() {
 
     grid.innerHTML =
         filteredGames
-            .map(createCard)
+            .map(
+                createCard
+            )
             .join("");
 }
 
 
-/* =========================================
+/* =========================
    HISTORY
-========================================= */
+========================= */
 
 async function loadHistory(game) {
 
@@ -2029,6 +2295,7 @@ async function loadHistory(game) {
 
 
     return data
+
         .filter(
             point =>
                 point &&
@@ -2039,8 +2306,10 @@ async function loadHistory(game) {
                     )
                 )
         )
+
         .map(
             point => ({
+
                 time:
                     new Date(
                         point.time
@@ -2050,26 +2319,31 @@ async function loadHistory(game) {
                     Number(
                         point.playing
                     )
+
             })
         )
+
         .filter(
             point =>
                 !Number.isNaN(
                     point.time.getTime()
                 )
         )
+
         .sort(
-            (a,b) =>
+            (a, b) =>
                 a.time - b.time
         );
 }
 
 
-/* =========================================
-   OPEN STATS
-========================================= */
+/* =========================
+   OPEN STATISTICS
+========================= */
 
-async function openGameStats(gameId) {
+async function openGameStats(
+    gameId
+) {
 
     const game =
         allGames.find(
@@ -2130,16 +2404,8 @@ async function openGameStats(gameId) {
             );
 
 
-        /*
-           Берём только последние
-           24 часа.
-        */
-
-        const now =
-            Date.now();
-
         const dayAgo =
-            now -
+            Date.now() -
             24 * 60 * 60 * 1000;
 
 
@@ -2191,11 +2457,13 @@ async function openGameStats(gameId) {
 }
 
 
-/* =========================================
+/* =========================
    MODAL FAVORITE
-========================================= */
+========================= */
 
-function updateModalFavorite(game) {
+function updateModalFavorite(
+    game
+) {
 
     if (
         isFavorite(game)
@@ -2212,20 +2480,29 @@ function updateModalFavorite(game) {
 }
 
 
-/* =========================================
+/* =========================
    STATISTICS
-========================================= */
+========================= */
 
 function resetStatistics() {
 
-    statMax.textContent = "—";
-    statMin.textContent = "—";
-    statAverage.textContent = "—";
-    statPoints.textContent = "—";
+    statMax.textContent =
+        "—";
+
+    statMin.textContent =
+        "—";
+
+    statAverage.textContent =
+        "—";
+
+    statPoints.textContent =
+        "—";
 }
 
 
-function drawStatistics(points) {
+function drawStatistics(
+    points
+) {
 
     chartMessage.style.display =
         "none";
@@ -2243,15 +2520,20 @@ function drawStatistics(points) {
 
 
     const max =
-        Math.max(...values);
+        Math.max(
+            ...values
+        );
+
 
     const min =
-        Math.min(...values);
+        Math.min(
+            ...values
+        );
 
 
     const sum =
         values.reduce(
-            (a,b) =>
+            (a, b) =>
                 a + b,
             0
         );
@@ -2265,15 +2547,21 @@ function drawStatistics(points) {
 
 
     statMax.textContent =
-        formatNumber(max);
+        formatNumber(
+            max
+        );
 
 
     statMin.textContent =
-        formatNumber(min);
+        formatNumber(
+            min
+        );
 
 
     statAverage.textContent =
-        formatNumber(average);
+        formatNumber(
+            average
+        );
 
 
     statPoints.textContent =
@@ -2286,11 +2574,13 @@ function drawStatistics(points) {
 }
 
 
-/* =========================================
+/* =========================
    CHART
-========================================= */
+========================= */
 
-function drawChart(points) {
+function drawChart(
+    points
+) {
 
     const ctx =
         chart.getContext(
@@ -2315,14 +2605,19 @@ function drawChart(points) {
         rect.height * dpr;
 
 
-    ctx.scale(
+    ctx.setTransform(
         dpr,
-        dpr
+        0,
+        0,
+        dpr,
+        0,
+        0
     );
 
 
     const width =
         rect.width;
+
 
     const height =
         rect.height;
@@ -2357,10 +2652,15 @@ function drawChart(points) {
 
 
     let min =
-        Math.min(...values);
+        Math.min(
+            ...values
+        );
+
 
     let max =
-        Math.max(...values);
+        Math.max(
+            ...values
+        );
 
 
     if (
@@ -2418,6 +2718,7 @@ function drawChart(points) {
 
         return (
             paddingTop +
+
             (
                 1 -
                 (
@@ -2425,14 +2726,13 @@ function drawChart(points) {
                     (max - min)
                 )
             ) *
+
             chartHeight
         );
     }
 
 
-    /*
-       GRID
-    */
+    /* GRID */
 
     ctx.strokeStyle =
         "#202733";
@@ -2453,10 +2753,12 @@ function drawChart(points) {
 
         const yy =
             paddingTop +
+
             (
                 i /
                 gridLines
             ) *
+
             chartHeight;
 
 
@@ -2478,6 +2780,7 @@ function drawChart(points) {
 
         const value =
             max -
+
             (
                 (
                     max - min
@@ -2496,28 +2799,35 @@ function drawChart(points) {
         ctx.textAlign =
             "right";
 
+
         ctx.fillText(
             formatNumber(
-                Math.round(value)
+                Math.round(
+                    value
+                )
             ),
+
             paddingLeft - 8,
+
             yy + 4
         );
     }
 
 
-    /*
-       LINE
-    */
+    /* LINE */
 
     ctx.beginPath();
 
 
     points.forEach(
-        (point, index) => {
+        (
+            point,
+            index
+        ) => {
 
             const xx =
                 x(index);
+
 
             const yy =
                 y(
@@ -2560,14 +2870,13 @@ function drawChart(points) {
     ctx.stroke();
 
 
-    /*
-       FILL
-    */
+    /* FILL */
 
     ctx.lineTo(
         x(
             points.length - 1
         ),
+
         paddingTop +
         chartHeight
     );
@@ -2575,6 +2884,7 @@ function drawChart(points) {
 
     ctx.lineTo(
         x(0),
+
         paddingTop +
         chartHeight
     );
@@ -2610,15 +2920,17 @@ function drawChart(points) {
     ctx.fill();
 
 
-    /*
-       POINTS
-    */
+    /* POINTS */
 
     points.forEach(
-        (point, index) => {
+        (
+            point,
+            index
+        ) => {
 
             const xx =
                 x(index);
+
 
             const yy =
                 y(
@@ -2627,6 +2939,7 @@ function drawChart(points) {
 
 
             ctx.beginPath();
+
 
             ctx.arc(
                 xx,
@@ -2645,9 +2958,7 @@ function drawChart(points) {
     );
 
 
-    /*
-       TIME LABELS
-    */
+    /* TIME LABELS */
 
     ctx.fillStyle =
         "#687386";
@@ -2674,6 +2985,7 @@ function drawChart(points) {
 
         const index =
             Math.round(
+
                 (
                     i /
                     Math.max(
@@ -2681,6 +2993,7 @@ function drawChart(points) {
                         labelCount - 1
                     )
                 ) *
+
                 (
                     points.length - 1
                 )
@@ -2710,9 +3023,9 @@ function drawChart(points) {
 }
 
 
-/* =========================================
+/* =========================
    CHART MESSAGE
-========================================= */
+========================= */
 
 function resetChart() {
 
@@ -2779,9 +3092,9 @@ function showChartMessage(
 }
 
 
-/* =========================================
+/* =========================
    CLOSE MODAL
-========================================= */
+========================= */
 
 function closeStatistics() {
 
@@ -2828,9 +3141,9 @@ document.addEventListener(
 );
 
 
-/* =========================================
+/* =========================
    MODAL FAVORITE
-========================================= */
+========================= */
 
 modalFavorite.addEventListener(
     "click",
@@ -2839,6 +3152,7 @@ modalFavorite.addEventListener(
         if (
             !currentModalGame
         ) {
+
             return;
         }
 
@@ -2852,11 +3166,13 @@ modalFavorite.addEventListener(
 );
 
 
-/* =========================================
+/* =========================
    NAV
-========================================= */
+========================= */
 
-function switchTab(tab) {
+function switchTab(
+    tab
+) {
 
     currentTab =
         tab;
@@ -2910,12 +3226,18 @@ favoritesTab.addEventListener(
 );
 
 
-/* =========================================
+/* =========================
    FILTER EVENTS
-========================================= */
+========================= */
 
 searchInput.addEventListener(
     "input",
+    applyFilters
+);
+
+
+genreFilter.addEventListener(
+    "change",
     applyFilters
 );
 
@@ -2951,6 +3273,9 @@ resetButton.addEventListener(
         maxOnlineInput.value =
             "";
 
+        genreFilter.value =
+            "all";
+
         sortSelect.value =
             "online";
 
@@ -2959,9 +3284,9 @@ resetButton.addEventListener(
 );
 
 
-/* =========================================
-   LOAD
-========================================= */
+/* =========================
+   LOAD GAMES
+========================= */
 
 async function loadGames() {
 
@@ -2976,8 +3301,10 @@ async function loadGames() {
                 DATA_URL +
                 "?v=" +
                 Date.now(),
+
                 {
-                    cache: "no-store"
+                    cache:
+                        "no-store"
                 }
             );
 
@@ -3026,20 +3353,21 @@ async function loadGames() {
         }
 
 
-        /*
-           Убираем дубли.
-        */
+        /* Убираем дубли */
 
         const unique =
             new Map();
 
 
         for (
-            const game of allGames
+            const game
+            of allGames
         ) {
 
             const id =
-                getGameId(game);
+                getGameId(
+                    game
+                );
 
 
             if (
@@ -3103,9 +3431,9 @@ async function loadGames() {
 }
 
 
-/* =========================================
+/* =========================
    START
-========================================= */
+========================= */
 
 updateFavoriteCount();
 
