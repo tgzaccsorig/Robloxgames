@@ -168,6 +168,8 @@ body {
     outline: none;
 }
 
+.genre-picker{position:relative;display:inline-block}.genre-button{min-width:150px;cursor:pointer;font-weight:800;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:10px}.genre-arrow{font-size:13px}.genre-menu{display:none;position:absolute;top:calc(100% + 7px);left:0;z-index:1000;width:210px;max-height:360px;overflow-y:auto;padding:7px;background:#151922;border:1px solid #303744;border-radius:12px;box-shadow:0 15px 40px rgba(0,0,0,.45)}.genre-menu.open{display:block}.genre-menu button{display:block;width:100%;padding:10px 11px;border:0;border-radius:8px;background:transparent;color:#fff;text-align:left;cursor:pointer;font:inherit}.genre-menu button:hover,.genre-menu button.selected{background:#202631}.genre-filter-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
 .select {
     background: #151922;
     border: 1px solid #282e3a;
@@ -851,24 +853,6 @@ body {
         padding: 16px;
     }
 }
-
-/* Кнопка выбора жанра */
-.genre-button {
-    border: 1px solid #2a303b;
-    background: #151922;
-    color: #fff;
-    border-radius: 12px;
-    padding: 12px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.genre-button:hover {
-    background: #202633;
-}
-
 </style>
 </head>
 
@@ -927,77 +911,29 @@ body {
         autocomplete="off"
     >
 
-    <button
-        id="genreButton"
-        class="genre-button"
-        type="button"
-        onclick="document.getElementById('genreFilter').focus(); document.getElementById('genreFilter').click();"
-    >
-        🎭 Жанр игр
-    </button>
-
-    <select
-        id="genreFilter"
-        class="select"
-    >
-        <option value="all">🎭 Все жанры</option>
-
-        <option value="Simulator">
-            ⚙️ Simulator
-        </option>
-
-        <option value="RNG">
-            🎲 RNG
-        </option>
-
-        <option value="Horror">
-            👻 Horror
-        </option>
-
-        <option value="RPG">
-            ⚔️ RPG
-        </option>
-
-        <option value="Tycoon">
-            🏗️ Tycoon
-        </option>
-
-        <option value="Obby">
-            🏃 Obby
-        </option>
-
-        <option value="Racing">
-            🏎️ Racing
-        </option>
-
-        <option value="Fighting">
-            🥊 Fighting
-        </option>
-
-        <option value="Adventure">
-            🗺️ Adventure
-        </option>
-
-        <option value="Survival">
-            🧟 Survival
-        </option>
-
-        <option value="FPS">
-            🔫 FPS
-        </option>
-
-        <option value="Sports">
-            ⚽ Sports
-        </option>
-
-        <option value="Town and City">
-            🏙️ Town & City
-        </option>
-
-        <option value="Comedy">
-            😂 Comedy
-        </option>
-    </select>
+    <div class="genre-picker" id="genrePicker">
+        <button id="genreButton" class="select genre-button" type="button" aria-haspopup="true" aria-expanded="false">🎭 Жанр игр <span class="genre-arrow">▾</span></button>
+        <div id="genreMenu" class="genre-menu" role="menu">
+            <button type="button" data-genre="all">🎭 Все жанры</button>
+            <button type="button" data-genre="Simulator">⚙️ Simulator</button>
+            <button type="button" data-genre="RNG">🎲 RNG</button>
+            <button type="button" data-genre="Horror">👻 Horror</button>
+            <button type="button" data-genre="RPG">⚔️ RPG</button>
+            <button type="button" data-genre="Tycoon">🏗️ Tycoon</button>
+            <button type="button" data-genre="Obby">🏃 Obby</button>
+            <button type="button" data-genre="Racing">🏎️ Racing</button>
+            <button type="button" data-genre="Fighting">🥊 Fighting</button>
+            <button type="button" data-genre="Adventure">🗺️ Adventure</button>
+            <button type="button" data-genre="Survival">🧟 Survival</button>
+            <button type="button" data-genre="FPS">🔫 FPS</button>
+            <button type="button" data-genre="Sports">⚽ Sports</button>
+            <button type="button" data-genre="Town and City">🏙️ Town &amp; City</button>
+            <button type="button" data-genre="Comedy">😂 Comedy</button>
+        </div>
+        <select id="genreFilter" class="genre-filter-hidden" aria-hidden="true" tabindex="-1">
+            <option value="all">Все жанры</option><option value="Simulator">Simulator</option><option value="RNG">RNG</option><option value="Horror">Horror</option><option value="RPG">RPG</option><option value="Tycoon">Tycoon</option><option value="Obby">Obby</option><option value="Racing">Racing</option><option value="Fighting">Fighting</option><option value="Adventure">Adventure</option><option value="Survival">Survival</option><option value="FPS">FPS</option><option value="Sports">Sports</option><option value="Town and City">Town &amp; City</option><option value="Comedy">Comedy</option>
+        </select>
+    </div>
 
 
     <input
@@ -1343,6 +1279,41 @@ const favoritesTab =
 
 const favoriteCount =
     document.getElementById("favoriteCount");
+
+const genreButton = document.getElementById("genreButton");
+const genreMenu = document.getElementById("genreMenu");
+const genrePicker = document.getElementById("genrePicker");
+
+function updateGenreButton() {
+    genreMenu.querySelectorAll("button[data-genre]").forEach(button => {
+        button.classList.toggle("selected", button.dataset.genre === genreFilter.value);
+    });
+}
+
+genreButton.addEventListener("click", event => {
+    event.stopPropagation();
+    const open = genreMenu.classList.toggle("open");
+    genreButton.setAttribute("aria-expanded", String(open));
+});
+
+genreMenu.querySelectorAll("button[data-genre]").forEach(button => {
+    button.addEventListener("click", () => {
+        genreFilter.value = button.dataset.genre;
+        updateGenreButton();
+        genreMenu.classList.remove("open");
+        genreButton.setAttribute("aria-expanded", "false");
+        applyFilters();
+    });
+});
+
+document.addEventListener("click", event => {
+    if (!genrePicker.contains(event.target)) {
+        genreMenu.classList.remove("open");
+        genreButton.setAttribute("aria-expanded", "false");
+    }
+});
+
+updateGenreButton();
 
 const modal =
     document.getElementById("modal");
@@ -3404,4 +3375,4 @@ loadGames();
 </script>
 
 </body>
-    </html>
+                    </html>
