@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hidegamefindrbx — Поиск игр Roblox</title>
     <style>
+        /* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ===== */
         :root {
-            --bg: #000000;
-            --card-bg: #0a0a0a;
-            --accent: #007bff;
-            --accent2: #0056b3;
+            --bg: #0a0a0f;
+            --card-bg: #111118;
+            --card-hover: #16161f;
+            --accent: #1e90ff;
+            --accent-light: #4da6ff;
+            --accent-dark: #0056b3;
             --text: #ffffff;
-            --muted: #aaaaaa;
+            --text-muted: #9ca3af;
             --star: #ffd700;
-            --border: #1a1a1a;
+            --border: #1f1f2e;
+            --shadow: 0 8px 20px rgba(0,0,0,0.5);
+            --transition: 0.25s ease;
         }
 
         * {
@@ -23,21 +28,24 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            line-height: 1.5;
         }
 
+        /* ===== ШАПКА ===== */
         header {
-            background: var(--card-bg);
+            background: rgba(17, 17, 24, 0.95);
+            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 50;
             border-bottom: 1px solid var(--border);
         }
 
@@ -46,22 +54,27 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--accent);
-            text-transform: uppercase;
+            font-size: 2rem;
+            font-weight: 800;
             letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
         }
 
         .disclaimer {
             font-size: 0.8rem;
-            color: var(--muted);
-            max-width: 400px;
+            color: var(--text-muted);
+            max-width: 450px;
             text-align: right;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
         }
 
         .search-bar {
@@ -71,66 +84,78 @@
 
         .search-bar input {
             width: 100%;
-            padding: 0.7rem 1rem;
-            border-radius: 25px;
-            border: none;
-            outline: none;
-            background: #111;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            background: #0d0d14;
             color: var(--text);
             font-size: 1rem;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            outline: none;
+            transition: var(--transition);
         }
 
         .search-bar input:focus {
-            box-shadow: 0 0 0 2px var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.2);
         }
 
-        /* Панель фильтров сверху */
+        /* ===== ПАНЕЛЬ ФИЛЬТРОВ ===== */
         .filters-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            padding: 10px 20px;
-            background: #0a0a0a;
+            gap: 12px;
+            padding: 12px 20px;
+            background: #0d0d14;
             border-bottom: 1px solid var(--border);
-            align-items: center;
-            justify-content: flex-start;
+            align-items: flex-end;
+            position: sticky;
+            top: 70px; /* чтобы не перекрывалась шапкой */
+            z-index: 40;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            min-width: 150px;
-            flex: 0 1 auto;
+            gap: 4px;
+            min-width: 140px;
         }
 
         .filter-group label {
-            font-size: 0.8rem;
-            color: var(--muted);
+            font-size: 0.75rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .filter-group select,
         .filter-group input[type="number"] {
-            padding: 0.4rem 0.6rem;
-            border-radius: 4px;
-            border: 1px solid #333;
-            background: #111;
+            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #2a2a3a;
+            background: #111118;
             color: var(--text);
             outline: none;
             font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-group select:focus,
+        .filter-group input[type="number"]:focus {
+            border-color: var(--accent);
         }
 
         .filter-group select[multiple] {
-            height: 80px;
-            width: 180px;
+            height: 100px;
+            width: 190px;
         }
 
         .range-inputs {
             display: flex;
-            gap: 5px;
+            gap: 6px;
             align-items: center;
         }
 
@@ -138,29 +163,8 @@
             width: 70px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            background: var(--accent2);
-            color: #fff;
-            white-space: nowrap;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-        }
-
-        .btn-random {
-            background: #0056b3;
-        }
-
-        .btn-reset {
-            background: #333;
+        .range-inputs span {
+            color: #666;
         }
 
         .favorites-only {
@@ -168,52 +172,136 @@
             align-items: center;
             gap: 5px;
             white-space: nowrap;
+            margin-bottom: 5px;
         }
 
         .favorites-only input {
             accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.55rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background: var(--accent);
+            color: #fff;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(30, 144, 255, 0.3);
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 144, 255, 0.4);
+        }
+
+        .btn-random {
+            background: var(--accent-dark);
+        }
+
+        .btn-reset {
+            background: #3a3a4a;
+            box-shadow: none;
+        }
+
+        .btn-reset:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .main-content {
             flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .main-content h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.5rem;
         }
 
+        /* ===== КАРТОЧКА ИГРЫ ===== */
         .game-card {
             background: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            box-shadow: var(--shadow);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform var(--transition), box-shadow var(--transition);
             position: relative;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border);
+            animation: fadeInUp 0.4s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.6);
             border-color: var(--accent);
+            background: var(--card-hover);
         }
 
         .game-thumb {
-            height: 140px;
-            background: linear-gradient(135deg, #001a33, #003366);
+            height: 150px;
+            background: linear-gradient(145deg, #001f3f, #004080);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 3rem;
+            color: rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-thumb::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .game-card:hover .game-thumb::after {
+            left: 100%;
         }
 
         .game-info {
@@ -224,136 +312,178 @@
         }
 
         .game-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .game-genre {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            background: #1a1a2e;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            align-self: flex-start;
         }
 
         .game-online {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #4caf50;
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            gap: 4px;
             margin-bottom: 0.3rem;
         }
 
         .game-visits {
             font-size: 0.85rem;
-            color: #66b3ff;
+            color: var(--accent-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .favorite-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            color: #444;
+            color: #555;
             position: absolute;
             top: 10px;
             right: 10px;
-            transition: 0.2s;
+            transition: transform 0.2s, color 0.2s;
             z-index: 5;
-        }
-
-        .favorite-btn.active {
-            color: var(--star);
+            line-height: 1;
         }
 
         .favorite-btn:hover {
             transform: scale(1.2);
         }
 
-        /* Модальное окно */
+        .favorite-btn.active {
+            color: var(--star);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            backdrop-filter: blur(4px);
         }
 
         .modal {
-            background: #0a0a0a;
-            border-radius: 12px;
+            background: #111118;
+            border-radius: 16px;
             padding: 2rem;
-            max-width: 650px;
+            max-width: 700px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            border: 1px solid #222;
+            border: 1px solid #2a2a3a;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .modal-close {
             position: absolute;
-            top: 10px;
+            top: 12px;
             right: 15px;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
             background: none;
             border: none;
-            color: var(--muted);
+            color: #888;
+            transition: color 0.2s, transform 0.2s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+            transform: rotate(90deg);
         }
 
         .modal h2 {
             margin-bottom: 1rem;
-            color: var(--accent);
+            color: var(--accent-light);
+            font-size: 1.8rem;
+            border-bottom: 1px solid #2a2a3a;
+            padding-bottom: 0.5rem;
         }
 
         .chart-container {
-            margin: 1rem 0;
-            background: #111;
+            margin: 1.2rem 0;
+            background: #0d0d14;
             padding: 1rem;
-            border-radius: 8px;
+            border-radius: 10px;
+            border: 1px solid #222;
         }
 
         canvas {
             width: 100%;
-            height: 200px;
+            height: 220px;
             display: block;
         }
 
         .modal-stats {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             flex-wrap: wrap;
             margin-top: 1rem;
         }
 
         .stat-item {
-            background: #111;
-            padding: 0.7rem 1rem;
-            border-radius: 6px;
+            background: #0d0d14;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
             flex: 1;
-            min-width: 120px;
+            min-width: 110px;
             text-align: center;
+            border: 1px solid #222;
         }
 
         .stat-item .label {
-            color: var(--muted);
+            color: var(--text-muted);
             font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .stat-item .value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            margin-top: 0.2rem;
         }
 
-        /* Адаптивность */
+        /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 768px) {
             .header-top {
                 flex-direction: column;
@@ -361,10 +491,16 @@
             }
             .disclaimer {
                 text-align: left;
+                max-width: 100%;
+                border-left: none;
+                border-top: 2px solid var(--accent);
+                padding-top: 6px;
+                padding-left: 0;
             }
             .filters-bar {
                 flex-direction: column;
                 align-items: stretch;
+                position: static;
             }
             .filter-group {
                 min-width: 100%;
@@ -372,24 +508,31 @@
             .range-inputs {
                 flex-wrap: wrap;
             }
+            .btn {
+                width: 100%;
+            }
+            .main-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- ШАПКА -->
     <header>
         <div class="header-top">
             <div class="logo">hidegamefindrbx</div>
             <div class="disclaimer">Этот сайт фанатский и не имеет никакого отношения к Roblox comparation</div>
         </div>
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Поиск игры по названию...">
+            <input type="text" id="searchInput" placeholder="🔍 Поиск игры по названию...">
         </div>
     </header>
 
-    <!-- Панель фильтров (сверху) -->
+    <!-- ПАНЕЛЬ ФИЛЬТРОВ -->
     <div class="filters-bar">
         <div class="filter-group">
-            <label for="genreFilter">Жанр</label>
+            <label for="genreFilter">🎮 Жанр</label>
             <select id="genreFilter" multiple size="3">
                 <option value="all">Все жанры</option>
                 <option value="Приключения">Приключения</option>
@@ -401,49 +544,49 @@
                 <option value="РП">РП</option>
                 <option value="Обби">Обби</option>
             </select>
-            <small style="color:#888;">Ctrl+клик для нескольких</small>
+            <small style="color:#888; font-size:0.7rem;">Ctrl+клик для нескольких</small>
         </div>
 
         <div class="filter-group">
-            <label>Онлайн</label>
+            <label>👥 Онлайн</label>
             <div class="range-inputs">
                 <input type="number" id="minOnline" placeholder="Мин" min="0">
-                <span style="color:#888;">—</span>
+                <span>—</span>
                 <input type="number" id="maxOnline" placeholder="Макс" min="0">
             </div>
         </div>
 
         <div class="filter-group">
-            <label>Визиты</label>
+            <label>👁 Визиты</label>
             <div class="range-inputs">
                 <input type="number" id="minVisits" placeholder="Мин" min="0">
-                <span style="color:#888;">—</span>
+                <span>—</span>
                 <input type="number" id="maxVisits" placeholder="Макс" min="0">
             </div>
         </div>
 
         <div class="filter-group favorites-only">
             <input type="checkbox" id="favoritesOnly">
-            <label for="favoritesOnly">Только избранное</label>
+            <label for="favoritesOnly">⭐ Только избранное</label>
         </div>
 
-        <button class="btn btn-random" id="randomBtn">🎲 Рандом по онлайну</button>
-        <button class="btn btn-reset" id="resetBtn">Сбросить фильтры</button>
+        <button class="btn btn-random" id="randomBtn">🎲 Рандом</button>
+        <button class="btn btn-reset" id="resetBtn">🔄 Сброс</button>
     </div>
 
-    <!-- Основной контент -->
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="main-content">
-        <h2>Игры Roblox</h2>
+        <h2>🔥 Популярные игры Roblox</h2>
         <div class="games-grid" id="gamesGrid"></div>
     </main>
 
-    <!-- Модальное окно статистики -->
+    <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <button class="modal-close" id="modalClose">&times;</button>
-            <h2 id="modalTitle">Статистика онлайна</h2>
+            <h2 id="modalTitle">Статистика</h2>
             <div class="chart-container">
-                <canvas id="onlineChart" width="500" height="200"></canvas>
+                <canvas id="onlineChart"></canvas>
             </div>
             <div class="modal-stats" id="modalStats"></div>
         </div>
@@ -477,7 +620,7 @@
             isFavorite: false,
         }));
 
-        // localStorage для избранного
+        // localStorage с проверкой доступности
         const FAVORITES_KEY = 'hidegamefindrbx_favorites';
         function loadFavorites() {
             try {
@@ -486,11 +629,17 @@
                     const game = games.find(g => g.id === id);
                     if (game) game.isFavorite = true;
                 });
-            } catch (e) {}
+            } catch (e) {
+                console.warn('localStorage недоступен, избранное не сохраняется.');
+            }
         }
         function saveFavorites() {
-            const favIds = games.filter(g => g.isFavorite).map(g => g.id);
-            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favIds));
+            try {
+                const favIds = games.filter(g => g.isFavorite).map(g => g.id);
+                localStorage.setItem(FAVORITES_KEY, JSON.stringify(favIds));
+            } catch (e) {
+                console.warn('Не удалось сохранить избранное.');
+            }
         }
 
         // ============ DOM ЭЛЕМЕНТЫ ============
@@ -510,9 +659,9 @@
         const onlineChartCanvas = document.getElementById('onlineChart');
         const modalStats = document.getElementById('modalStats');
 
-        let chartInstance = null;
+        let currentGameId = null;
 
-        // ============ ФУНКЦИИ ============
+        // ============ УТИЛИТЫ ============
         function formatVisits(visits) {
             if (visits >= 1e9) return (visits / 1e9).toFixed(1) + 'B';
             if (visits >= 1e6) return (visits / 1e6).toFixed(1) + 'M';
@@ -523,42 +672,27 @@
         function getFilteredGames() {
             let filtered = [...games];
 
-            // Поиск по названию
             const searchTerm = searchInput.value.toLowerCase().trim();
             if (searchTerm) {
                 filtered = filtered.filter(g => g.title.toLowerCase().includes(searchTerm));
             }
 
-            // Фильтр по жанру (множественный выбор)
             const selectedGenres = Array.from(genreFilter.selectedOptions).map(opt => opt.value);
             if (!selectedGenres.includes('all') && selectedGenres.length > 0) {
                 filtered = filtered.filter(g => selectedGenres.includes(g.genre));
             }
 
-            // Фильтр по онлайну
             const minOnline = parseInt(minOnlineInput.value);
             const maxOnline = parseInt(maxOnlineInput.value);
-            if (!isNaN(minOnline)) {
-                filtered = filtered.filter(g => g.online >= minOnline);
-            }
-            if (!isNaN(maxOnline)) {
-                filtered = filtered.filter(g => g.online <= maxOnline);
-            }
+            if (!isNaN(minOnline)) filtered = filtered.filter(g => g.online >= minOnline);
+            if (!isNaN(maxOnline)) filtered = filtered.filter(g => g.online <= maxOnline);
 
-            // Фильтр по визитам
             const minVisits = parseInt(minVisitsInput.value);
             const maxVisits = parseInt(maxVisitsInput.value);
-            if (!isNaN(minVisits)) {
-                filtered = filtered.filter(g => g.visits >= minVisits);
-            }
-            if (!isNaN(maxVisits)) {
-                filtered = filtered.filter(g => g.visits <= maxVisits);
-            }
+            if (!isNaN(minVisits)) filtered = filtered.filter(g => g.visits >= minVisits);
+            if (!isNaN(maxVisits)) filtered = filtered.filter(g => g.visits <= maxVisits);
 
-            // Только избранное
-            if (favoritesOnlyCheckbox.checked) {
-                filtered = filtered.filter(g => g.isFavorite);
-            }
+            if (favoritesOnlyCheckbox.checked) filtered = filtered.filter(g => g.isFavorite);
 
             return filtered;
         }
@@ -568,7 +702,7 @@
             gamesGrid.innerHTML = '';
 
             if (filtered.length === 0) {
-                gamesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#aaa;">Ничего не найдено</p>';
+                gamesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#aaa; padding: 2rem;">😕 Ничего не найдено. Попробуйте изменить фильтры.</p>';
                 return;
             }
 
@@ -583,16 +717,23 @@
                     <div class="game-thumb">🎮</div>
                     <div class="game-info">
                         <div class="game-title">${game.title}</div>
-                        <div class="game-genre">${game.genre}</div>
-                        <div class="game-online">🟢 ${game.online.toLocaleString()} онлайн</div>
-                        <div class="game-visits">👁 ${formatVisits(game.visits)} посещений</div>
+                        <span class="game-genre">${game.genre}</span>
+                        <div class="game-online">
+                            <span>🟢</span> ${game.online.toLocaleString()} онлайн
+                        </div>
+                        <div class="game-visits">
+                            <span>👁</span> ${formatVisits(game.visits)} посещений
+                        </div>
                     </div>
                 `;
+
+                // Обработчик клика по карточке (исключая клик по избранному)
                 card.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('favorite-btn')) return;
+                    if (e.target.closest('.favorite-btn')) return;
                     openStats(game);
                 });
 
+                // Обработчик клика по кнопке избранного
                 const favBtn = card.querySelector('.favorite-btn');
                 favBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -620,22 +761,19 @@
                 if (newOnline < 100) newOnline = 100;
                 game.online = newOnline;
                 game.history.push(newOnline);
-                if (game.history.length > 30) {
-                    game.history.shift();
-                }
+                if (game.history.length > 30) game.history.shift();
             });
+
+            // Если открыто модальное окно, обновляем его статистику
             if (modalOverlay.style.display === 'flex' && currentGameId) {
                 const currentGame = games.find(g => g.id === currentGameId);
-                if (currentGame) {
-                    updateModalStats(currentGame);
-                }
+                if (currentGame) updateModalStats(currentGame);
             }
+
             renderGames();
         }
 
         // ============ МОДАЛЬНОЕ ОКНО ============
-        let currentGameId = null;
-
         function openStats(game) {
             currentGameId = game.id;
             modalTitle.textContent = game.title;
@@ -674,40 +812,60 @@
         }
 
         function drawChart(history) {
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-            const ctx = onlineChartCanvas.getContext('2d');
-            ctx.clearRect(0, 0, onlineChartCanvas.width, onlineChartCanvas.height);
+            const canvas = onlineChartCanvas;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth || 500;
+            const height = canvas.height = 220;
+            ctx.clearRect(0, 0, width, height);
             
-            const width = onlineChartCanvas.width;
-            const height = onlineChartCanvas.height;
-            const padding = 20;
+            const padding = 30;
             const maxVal = Math.max(...history);
             const minVal = Math.min(...history);
             const range = maxVal - minVal || 1;
-            
-            ctx.beginPath();
-            ctx.strokeStyle = '#007bff';
-            ctx.lineWidth = 2;
             const stepX = (width - 2 * padding) / (history.length - 1 || 1);
+
+            // Фон
+            ctx.fillStyle = '#0d0d14';
+            ctx.fillRect(0, 0, width, height);
+
+            // Сетка
+            ctx.strokeStyle = '#1f1f2e';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (height - 2 * padding) * (i / 5);
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+
+            // Линия графика
+            ctx.beginPath();
+            ctx.strokeStyle = '#1e90ff';
+            ctx.lineWidth = 2.5;
+            ctx.lineJoin = 'round';
             history.forEach((val, index) => {
                 const x = padding + index * stepX;
                 const y = height - padding - ((val - minVal) / range) * (height - 2 * padding);
-                if (index === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
             });
             ctx.stroke();
 
+            // Заливка под линией
+            ctx.lineTo(width - padding, height - padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(30, 144, 255, 0.1)';
+            ctx.fill();
+
+            // Точки
             history.forEach((val, index) => {
                 const x = padding + index * stepX;
                 const y = height - padding - ((val - minVal) / range) * (height - 2 * padding);
                 ctx.beginPath();
                 ctx.arc(x, y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = '#4caf50';
+                ctx.fillStyle = '#4ade80';
                 ctx.fill();
             });
         }
@@ -715,15 +873,9 @@
         modalClose.addEventListener('click', () => {
             modalOverlay.style.display = 'none';
             currentGameId = null;
-            if (chartInstance) {
-                chartInstance.destroy();
-                chartInstance = null;
-            }
         });
         modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalClose.click();
-            }
+            if (e.target === modalOverlay) modalClose.click();
         });
 
         // ============ ОБРАБОТЧИКИ ФИЛЬТРОВ ============
