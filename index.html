@@ -1617,26 +1617,23 @@ function getDate(game) {
 
 function getGameGenres(game) {
 
-    const genres =
-        new Set();
+    const genres = new Set();
 
+    const rawGenre = String(
+        game.genre || ""
+    ).trim();
 
-    const baseGenre =
-        String(
-            game.genre || ""
-        ).trim();
-
-
+    // Реальный жанр из games.json.
     if (
-        baseGenre &&
-        baseGenre !== "All"
+        rawGenre &&
+        rawGenre.toLowerCase() !== "all"
     ) {
-
-        genres.add(
-            baseGenre
-        );
+        rawGenre
+            .split(/[,/|;]+/)
+            .map(x => x.trim())
+            .filter(Boolean)
+            .forEach(x => genres.add(x));
     }
-
 
     const text = [
         game.name || "",
@@ -1646,100 +1643,31 @@ function getGameGenres(game) {
         .join(" ")
         .toLowerCase();
 
-
     const rules = [
-
-        [
-            "Simulator",
-            /\bsimulator\b|simulation|simulator game/
-        ],
-
-        [
-            "RNG",
-            /\brng\b|random number|random luck|luck based|gacha|roll for/
-        ],
-
-        [
-            "Horror",
-            /\bhorror\b|scary|terrifying|survive the night|monster|killer|creepy/
-        ],
-
-        [
-            "RPG",
-            /\brpg\b|role.?playing|level up|quest|dungeon|character class/
-        ],
-
-        [
-            "Tycoon",
-            /\btycoon\b|build your empire|factory|business simulator/
-        ],
-
-        [
-            "Obby",
-            /\bobby\b|obstacle course|tower of hell|parkour/
-        ],
-
-        [
-            "Racing",
-            /\bracing\b|race cars|racing game|driving simulator|kart/
-        ],
-
-        [
-            "Fighting",
-            /\bfighting\b|fighter|combat|pvp|duel|battle arena/
-        ],
-
-        [
-            "Adventure",
-            /\badventure\b|explore|exploration|quest/
-        ],
-
-        [
-            "Survival",
-            /\bsurvival\b|survive|zombie apocalypse|crafting/
-        ],
-
-        [
-            "FPS",
-            /\bfps\b|first person shooter|shooter/
-        ],
-
-        [
-            "Sports",
-            /\bsports?\b|football|soccer|basketball|baseball|tennis/
-        ],
-
-        [
-            "Town and City",
-            /town|city|roleplay city|life in the city/
-        ],
-
-        [
-            "Comedy",
-            /\bcomedy\b|funny|meme|troll/
-        ]
+        ["Simulator", /\bsimulator\b|simulation|simulator game/],
+        ["RNG", /\brng\b|random number|random luck|luck based|gacha|roll for/],
+        ["Horror", /\bhorror\b|scary|terrifying|survive the night|monster|killer|creepy/],
+        ["RPG", /\brpg\b|role.?playing|level up|quest|dungeon|character class/],
+        ["Tycoon", /\btycoon\b|build your empire|factory|business simulator/],
+        ["Obby", /\bobby\b|\bobby\b|obstacle course|tower of hell|parkour/],
+        ["Racing", /\bracing\b|race cars|racing game|driving simulator|kart/],
+        ["Fighting", /\bfighting\b|fighter|combat|pvp|duel|battle arena/],
+        ["Adventure", /\badventure\b|explore|exploration|quest/],
+        ["Survival", /\bsurvival\b|survive|zombie apocalypse|crafting/],
+        ["FPS", /\bfps\b|first person shooter|shooter/],
+        ["Sports", /\bsports?\b|football|soccer|basketball|baseball|tennis/],
+        ["Town and City", /\btown\b|\bcity\b|roleplay city|life in the city/],
+        ["Comedy", /\bcomedy\b|funny|meme|troll/]
     ];
 
-
-    for (
-        const [name, regex]
-        of rules
-    ) {
-
-        if (
-            regex.test(text)
-        ) {
-
-            genres.add(
-                name
-            );
+    for (const [name, regex] of rules) {
+        if (regex.test(text)) {
+            genres.add(name);
         }
     }
 
-
     return genres;
 }
-
 
 /* =========================
    SORT
@@ -2119,16 +2047,17 @@ function applyFilters() {
 
                 const genreMatches =
                     selectedGenre === "all" ||
-                    Array.from(getGameGenres(game))
-                        .some(
-                            genre =>
-                                String(genre)
-                                    .trim()
-                                    .toLowerCase() ===
-                                String(selectedGenre)
-                                    .trim()
-                                    .toLowerCase()
-                        );
+                    Array.from(
+                        getGameGenres(game)
+                    ).some(
+                        genre =>
+                            String(genre)
+                                .trim()
+                                .toLowerCase() ===
+                            String(selectedGenre)
+                                .trim()
+                                .toLowerCase()
+                    );
 
 
                 return (
@@ -3290,76 +3219,6 @@ resetButton.addEventListener(
 );
 
 
-
-/* =========================
-   DYNAMIC GENRE FILTER
-========================= */
-
-function updateGenreOptions() {
-
-    const selected = genreFilter.value;
-
-    const genreMap = new Map();
-
-    allGames.forEach(game => {
-
-        getGameGenres(game).forEach(genre => {
-
-            const clean = String(genre || "").trim();
-
-            if (!clean || clean.toLowerCase() === "all") {
-                return;
-            }
-
-            const key = clean.toLowerCase();
-
-            if (!genreMap.has(key)) {
-                genreMap.set(key, clean);
-            }
-        });
-    });
-
-    const fixedOptions = Array.from(
-        genreFilter.options
-    ).map(option => ({
-        value: option.value,
-        text: option.textContent.trim()
-    }));
-
-    const existing = new Set(
-        fixedOptions.map(
-            option => option.value.toLowerCase()
-        )
-    );
-
-    genreMap.forEach((label, key) => {
-
-        if (
-            key !== "all" &&
-            !existing.has(key)
-        ) {
-            const option =
-                document.createElement("option");
-
-            option.value = label;
-            option.textContent = "🎭 " + label;
-
-            genreFilter.appendChild(option);
-        }
-    });
-
-    const stillExists =
-        Array.from(
-            genreFilter.options
-        ).some(
-            option =>
-                option.value === selected
-        );
-
-    genreFilter.value =
-        stillExists ? selected : "all";
-}
-
 /* =========================
    LOAD GAMES
 ========================= */
@@ -3462,8 +3321,6 @@ async function loadGames() {
             Array.from(
                 unique.values()
             );
-
-        updateGenreOptions();
 
 
         updateFavoriteCount();
