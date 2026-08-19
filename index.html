@@ -119,6 +119,12 @@ body {
     color: white;
 }
 
+#genreButton.active {
+    background: #00aaff;
+    border-color: #00aaff;
+    color: white;
+}
+
 /* =========================
    FILTERS
 ========================= */
@@ -768,6 +774,7 @@ body {
 
     .nav {
         padding: 0 15px 12px;
+        flex-wrap: wrap;
     }
 
     .controls {
@@ -896,10 +903,18 @@ body {
         <span id="favoriteCount">0</span>
     </button>
 
+    <button
+        id="genreButton"
+        class="nav-button"
+        type="button"
+    >
+        🎭 Жанр игр
+    </button>
+
 </nav>
 
 
-<div class="controls">
+<div id="controls" class="controls">
 
     <input
         id="search"
@@ -1313,6 +1328,9 @@ const allTab =
 
 const favoritesTab =
     document.getElementById("favoritesTab");
+
+const genreButton =
+    document.getElementById("genreButton");
 
 const favoriteCount =
     document.getElementById("favoriteCount");
@@ -3158,6 +3176,32 @@ favoritesTab.addEventListener(
     "click",
     () =>
         switchTab("favorites")
+);
+
+
+/* =========================
+   GENRE BUTTON
+========================= */
+
+genreButton.addEventListener(
+    "click",
+    () => {
+        genreButton.classList.add("active");
+
+        genreFilter.focus();
+
+        try {
+            if (typeof genreFilter.showPicker === "function") {
+                genreFilter.showPicker();
+            }
+        } catch (error) {
+            // Некоторые браузеры запрещают showPicker — обычного focus достаточно.
+        }
+
+        setTimeout(() => {
+            genreButton.classList.remove("active");
+        }, 500);
+    }
 );
 
 
