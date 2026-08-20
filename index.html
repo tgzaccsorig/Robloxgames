@@ -197,73 +197,6 @@ body {
     border-color: #00aaff;
 }
 
-
-/* =========================
-   GENRE BUTTON
-========================= */
-
-.genre-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.genre-button {
-    background: #151922;
-    border: 1px solid #282e3a;
-    color: white;
-    padding: 13px 15px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.genre-button:hover {
-    border-color: #00aaff;
-}
-
-.genre-menu {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 210px;
-    max-height: 360px;
-    overflow-y: auto;
-    padding: 6px;
-    background: #151922;
-    border: 1px solid #282e3a;
-    border-radius: 12px;
-    box-shadow: 0 14px 35px rgba(0,0,0,.45);
-    z-index: 9999;
-}
-
-.genre-menu.open {
-    display: block;
-}
-
-.genre-menu button {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
-    color: white;
-    text-align: left;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.genre-menu button:hover,
-.genre-menu button.active {
-    background: #202631;
-}
-
-.genre-native-select {
-    display: none;
-}
-
 /* =========================
    STATS
 ========================= */
@@ -918,6 +851,251 @@ body {
         padding: 16px;
     }
 }
+
+/* =========================
+   GENRE MENU + SETTINGS
+========================= */
+
+.genre-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.genre-hidden {
+    display: none !important;
+}
+
+.genre-button {
+    border: 1px solid #303744;
+    border-radius: 11px;
+    padding: 11px 15px;
+    background: #191f29;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.genre-button:hover {
+    background: #242b36;
+}
+
+.genre-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 0;
+    width: 210px;
+    max-height: 330px;
+    overflow-y: auto;
+    padding: 6px;
+    background: #171b23;
+    border: 1px solid #303744;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.45);
+    z-index: 10000;
+}
+
+.genre-menu.open {
+    display: block;
+}
+
+.genre-menu button {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 10px;
+    background: transparent;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+}
+
+.genre-menu button:hover {
+    background: #292f3b;
+}
+
+.settings-wrapper {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 99999;
+}
+
+.settings-button {
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 17px;
+    background: #5865f2;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 800;
+    box-shadow: 0 8px 25px rgba(0,0,0,.35);
+}
+
+.settings-button:hover {
+    background: #4752c4;
+}
+
+.settings-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 54px;
+    width: 310px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 18px;
+    background: #171b23;
+    color: #fff;
+    border: 1px solid #303744;
+    border-radius: 16px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.55);
+}
+
+.settings-menu.open {
+    display: block;
+}
+
+.settings-menu h2 {
+    margin: 0 0 16px;
+}
+
+.settings-section {
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #303744;
+}
+
+.settings-section h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.settings-section label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 7px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.settings-section label:hover {
+    background: #252b35;
+}
+
+.settings-section input[type="radio"],
+.settings-section input[type="checkbox"] {
+    accent-color: #5865f2;
+}
+
+.switch-row {
+    justify-content: space-between;
+}
+
+.settings-note {
+    margin: 9px 6px 0;
+    color: #9da6b5;
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.reset-settings {
+    width: 100%;
+    border: 0;
+    border-radius: 9px;
+    padding: 10px;
+    background: #292f3a;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.reset-settings:hover {
+    background: #363d4b;
+}
+
+/* Light theme */
+body.light-theme,
+body.light-theme .header,
+body.light-theme .disclaimer,
+body.light-theme .nav,
+body.light-theme .controls,
+body.light-theme .stats {
+    background-color: #f5f6f8;
+    color: #151821;
+}
+
+body.light-theme .settings-menu {
+    background: #fff;
+    color: #151821;
+    border-color: #d9dde5;
+}
+
+body.light-theme .settings-section {
+    border-color: #d9dde5;
+}
+
+body.light-theme .settings-section label:hover {
+    background: #f0f2f5;
+}
+
+body.light-theme .genre-menu {
+    background: #fff;
+    border-color: #d9dde5;
+}
+
+body.light-theme .genre-menu button {
+    color: #151821;
+}
+
+body.light-theme .genre-menu button:hover {
+    background: #eef0f4;
+}
+
+body.light-theme .genre-button {
+    background: #fff;
+    color: #151821;
+    border-color: #d9dde5;
+}
+
+body.light-theme .reset-settings {
+    background: #e7e9ee;
+    color: #151821;
+}
+
+/* Compact mode */
+body.compact-mode .grid {
+    gap: 8px;
+}
+
+body.compact-mode .card-body {
+    padding: 8px;
+}
+
+body.compact-mode .game-name {
+    font-size: 13px;
+}
+
+
+@media (max-width: 700px) {
+    .settings-wrapper {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .settings-menu {
+        width: min(310px, calc(100vw - 24px));
+        right: 0;
+    }
+
+    .genre-menu {
+        max-width: calc(100vw - 30px);
+    }
+}
+
 </style>
 </head>
 
@@ -977,7 +1155,6 @@ body {
     >
 
     <div class="genre-wrapper">
-
         <button
             id="genreButton"
             class="genre-button"
@@ -986,32 +1163,28 @@ body {
             🎭 Жанр игр ▾
         </button>
 
-        <div
-            id="genreMenu"
-            class="genre-menu"
-        >
-            <button type="button" data-genre="all">🎭 Все жанры</button>
-            <button type="button" data-genre="Simulator">⚙️ Simulator</button>
-            <button type="button" data-genre="RNG">🎲 RNG</button>
-            <button type="button" data-genre="Horror">👻 Horror</button>
-            <button type="button" data-genre="RPG">⚔️ RPG</button>
-            <button type="button" data-genre="Tycoon">🏗️ Tycoon</button>
-            <button type="button" data-genre="Obby">🏃 Obby</button>
-            <button type="button" data-genre="Racing">🏎️ Racing</button>
-            <button type="button" data-genre="Fighting">🥊 Fighting</button>
-            <button type="button" data-genre="Adventure">🗺️ Adventure</button>
-            <button type="button" data-genre="Survival">🧟 Survival</button>
-            <button type="button" data-genre="FPS">🔫 FPS</button>
-            <button type="button" data-genre="Sports">⚽ Sports</button>
-            <button type="button" data-genre="Town and City">🏙️ Town &amp; City</button>
-            <button type="button" data-genre="Comedy">😂 Comedy</button>
+        <div id="genreMenu" class="genre-menu">
+            <button type="button" data-genre-choice="all">🎭 Все жанры</button>
+            <button type="button" data-genre-choice="Simulator">⚙️ Simulator</button>
+            <button type="button" data-genre-choice="RNG">🎲 RNG</button>
+            <button type="button" data-genre-choice="Horror">👻 Horror</button>
+            <button type="button" data-genre-choice="RPG">⚔️ RPG</button>
+            <button type="button" data-genre-choice="Tycoon">🏗️ Tycoon</button>
+            <button type="button" data-genre-choice="Obby">🏃 Obby</button>
+            <button type="button" data-genre-choice="Racing">🏎️ Racing</button>
+            <button type="button" data-genre-choice="Fighting">🥊 Fighting</button>
+            <button type="button" data-genre-choice="Adventure">🗺️ Adventure</button>
+            <button type="button" data-genre-choice="Survival">🧟 Survival</button>
+            <button type="button" data-genre-choice="FPS">🔫 FPS</button>
+            <button type="button" data-genre-choice="Sports">⚽ Sports</button>
+            <button type="button" data-genre-choice="Town and City">🏙️ Town & City</button>
+            <button type="button" data-genre-choice="Comedy">😂 Comedy</button>
         </div>
-
     </div>
 
     <select
         id="genreFilter"
-        class="select genre-native-select"
+        class="select genre-hidden"
     >
         <option value="all">🎭 Все жанры</option>
 
@@ -1167,6 +1340,82 @@ body {
 
 </main>
 
+
+
+<!-- =========================
+     SETTINGS
+========================= -->
+
+<div class="settings-wrapper">
+    <button id="settingsButton" class="settings-button" type="button">
+        ⚙️ Настройки
+    </button>
+
+    <div id="settingsMenu" class="settings-menu">
+        <h2>⚙️ Настройки</h2>
+
+        <div class="settings-section">
+            <h3>🎨 Тема</h3>
+
+            <label>
+                <input type="radio" name="theme" value="dark" checked>
+                🌙 Тёмная
+            </label>
+
+            <label>
+                <input type="radio" name="theme" value="light">
+                ☀️ Светлая
+            </label>
+
+            <label>
+                <input type="radio" name="theme" value="auto">
+                🌓 Как на устройстве
+            </label>
+        </div>
+
+        <div class="settings-section">
+            <h3>👤 Возрастной режим</h3>
+
+            <label>
+                <input type="radio" name="ageMode" value="kids">
+                🧒 Roblox Kids
+            </label>
+
+            <label>
+                <input type="radio" name="ageMode" value="select">
+                🛡️ Roblox Select
+            </label>
+
+            <label>
+                <input type="radio" name="ageMode" value="all" checked>
+                🎮 Roblox
+            </label>
+
+            <p class="settings-note">
+                Возрастной режим станет настоящим фильтром, когда в данных игр
+                появится информация о возрастной рекомендации Roblox.
+            </p>
+        </div>
+
+        <div class="settings-section">
+            <h3>✨ Дополнительно</h3>
+
+            <label class="switch-row">
+                <span>💾 Запоминать настройки</span>
+                <input type="checkbox" id="saveSettings" checked>
+            </label>
+
+            <label class="switch-row">
+                <span>📱 Компактный режим</span>
+                <input type="checkbox" id="compactMode">
+            </label>
+        </div>
+
+        <button id="resetSettings" class="reset-settings" type="button">
+            🔄 Сбросить настройки
+        </button>
+    </div>
+</div>
 
 <!-- =========================
      STATISTICS MODAL
@@ -1373,8 +1622,6 @@ let currentTab = "all";
 
 let currentModalGame = null;
 
-const thumbnailCache = new Map();
-
 
 /* =========================
    ELEMENTS
@@ -1457,77 +1704,6 @@ const modalPlay =
 
 const modalFavorite =
     document.getElementById("modalFavorite");
-
-/* =========================
-   GENRE BUTTON
-========================= */
-
-const genreButton =
-    document.getElementById("genreButton");
-
-const genreMenu =
-    document.getElementById("genreMenu");
-
-const genreMenuButtons =
-    genreMenu.querySelectorAll("[data-genre]");
-
-function updateGenreButton() {
-
-    const selected =
-        genreFilter.value;
-
-    const button =
-        genreMenu.querySelector(
-            `[data-genre="${CSS.escape(selected)}"]`
-        );
-
-    genreButton.textContent =
-        button
-            ? button.textContent.trim() + " ▾"
-            : "🎭 Жанр игр ▾";
-
-    genreMenuButtons.forEach(item => {
-        item.classList.toggle(
-            "active",
-            item.dataset.genre === selected
-        );
-    });
-}
-
-genreButton.addEventListener(
-    "click",
-    event => {
-        event.stopPropagation();
-        genreMenu.classList.toggle("open");
-    }
-);
-
-genreMenuButtons.forEach(
-    button => {
-        button.addEventListener(
-            "click",
-            () => {
-                genreFilter.value =
-                    button.dataset.genre;
-
-                updateGenreButton();
-                genreMenu.classList.remove("open");
-                applyFilters();
-            }
-        );
-    }
-);
-
-document.addEventListener(
-    "click",
-    event => {
-        if (!event.target.closest(".genre-wrapper")) {
-            genreMenu.classList.remove("open");
-        }
-    }
-);
-
-
 
 
 /* =========================
@@ -1706,84 +1882,41 @@ function formatNumber(number) {
 
 function getThumbnail(game) {
 
-    if (game._thumbnailUrl) {
-        return game._thumbnailUrl;
-    }
-
     if (
         game.thumbnail &&
-        typeof game.thumbnail === "string" &&
-        !game.thumbnail.includes("thumbnails.roblox.com/v1/")
+        typeof game.thumbnail === "string"
     ) {
+
         return game.thumbnail;
     }
+
 
     if (
         game.image &&
         typeof game.image === "string"
     ) {
+
         return game.image;
     }
 
-    return "https://placehold.co/600x338/151922/ffffff?text=Roblox";
-}
 
+    if (game.universeId) {
 
-async function loadRobloxThumbnails(games) {
-
-    const pending = games.filter(game =>
-        game.universeId &&
-        !game._thumbnailLoaded
-    );
-
-    if (!pending.length) {
-        return;
+        return (
+            "https://thumbnails.roblox.com/v1/games/icons" +
+            "?universeIds=" +
+            encodeURIComponent(
+                game.universeId
+            ) +
+            "&returnPolicy=PlaceHolder" +
+            "&size=512x512" +
+            "&format=Png" +
+            "&isCircular=false"
+        );
     }
 
-    for (let i = 0; i < pending.length; i += 50) {
 
-        const batch = pending.slice(i, i + 50);
-
-        batch.forEach(game => {
-            game._thumbnailLoaded = true;
-        });
-
-        const ids = batch
-            .map(game => encodeURIComponent(game.universeId))
-            .join(",");
-
-        try {
-            const response = await fetch(
-                "https://thumbnails.roblox.com/v1/games/icons" +
-                "?universeIds=" + ids +
-                "&returnPolicy=PlaceHolder" +
-                "&size=512x512" +
-                "&format=Png" +
-                "&isCircular=false",
-                { cache: "no-store" }
-            );
-
-            if (!response.ok) {
-                throw new Error("Thumbnail API HTTP " + response.status);
-            }
-
-            const data = await response.json();
-
-            for (const item of (data.data || [])) {
-                const game = batch.find(
-                    g => String(g.universeId) === String(item.targetId)
-                );
-
-                if (game && item.imageUrl) {
-                    game._thumbnailUrl = item.imageUrl;
-                    thumbnailCache.set(String(game.universeId), item.imageUrl);
-                }
-            }
-
-        } catch (error) {
-            console.warn("Не удалось загрузить картинки Roblox:", error);
-        }
-    }
+    return "";
 }
 
 
@@ -2064,7 +2197,6 @@ function createCard(game) {
                 <img
                     class="game-image"
                     src="${thumbnail}"
-                    data-universe-id="${escapeHTML(String(game.universeId || ""))}"
                     alt="${name}"
                     loading="lazy"
                     referrerpolicy="no-referrer"
@@ -2385,24 +2517,6 @@ function render() {
                 createCard
             )
             .join("");
-
-
-    loadRobloxThumbnails(filteredGames).then(() => {
-
-        grid
-            .querySelectorAll("img[data-universe-id]")
-            .forEach(img => {
-
-                const id = img.dataset.universeId;
-                const game = filteredGames.find(
-                    item => String(item.universeId || "") === String(id)
-                );
-
-                if (game && game._thumbnailUrl) {
-                    img.src = game._thumbnailUrl;
-                }
-            });
-    });
 }
 
 
@@ -3408,10 +3522,7 @@ searchInput.addEventListener(
 
 genreFilter.addEventListener(
     "change",
-    () => {
-        updateGenreButton();
-        applyFilters();
-    }
+    applyFilters
 );
 
 
@@ -3448,8 +3559,6 @@ resetButton.addEventListener(
 
         genreFilter.value =
             "all";
-
-        updateGenreButton();
 
         sortSelect.value =
             "online";
@@ -3611,9 +3720,322 @@ async function loadGames() {
 ========================= */
 
 updateFavoriteCount();
-updateGenreButton();
 
 loadGames();
+
+
+/* =========================
+   GENRE BUTTON
+========================= */
+
+const genreButton =
+    document.getElementById("genreButton");
+
+const genreMenu =
+    document.getElementById("genreMenu");
+
+const genreChoices =
+    document.querySelectorAll("[data-genre-choice]");
+
+if (genreButton && genreMenu) {
+
+    genreButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+        genreMenu.classList.toggle("open");
+    });
+
+    genreChoices.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const value =
+                this.getAttribute("data-genre-choice");
+
+            const select =
+                document.getElementById("genreFilter");
+
+            if (select) {
+                select.value = value;
+                select.dispatchEvent(
+                    new Event("change", { bubbles: true })
+                );
+            }
+
+            genreButton.textContent =
+                this.textContent.trim() + " ▾";
+
+            genreMenu.classList.remove("open");
+        });
+    });
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+const settingsButton =
+    document.getElementById("settingsButton");
+
+const settingsMenu =
+    document.getElementById("settingsMenu");
+
+const saveSettings =
+    document.getElementById("saveSettings");
+
+const compactMode =
+    document.getElementById("compactMode");
+
+const resetSettings =
+    document.getElementById("resetSettings");
+
+
+function applyTheme(theme) {
+
+    document.body.classList.remove("light-theme");
+
+    if (theme === "light") {
+        document.body.classList.add("light-theme");
+    }
+
+    if (theme === "auto") {
+
+        if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: light)").matches
+        ) {
+            document.body.classList.add("light-theme");
+        }
+    }
+}
+
+
+function saveSiteSettings() {
+
+    if (!saveSettings.checked) {
+        return;
+    }
+
+    const theme =
+        document.querySelector(
+            'input[name="theme"]:checked'
+        ).value;
+
+    const ageMode =
+        document.querySelector(
+            'input[name="ageMode"]:checked'
+        ).value;
+
+    localStorage.setItem("hidegame_theme", theme);
+    localStorage.setItem("hidegame_age_mode", ageMode);
+    localStorage.setItem(
+        "hidegame_compact",
+        compactMode.checked ? "1" : "0"
+    );
+}
+
+
+if (settingsButton && settingsMenu) {
+
+    settingsButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+        settingsMenu.classList.toggle("open");
+    });
+}
+
+
+document.addEventListener("click", function (event) {
+
+    if (
+        !event.target.closest(".settings-wrapper") &&
+        !event.target.closest(".genre-wrapper")
+    ) {
+        if (settingsMenu) {
+            settingsMenu.classList.remove("open");
+        }
+
+        if (genreMenu) {
+            genreMenu.classList.remove("open");
+        }
+    }
+});
+
+
+document
+    .querySelectorAll('input[name="theme"]')
+    .forEach(function (radio) {
+
+        radio.addEventListener("change", function () {
+
+            applyTheme(this.value);
+            saveSiteSettings();
+
+        });
+    });
+
+
+document
+    .querySelectorAll('input[name="ageMode"]')
+    .forEach(function (radio) {
+
+        radio.addEventListener("change", function () {
+
+            /*
+             * Пока возрастной режим сохраняется.
+             * Реальный Kids/Select-фильтр подключим,
+             * когда в games.json будут возрастные данные.
+             */
+            localStorage.setItem(
+                "hidegame_age_mode",
+                this.value
+            );
+
+            saveSiteSettings();
+        });
+    });
+
+
+if (compactMode) {
+
+    compactMode.addEventListener("change", function () {
+
+        document.body.classList.toggle(
+            "compact-mode",
+            this.checked
+        );
+
+        saveSiteSettings();
+
+    });
+}
+
+
+if (resetSettings) {
+
+    resetSettings.addEventListener("click", function () {
+
+        localStorage.removeItem("hidegame_theme");
+        localStorage.removeItem("hidegame_age_mode");
+        localStorage.removeItem("hidegame_compact");
+
+        const dark =
+            document.querySelector(
+                'input[name="theme"][value="dark"]'
+            );
+
+        const all =
+            document.querySelector(
+                'input[name="ageMode"][value="all"]'
+            );
+
+        if (dark) dark.checked = true;
+        if (all) all.checked = true;
+
+        if (saveSettings) {
+            saveSettings.checked = true;
+        }
+
+        if (compactMode) {
+            compactMode.checked = false;
+        }
+
+        applyTheme("dark");
+        document.body.classList.remove("compact-mode");
+
+        if (genreButton) {
+            genreButton.textContent = "🎭 Жанр игр ▾";
+        }
+
+        const genreFilter =
+            document.getElementById("genreFilter");
+
+        if (genreFilter) {
+            genreFilter.value = "all";
+            genreFilter.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        }
+    });
+}
+
+
+/* Load saved settings */
+
+const savedTheme =
+    localStorage.getItem("hidegame_theme");
+
+const savedAgeMode =
+    localStorage.getItem("hidegame_age_mode");
+
+const savedCompact =
+    localStorage.getItem("hidegame_compact");
+
+
+if (savedTheme) {
+
+    const themeRadio =
+        document.querySelector(
+            'input[name="theme"][value="' +
+            savedTheme +
+            '"]'
+        );
+
+    if (themeRadio) {
+        themeRadio.checked = true;
+    }
+
+    applyTheme(savedTheme);
+
+}
+
+
+if (savedAgeMode) {
+
+    const ageRadio =
+        document.querySelector(
+            'input[name="ageMode"][value="' +
+            savedAgeMode +
+            '"]'
+        );
+
+    if (ageRadio) {
+        ageRadio.checked = true;
+    }
+}
+
+
+if (savedCompact === "1") {
+
+    if (compactMode) {
+        compactMode.checked = true;
+    }
+
+    document.body.classList.add("compact-mode");
+}
+
+
+/* Auto theme follows system changes */
+
+if (window.matchMedia) {
+
+    const media =
+        window.matchMedia(
+            "(prefers-color-scheme: light)"
+        );
+
+    if (media.addEventListener) {
+
+        media.addEventListener("change", function () {
+
+            const theme =
+                localStorage.getItem("hidegame_theme");
+
+            if (theme === "auto") {
+                applyTheme("auto");
+            }
+        });
+    }
+}
 
 </script>
 
