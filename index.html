@@ -1,202 +1,83 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="genre-wrapper">
+    <button class="genre-btn" onclick="toggleGenres()">
+        🎭 Жанр игр ▾
+    </button>
 
-    <title>Roblox Games</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #0f1117;
-            color: white;
-        }
-
-        header {
-            padding: 20px;
-            background: #171a23;
-            border-bottom: 1px solid #292e3a;
-        }
-
-        h1 {
-            margin: 0 0 15px 0;
-            font-size: 28px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            border: 0;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .genre-button {
-            padding: 12px 18px;
-            border-radius: 10px;
-            background: #5865f2;
-            color: white;
-            font-weight: bold;
-        }
-
-        .genre-button:hover {
-            background: #4752c4;
-        }
-
-        .genre-menu {
-            display: none;
-            position: absolute;
-            margin-top: 8px;
-            width: 210px;
-            background: #1c202b;
-            border: 1px solid #303644;
-            border-radius: 10px;
-            padding: 6px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.5);
-            z-index: 1000;
-        }
-
-        .genre-menu.show {
-            display: block;
-        }
-
-        .genre-menu button {
-            display: block;
-            width: 100%;
-            padding: 11px 12px;
-            border-radius: 7px;
-            background: transparent;
-            color: white;
-            text-align: left;
-        }
-
-        .genre-menu button:hover {
-            background: #303644;
-        }
-
-        .genre-wrapper {
-            position: relative;
-        }
-
-        .message {
-            padding: 40px 20px;
-            text-align: center;
-            color: #aeb5c5;
-        }
-
-        .success {
-            color: #55e6a5;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-
-<header>
-    <h1>🎮 Roblox Games</h1>
-
-    <div class="controls">
-
-        <div class="genre-wrapper">
-
-            <button
-                class="genre-button"
-                id="genreButton"
-                type="button"
-            >
-                🎭 Жанр игр ▾
-            </button>
-
-            <div
-                class="genre-menu"
-                id="genreMenu"
-            >
-                <button type="button" data-genre="all">
-                    🎮 Все игры
-                </button>
-
-                <button type="button" data-genre="adventure">
-                    🗺️ Приключения
-                </button>
-
-                <button type="button" data-genre="horror">
-                    👻 Хоррор
-                </button>
-
-                <button type="button" data-genre="obby">
-                    🏃 Обби
-                </button>
-
-                <button type="button" data-genre="simulator">
-                    ⚙️ Симулятор
-                </button>
-
-                <button type="button" data-genre="tycoon">
-                    🏢 Тайкун
-                </button>
-
-                <button type="button" data-genre="roleplay">
-                    🎭 Ролевые
-                </button>
-            </div>
-
-        </div>
-
+    <div id="genre-menu" class="genre-menu">
+        <button onclick="chooseGenre('all')">🎮 Все игры</button>
+        <button onclick="chooseGenre('horror')">👻 Хоррор</button>
+        <button onclick="chooseGenre('obby')">🏃 Обби</button>
+        <button onclick="chooseGenre('simulator')">⚙️ Симулятор</button>
+        <button onclick="chooseGenre('tycoon')">🏢 Тайкун</button>
+        <button onclick="chooseGenre('roleplay')">🎭 Ролевые</button>
     </div>
-</header>
+</div>
 
-<main>
-    <div class="message">
-        <p class="success">✅ НОВЫЙ index.html ЗАГРУЖЕН!</p>
-        <p>Если ты видишь эту надпись и кнопку «🎭 Жанр игр», значит GitHub Pages действительно использует новый index.html.</p>
-        <p>Нажми кнопку выше — должно открыться меню жанров.</p>
-    </div>
-</main>
+<style>
+.genre-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.genre-btn {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #5865f2;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.genre-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 180px;
+    padding: 6px;
+    background: #1b1e27;
+    border-radius: 10px;
+    z-index: 9999;
+}
+
+.genre-menu.open {
+    display: block;
+}
+
+.genre-menu button {
+    display: block;
+    width: 100%;
+    padding: 9px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.genre-menu button:hover {
+    background: #303542;
+}
+</style>
 
 <script>
-    const genreButton = document.getElementById("genreButton");
-    const genreMenu = document.getElementById("genreMenu");
+function toggleGenres() {
+    document.getElementById("genre-menu").classList.toggle("open");
+}
 
-    genreButton.addEventListener("click", function () {
-        genreMenu.classList.toggle("show");
-    });
+function chooseGenre(genre) {
+    console.log("Выбран жанр:", genre);
 
-    document.querySelectorAll("[data-genre]").forEach(function (button) {
+    // Если в твоём сайте уже есть genreFilter:
+    const filter = document.getElementById("genreFilter");
 
-        button.addEventListener("click", function () {
+    if (filter) {
+        filter.value = genre;
+        filter.dispatchEvent(new Event("change", { bubbles: true }));
+    }
 
-            const genre = this.dataset.genre;
-
-            console.log("Выбран жанр:", genre);
-
-            genreButton.textContent =
-                "🎭 " + this.textContent.trim() + " ▾";
-
-            genreMenu.classList.remove("show");
-        });
-
-    });
-
-    document.addEventListener("click", function (event) {
-
-        if (!event.target.closest(".genre-wrapper")) {
-            genreMenu.classList.remove("show");
-        }
-
-    });
+    document.getElementById("genre-menu").classList.remove("open");
+}
 </script>
-
-</body>
-</html>
