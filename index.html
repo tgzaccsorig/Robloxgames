@@ -1096,10 +1096,126 @@ body.compact-mode .game-name {
     }
 }
 
+
+/* =========================
+   MINECRAFT SERVER BANNER
+========================= */
+
+.minecraft-banner {
+    width: 100%;
+    background:
+        radial-gradient(circle at 15% 50%, rgba(0, 234, 255, .12), transparent 30%),
+        radial-gradient(circle at 85% 50%, rgba(0, 255, 140, .08), transparent 28%),
+        linear-gradient(135deg, #111722 0%, #090c12 100%);
+    border-bottom: 1px solid rgba(0, 234, 255, .22);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .22);
+}
+
+.minecraft-banner-inner {
+    width: 100%;
+    min-height: 68px;
+    padding: 12px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.minecraft-banner-text {
+    margin: 0;
+    color: #f2f7ff;
+    font-size: clamp(14px, 1.8vw, 18px);
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.minecraft-banner-ip {
+    color: #00eaff;
+    text-shadow: 0 0 14px rgba(0, 234, 255, .45);
+    white-space: nowrap;
+}
+
+.minecraft-copy-button {
+    flex: 0 0 auto;
+    border: 1px solid #00eaff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    background: rgba(0, 234, 255, .10);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 900;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .15s ease;
+}
+
+.minecraft-copy-button:hover {
+    background: rgba(0, 234, 255, .20);
+    transform: translateY(-1px);
+}
+
+.minecraft-copy-button:active {
+    transform: translateY(0);
+}
+
+.minecraft-copy-button.copied {
+    background: #19a957;
+    border-color: #19a957;
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .minecraft-banner-inner {
+        min-height: 0;
+        padding: 12px 14px;
+        gap: 10px;
+        flex-direction: column;
+    }
+
+    .minecraft-banner-text {
+        font-size: 14px;
+    }
+
+    .minecraft-banner-ip {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .minecraft-copy-button {
+        width: 100%;
+        max-width: 260px;
+        padding: 10px 14px;
+    }
+}
+
 </style>
 </head>
 
+
 <body>
+
+<div class="minecraft-banner">
+    <div class="minecraft-banner-inner">
+        <p class="minecraft-banner-text">
+            🎮 Заходите на сервер:
+            <span class="minecraft-banner-ip">goodbadworld.falixsrv.me</span>
+            <span>(Версия 1.21.4)</span>
+        </p>
+
+        <button
+            id="minecraftCopyIp"
+            class="minecraft-copy-button"
+            type="button"
+        >
+            Копировать IP
+        </button>
+    </div>
+</div>
+
 
 <header class="header">
 
@@ -4035,6 +4151,64 @@ if (window.matchMedia) {
             }
         });
     }
+}
+
+
+/* =========================
+   MINECRAFT IP COPY BUTTON
+========================= */
+
+const minecraftCopyButton =
+    document.getElementById("minecraftCopyIp");
+
+const minecraftServerIp =
+    "goodbadworld.falixsrv.me";
+
+if (minecraftCopyButton) {
+    minecraftCopyButton.addEventListener("click", async function () {
+
+        try {
+            await navigator.clipboard.writeText(minecraftServerIp);
+
+            this.textContent = "Скопировано! 👍";
+            this.classList.add("copied");
+
+            setTimeout(function () {
+                minecraftCopyButton.textContent = "Копировать IP";
+                minecraftCopyButton.classList.remove("copied");
+            }, 2000);
+
+        } catch (error) {
+            /*
+             * Запасной вариант для старых браузеров,
+             * где Clipboard API недоступен.
+             */
+            const textArea = document.createElement("textarea");
+
+            textArea.value = minecraftServerIp;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand("copy");
+
+                this.textContent = "Скопировано! 👍";
+                this.classList.add("copied");
+
+                setTimeout(function () {
+                    minecraftCopyButton.textContent = "Копировать IP";
+                    minecraftCopyButton.classList.remove("copied");
+                }, 2000);
+
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+    });
 }
 
 </script>
